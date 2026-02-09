@@ -40,4 +40,11 @@ export class PenilaianAdministrasiController {
   async get(@Param('assignmentId') assignmentId: string, @CurrentUser() user: any) {
     return this.service.getByAssignment(BigInt(assignmentId));
   }
+
+  @Get('proposal/:proposalId/administrasi/errors')
+  @ApiOperation({ summary: 'Get error union from all reviewers (mahasiswa view)' })
+  @ApiResponse({ status: 200, description: 'Combined error list' })
+  async getErrorUnion(@Param('proposalId') proposalId: string) {
+    return this.service.getErrorUnion(BigInt(proposalId));
+  }
 }

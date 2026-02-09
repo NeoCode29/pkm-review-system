@@ -107,20 +107,20 @@ describe('SystemConfigService', () => {
       );
     });
 
-    it('should finalize reviews: ≥1 complete = reviewed, 0 = not_reviewed', async () => {
+    it('should finalize reviews: ≥1 complete = reviewed with scores, 0 = not_reviewed', async () => {
       mockTx.systemConfig.upsert.mockResolvedValue({});
       mockTx.proposal.findMany.mockResolvedValueOnce([
         {
           id: 1n,
           reviewerAssignments: [
-            { penilaianAdministrasi: { isComplete: true }, penilaianSubstansi: { isComplete: true } },
-            { penilaianAdministrasi: { isComplete: false }, penilaianSubstansi: null },
+            { penilaianAdministrasi: { isComplete: true, totalKesalahan: 2 }, penilaianSubstansi: { isComplete: true, totalSkor: 500 } },
+            { penilaianAdministrasi: { isComplete: false, totalKesalahan: 0 }, penilaianSubstansi: null },
           ],
         },
         {
           id: 2n,
           reviewerAssignments: [
-            { penilaianAdministrasi: { isComplete: false }, penilaianSubstansi: null },
+            { penilaianAdministrasi: { isComplete: false, totalKesalahan: 0 }, penilaianSubstansi: null },
           ],
         },
       ]);
@@ -128,11 +128,15 @@ describe('SystemConfigService', () => {
       mockTx.systemConfig.findMany.mockResolvedValueOnce([]);
 
       await service.updateToggle('reviewEnabled', false, 'admin');
-      // Proposal 1: 1 complete review → reviewed
+      // Proposal 1: 1 complete review → reviewed with avg scores
       expect(mockTx.proposal.update).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 1n },
-          data: { status: 'reviewed' },
+          data: expect.objectContaining({
+            status: 'reviewed',
+            administratifScore: 2,
+            substantifScore: 500,
+          }),
         }),
       );
       // Proposal 2: 0 complete reviews → not_reviewed

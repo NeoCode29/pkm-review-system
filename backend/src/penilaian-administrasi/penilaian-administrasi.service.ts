@@ -121,6 +121,52 @@ export class PenilaianAdministrasiService {
     return penilaian;
   }
 
+  async getErrorUnion(proposalId: bigint) {
+    // Get all reviewer assignments for this proposal
+    const assignments = await this.prisma.reviewerAssignment.findMany({
+      where: { proposalId },
+      include: {
+        penilaianAdministrasi: {
+          include: {
+            detailPenilaianAdministrasi: {
+              include: {
+                kriteriaAdministrasi: { select: { id: true, deskripsi: true, urutan: true } },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Collect all errors from all reviewers (union)
+    const errorMap = new Map<string, { kriteriaId: bigint; deskripsi: string; urutan: number; reviewerCount: number }>();
+
+    for (const assignment of assignments) {
+      const details = assignment.penilaianAdministrasi?.detailPenilaianAdministrasi || [];
+      for (const detail of details) {
+        if (detail.adaKesalahan) {
+          const key = detail.kriteriaAdministrasiId.toString();
+          const existing = errorMap.get(key);
+          if (existing) {
+            existing.reviewerCount += 1;
+          } else {
+            errorMap.set(key, {
+              kriteriaId: detail.kriteriaAdministrasiId,
+              deskripsi: detail.kriteriaAdministrasi.deskripsi,
+              urutan: detail.kriteriaAdministrasi.urutan ?? 0,
+              reviewerCount: 1,
+            });
+          }
+        }
+      }
+    }
+
+    const errors = Array.from(errorMap.values()).sort((a, b) => a.urutan - b.urutan);
+    const totalKesalahan = errors.length;
+
+    return { totalKesalahan, errors };
+  }
+
   private async validateAssignment(assignmentId: bigint, userId: string) {
     const assignment = await this.prisma.reviewerAssignment.findUnique({
       where: { id: assignmentId },

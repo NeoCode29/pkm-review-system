@@ -71,27 +71,50 @@ export class SystemConfigService {
 
       if (key === 'reviewEnabled' && !enabled) {
         // under_review → reviewed (≥1 complete review) or not_reviewed (0 reviews)
+        // Also calculate and store average scores from reviewers
         const underReviewProposals = await tx.proposal.findMany({
           where: { status: 'under_review' },
           include: {
             reviewerAssignments: {
               include: {
-                penilaianAdministrasi: { select: { isComplete: true } },
-                penilaianSubstansi: { select: { isComplete: true } },
+                penilaianAdministrasi: { select: { isComplete: true, totalKesalahan: true } },
+                penilaianSubstansi: { select: { isComplete: true, totalSkor: true } },
               },
             },
           },
         });
 
         for (const proposal of underReviewProposals) {
-          const completedReviews = proposal.reviewerAssignments.filter(
+          const completedAssignments = proposal.reviewerAssignments.filter(
             (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
-          ).length;
+          );
 
-          await tx.proposal.update({
-            where: { id: proposal.id },
-            data: { status: completedReviews >= 1 ? 'reviewed' : 'not_reviewed' },
-          });
+          if (completedAssignments.length >= 1) {
+            // Calculate average scores from completed reviews
+            const totalAdministratif = completedAssignments.reduce(
+              (sum, a) => sum + (a.penilaianAdministrasi?.totalKesalahan ?? 0), 0,
+            );
+            const avgAdministratif = totalAdministratif / completedAssignments.length;
+
+            const totalSubstantif = completedAssignments.reduce(
+              (sum, a) => sum + (Number(a.penilaianSubstansi?.totalSkor) || 0), 0,
+            );
+            const avgSubstantif = totalSubstantif / completedAssignments.length;
+
+            await tx.proposal.update({
+              where: { id: proposal.id },
+              data: {
+                status: 'reviewed',
+                administratifScore: avgAdministratif,
+                substantifScore: avgSubstantif,
+              },
+            });
+          } else {
+            await tx.proposal.update({
+              where: { id: proposal.id },
+              data: { status: 'not_reviewed' },
+            });
+          }
         }
       }
 

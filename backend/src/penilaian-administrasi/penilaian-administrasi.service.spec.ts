@@ -13,7 +13,7 @@ const mockTx = {
 };
 
 const mockPrisma = {
-  reviewerAssignment: { findUnique: jest.fn() },
+  reviewerAssignment: { findUnique: jest.fn(), findMany: jest.fn() },
   penilaianAdministrasi: { findUnique: jest.fn() },
   proposal: { findUnique: jest.fn() },
   kriteriaAdministrasi: { findMany: jest.fn() },
@@ -151,6 +151,49 @@ describe('PenilaianAdministrasiService', () => {
       });
       const result = await service.getByAssignment(1n);
       expect(result).toBeDefined();
+    });
+  });
+
+  describe('getErrorUnion', () => {
+    it('should combine errors from both reviewers (union)', async () => {
+      mockPrisma.reviewerAssignment.findMany.mockResolvedValueOnce([
+        {
+          penilaianAdministrasi: {
+            detailPenilaianAdministrasi: [
+              { adaKesalahan: true, kriteriaAdministrasiId: 1n, kriteriaAdministrasi: { id: 1n, deskripsi: 'Format salah', urutan: 1 } },
+              { adaKesalahan: false, kriteriaAdministrasiId: 2n, kriteriaAdministrasi: { id: 2n, deskripsi: 'Lengkap', urutan: 2 } },
+            ],
+          },
+        },
+        {
+          penilaianAdministrasi: {
+            detailPenilaianAdministrasi: [
+              { adaKesalahan: false, kriteriaAdministrasiId: 1n, kriteriaAdministrasi: { id: 1n, deskripsi: 'Format salah', urutan: 1 } },
+              { adaKesalahan: true, kriteriaAdministrasiId: 2n, kriteriaAdministrasi: { id: 2n, deskripsi: 'Lengkap', urutan: 2 } },
+            ],
+          },
+        },
+      ]);
+
+      const result = await service.getErrorUnion(1n);
+      // Both criteria have errors (union: reviewer 1 flagged #1, reviewer 2 flagged #2)
+      expect(result.totalKesalahan).toBe(2);
+      expect(result.errors).toHaveLength(2);
+    });
+
+    it('should return 0 errors when no reviewer flagged errors', async () => {
+      mockPrisma.reviewerAssignment.findMany.mockResolvedValueOnce([
+        {
+          penilaianAdministrasi: {
+            detailPenilaianAdministrasi: [
+              { adaKesalahan: false, kriteriaAdministrasiId: 1n, kriteriaAdministrasi: { id: 1n, deskripsi: 'OK', urutan: 1 } },
+            ],
+          },
+        },
+      ]);
+
+      const result = await service.getErrorUnion(1n);
+      expect(result.totalKesalahan).toBe(0);
     });
   });
 });
