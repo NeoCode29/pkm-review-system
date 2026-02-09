@@ -14,6 +14,9 @@ import { AssignmentsModule } from './reviewer-assignments/assignments.module';
 import { PenilaianAdministrasiModule } from './penilaian-administrasi/penilaian-administrasi.module';
 import { PenilaianSubstansiModule } from './penilaian-substansi/penilaian-substansi.module';
 import { PdfAnnotationsModule } from './pdf-annotations/pdf-annotations.module';
+import { SystemConfigModule } from './system-config/system-config.module';
+import { DashboardModule } from './dashboard/dashboard.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -33,6 +36,9 @@ import { PdfAnnotationsModule } from './pdf-annotations/pdf-annotations.module';
     PenilaianAdministrasiModule,
     PenilaianSubstansiModule,
     PdfAnnotationsModule,
+    SystemConfigModule,
+    DashboardModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
