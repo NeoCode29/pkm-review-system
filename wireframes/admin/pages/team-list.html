@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team List | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item active">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Manajemen Team</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid-4col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">38</div>
+                    <div class="stat-label">Total Teams</div>
+                </div>
+                <div class="stat-box" style="background: #e8f5e9;">
+                    <div class="number">28</div>
+                    <div class="stat-label">Submitted</div>
+                </div>
+                <div class="stat-box" style="background: #fff9c4;">
+                    <div class="number">8</div>
+                    <div class="stat-label">Draft</div>
+                </div>
+                <div class="stat-box" style="background: #e3f2fd;">
+                    <div class="number">12</div>
+                    <div class="stat-label">Under Review</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="box">
+                <div class="box-title">Filters</div>
+                <div class="filter-bar">
+                    <div>
+                        <label class="label">Jenis PKM</label>
+                        <select class="input-field" style="margin: 0; width: 150px;">
+                            <option>All</option>
+                            <option>PKM-KC</option>
+                            <option>PKM-GT</option>
+                            <option>PKM-K</option>
+                            <option>PKM-PM</option>
+                            <option>PKM-PI</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0; width: 150px;">
+                            <option>All</option>
+                            <option>Draft</option>
+                            <option>Submitted</option>
+                            <option>Under Review</option>
+                            <option>Reviewed</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari nama team atau judul..."
+                            style="margin: 0;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Table -->
+            <div class="box">
+                <div class="box-title">Team List (38 teams)</div>
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Judul Proposal</th>
+                                <th>Jenis PKM</th>
+                                <th>Ketua</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="team-detail.html" style="color: #000; font-weight: bold;">Tim Inovasi
+                                        Digital</a></td>
+                                <td>Aplikasi AR untuk Pembelajaran</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td>Budi Santoso</td>
+                                <td><span class="badge badge-green">SUBMITTED</span></td>
+                                <td>
+                                    <a href="team-detail.html" class="button button-sm">Detail</a>
+                                    <a href="team-edit.html" class="button button-sm">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="team-detail.html" style="color: #000; font-weight: bold;">Tim AI
+                                        Research</a>
+                                </td>
+                                <td>Chatbot NLP Bahasa Indonesia</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td>Rina Wijaya</td>
+                                <td><span class="badge badge-yellow">IN REVIEW</span></td>
+                                <td>
+                                    <a href="team-detail.html" class="button button-sm">Detail</a>
+                                    <a href="team-edit.html" class="button button-sm">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="team-detail.html" style="color: #000; font-weight: bold;">Tim Green
+                                        Tech</a>
+                                </td>
+                                <td>IoT Monitoring Pertanian</td>
+                                <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                <td>Ahmad Fauzi</td>
+                                <td><span class="badge">DRAFT</span></td>
+                                <td>
+                                    <a href="team-detail.html" class="button button-sm">Detail</a>
+                                    <a href="team-edit.html" class="button button-sm">Edit</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="team-detail.html" style="color: #000; font-weight: bold;">Tim
+                                        HealthTech</a>
+                                </td>
+                                <td>Aplikasi Monitoring Kesehatan</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td>Dewi Sartika</td>
+                                <td><span class="badge badge-green">SUBMITTED</span></td>
+                                <td>
+                                    <a href="team-detail.html" class="button button-sm">Detail</a>
+                                    <a href="team-edit.html" class="button button-sm">Edit</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button class="button">← Previous</button>
+                    <span style="margin: 0 15px;">Page 1 of 4</span>
+                    <button class="button">Next →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Jenis PKM | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item active">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">Master Data</div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <a href="master-prodi.html" class="tab">Program Studi</a>
+                <a href="master-jurusan.html" class="tab">Jurusan</a>
+                <a href="master-pkm.html" class="tab active">Jenis PKM</a>
+            </div>
+
+            <!-- Actions -->
+            <div class="box">
+                <div class="filter-bar">
+                    <div style="flex: 1;">
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari jenis PKM..." style="margin: 0;">
+                    </div>
+                    <div style="align-self: flex-end;">
+                        <button class="button button-primary">+ Tambah Jenis PKM</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="box">
+                <div class="box-title">Daftar Jenis PKM (5 jenis)</div>
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th style="width: 100px;">Kode</th>
+                                <th>Nama Lengkap</th>
+                                <th>Deskripsi</th>
+                                <th>Teams</th>
+                                <th>Kriteria</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td>Karsa Cipta</td>
+                                <td>Kreativitas dalam menciptakan karya cipta...</td>
+                                <td><span class="badge">12</span></td>
+                                <td><span class="badge badge-green">4 kriteria</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger" disabled>🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                <td>Gagasan Tertulis</td>
+                                <td>Penulisan artikel ilmiah berupa gagasan...</td>
+                                <td><span class="badge">8</span></td>
+                                <td><span class="badge badge-green">4 kriteria</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger" disabled>🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><span class="badge">PKM-K</span></td>
+                                <td>Kewirausahaan</td>
+                                <td>Pengembangan kewirausahaan mahasiswa...</td>
+                                <td><span class="badge">6</span></td>
+                                <td><span class="badge badge-green">5 kriteria</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger" disabled>🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><span class="badge badge-green">PKM-PM</span></td>
+                                <td>Pengabdian Masyarakat</td>
+                                <td>Program pengabdian kepada masyarakat...</td>
+                                <td><span class="badge">5</span></td>
+                                <td><span class="badge badge-green">4 kriteria</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger" disabled>🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><span class="badge badge-red">PKM-PI</span></td>
+                                <td>Penelitian Ilmiah</td>
+                                <td>Penelitian ilmiah yang menghasilkan...</td>
+                                <td><span class="badge">7</span></td>
+                                <td><span class="badge badge-green">6 kriteria</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger" disabled>🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Important:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Jenis PKM yang sudah digunakan oleh team tidak dapat dihapus</li>
+                    <li>Setiap jenis PKM harus memiliki minimal 1 kriteria substantif</li>
+                    <li>Kode PKM harus unik (tidak boleh duplikat)</li>
+                </ul>
+            </div>
+
+            <div class="box">
+                <div class="box-title">📊 Quick Stats by PKM Type</div>
+                <div class="grid-3col" style="margin-top: 10px;">
+                    <div class="stat-box" style="border-color: #1976d2;">
+                        <div class="number" style="color: #1976d2;">12</div>
+                        <div class="stat-label">PKM-KC Teams</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #f9a825;">
+                        <div class="number" style="color: #f9a825;">8</div>
+                        <div class="stat-label">PKM-GT Teams</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #388e3c;">
+                        <div class="number" style="color: #388e3c;">18</div>
+                        <div class="stat-label">Other PKM Teams</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Tim Baru | Mahasiswa PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Mahasiswa</h1>
+        </div>
+        <div class="user-info">
+            Budi Santoso (123456789012) | <a href="login.html">Logout</a> |
+            <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Mahasiswa</h3>
+            <a href="dashboard.html" class="sidebar-item">🏠 Dashboard</a>
+            <a href="browse-teams.html" class="sidebar-item">🔍 Cari Tim</a>
+            <a href="create-team.html" class="sidebar-item active">➕ Buat Tim</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a> / Buat Tim Baru
+            </div>
+            <div class="page-title">Buat Tim Baru</div>
+
+            <!-- Info Alert -->
+            <div class="alert alert-info">
+                <strong>ℹ️ Informasi:</strong> Anda akan menjadi <strong>Ketua Tim</strong> setelah membuat tim.
+                Tim minimal harus memiliki 3 anggota untuk dapat mengupload proposal.
+            </div>
+
+            <!-- Form Create Team -->
+            <div class="box" style="max-width: 800px;">
+                <div class="box-title">📝 Data Tim</div>
+
+                <form>
+                    <!-- Nama Tim -->
+                    <div class="form-group">
+                        <label class="label">
+                            Nama Tim <span class="required">*</span>
+                        </label>
+                        <input type="text" class="input-field" placeholder="Contoh: Tim Inovasi Digital">
+                        <p class="help-text">Nama tim yang unik dan mudah diingat</p>
+                    </div>
+
+                    <!-- Judul Proposal -->
+                    <div class="form-group">
+                        <label class="label">
+                            Judul Proposal <span class="required">*</span>
+                        </label>
+                        <input type="text" class="input-field"
+                            placeholder="Contoh: Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar">
+                        <p class="help-text">Judul lengkap proposal PKM Anda</p>
+                    </div>
+
+                    <!-- Jenis PKM -->
+                    <div class="form-group">
+                        <label class="label">
+                            Jenis PKM <span class="required">*</span>
+                        </label>
+                        <select class="input-field">
+                            <option value="">Pilih Jenis PKM</option>
+                            <option value="PKM-KC">PKM-KC (Karsa Cipta)</option>
+                            <option value="PKM-GT">PKM-GT (Gagasan Tertulis)</option>
+                            <option value="PKM-K">PKM-K (Kewirausahaan)</option>
+                            <option value="PKM-PM">PKM-PM (Pengabdian Masyarakat)</option>
+                            <option value="PKM-AI">PKM-AI (Artikel Ilmiah)</option>
+                            <option value="PKM-RE">PKM-RE (Riset Eksakta)</option>
+                            <option value="PKM-RSH">PKM-RSH (Riset Sosial Humaniora)</option>
+                        </select>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Dosen Pembimbing -->
+                    <div class="box-title">👨‍🏫 Dosen Pembimbing (Opsional)</div>
+                    <div class="alert alert-warning" style="margin-bottom: 20px;">
+                        <strong>⚠️ Penting:</strong> Dosen pembimbing <strong>WAJIB diisi sebelum upload
+                            proposal</strong>.
+                        Anda dapat mengisinya nanti di halaman Edit Tim.
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="form-group">
+                            <label class="label">Nama Dosen Pembimbing</label>
+                            <input type="text" class="input-field" placeholder="Dr. Ahmad Fauzi, M.Kom">
+                        </div>
+                        <div class="form-group">
+                            <label class="label">NIDN</label>
+                            <input type="text" class="input-field" placeholder="0123456789">
+                        </div>
+                    </div>
+
+                    <div class="grid-2col">
+                        <div class="form-group">
+                            <label class="label">Email Dosen</label>
+                            <input type="email" class="input-field" placeholder="dosen@staff.ac.id">
+                        </div>
+                        <div class="form-group">
+                            <label class="label">No HP Dosen</label>
+                            <input type="tel" class="input-field" placeholder="08123456789">
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Tim Settings -->
+                    <div class="box-title">⚙️ Pengaturan Tim</div>
+
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <div class="toggle-box on" onclick="this.classList.toggle('on')"></div>
+                            <div>
+                                <span class="toggle-label"><strong>Terbuka untuk Bergabung</strong></span>
+                                <p class="help-text" style="margin: 5px 0 0 0;">
+                                    Jika aktif, tim Anda akan terlihat di halaman "Cari Tim" dan mahasiswa lain dapat
+                                    mengirim request bergabung
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Initial Members -->
+                    <div class="box-title">👥 Anggota Tim Awal (Opsional)</div>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                        Anda dapat langsung menambahkan anggota yang sudah Anda kenal, atau biarkan kosong dan tunggu
+                        request bergabung dari mahasiswa lain.
+                    </p>
+
+                    <!-- Creator as Ketua -->
+                    <div class="member-item" style="border-color: #1565c0; background: #e3f2fd;">
+                        <div class="member-avatar">BU</div>
+                        <div class="member-info">
+                            <div class="member-name">
+                                Budi Santoso
+                                <span class="badge badge-blue" style="font-size: 10px;">Ketua (Anda)</span>
+                            </div>
+                            <div class="member-detail">123456789012 • T. Informatika</div>
+                        </div>
+                    </div>
+
+                    <!-- Add Member Input -->
+                    <div class="box" style="background: #f5f5f5; margin-top: 15px;">
+                        <div style="display: flex; gap: 10px; align-items: flex-end;">
+                            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                                <label class="label">Cari Mahasiswa</label>
+                                <input type="text" class="input-field" placeholder="Ketik NIM atau nama mahasiswa..."
+                                    style="margin-bottom: 0;">
+                            </div>
+                            <button type="button" class="button button-primary" style="margin: 0;">
+                                🔍 Cari
+                            </button>
+                        </div>
+
+                        <!-- Search Result Preview -->
+                        <div style="margin-top: 15px; display: none;" id="searchResult">
+                            <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Hasil pencarian:</p>
+                            <div class="member-item" style="background: #fff;">
+                                <div class="member-avatar">AF</div>
+                                <div class="member-info">
+                                    <div class="member-name">Ahmad Fauzi</div>
+                                    <div class="member-detail">123456789013 • T. Informatika</div>
+                                </div>
+                                <button type="button" class="button button-sm button-success">+ Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Added Members Preview -->
+                    <div style="margin-top: 15px;">
+                        <p style="font-size: 14px; margin-bottom: 10px;">
+                            <strong>Anggota Ditambahkan:</strong> (1/4 slot terisi)
+                        </p>
+                        <div style="color: #666; font-size: 14px; font-style: italic;">
+                            Belum ada anggota tambahan. Tim minimal 3 orang untuk submit proposal.
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Validation Summary -->
+                    <div class="box" style="background: #fff9c4; border-color: #f9a825;">
+                        <div class="box-title" style="color: #f57f17;">📋 Checklist Sebelum Submit</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="color: #388e3c;">✓</span>
+                                <span>Nama tim diisi</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="color: #388e3c;">✓</span>
+                                <span>Judul proposal diisi</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="color: #388e3c;">✓</span>
+                                <span>Jenis PKM dipilih</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="color: #f57c00;">○</span>
+                                <span style="color: #666;">Dosen pembimbing (opsional saat create, wajib sebelum upload
+                                    proposal)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <a href="dashboard.html" class="button">Batal</a>
+                        <button type="submit" class="button button-primary">
+                            ➕ Buat Tim
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Detail | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item active">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="team-list.html">Teams</a> / <a href="team-detail.html">Tim Inovasi Digital</a> / Review Detail
+            </div>
+
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Detail Hasil Review</div>
+                <a href="team-detail.html" class="button">← Kembali</a>
+            </div>
+
+            <!-- Proposal Summary -->
+            <div class="box" style="background: #e3f2fd;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="font-size: 18px;">Tim Inovasi Digital</strong><br>
+                        <span style="color: #666;">Aplikasi Pembelajaran dengan Augmented Reality</span><br>
+                        <span class="badge badge-blue">PKM-KC</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold;">85.5</div>
+                        <div style="font-size: 12px; color: #666;">Final Score (Avg)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Tabs -->
+            <div class="tabs">
+                <div class="tab active">R1: Dr. Siti Nurhaliza</div>
+                <div class="tab">R2: Prof. Ahmad Fauzi</div>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Left: Admin Review -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📋 Review Administratif <span class="badge badge-green">LOLOS</span>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>Format Proposal</td>
+                                    <td style="text-align: center;"><span class="badge badge-green">✓ Sesuai</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Kelengkapan BAB</td>
+                                    <td style="text-align: center;"><span class="badge badge-green">✓ Lengkap</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Jumlah Halaman</td>
+                                    <td style="text-align: center;"><span class="badge badge-green">✓ 15 hal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Daftar Pustaka</td>
+                                    <td style="text-align: center;"><span class="badge badge-green">✓ Ada</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: Substantif Review -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📊 Penilaian Substantif</div>
+                        <div
+                            style="text-align: center; padding: 20px; background: #e8f5e9; border: 2px solid #333; margin-bottom: 15px;">
+                            <div style="font-size: 36px; font-weight: bold;">87.0</div>
+                            <div style="font-size: 14px; color: #666;">Total Score</div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Kriteria</th>
+                                    <th>Bobot</th>
+                                    <th>Skor</th>
+                                    <th>Weighted</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Kreativitas</td>
+                                    <td>30%</td>
+                                    <td>90</td>
+                                    <td>27.0</td>
+                                </tr>
+                                <tr>
+                                    <td>Inovasi</td>
+                                    <td>25%</td>
+                                    <td>85</td>
+                                    <td>21.25</td>
+                                </tr>
+                                <tr>
+                                    <td>Kebermanfaatan</td>
+                                    <td>25%</td>
+                                    <td>88</td>
+                                    <td>22.0</td>
+                                </tr>
+                                <tr>
+                                    <td>Kelayakan</td>
+                                    <td>20%</td>
+                                    <td>84</td>
+                                    <td>16.8</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #ddd;">
+                                    <td colspan="3"><strong>Total</strong></td>
+                                    <td><strong>87.0</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Catatan -->
+            <div class="box">
+                <div class="box-title">📝 Catatan Reviewer</div>
+                <div style="padding: 15px; background: #f5f5f5; border: 2px solid #333; line-height: 1.8;">
+                    <strong>Kelebihan:</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Ide sangat kreatif dan inovatif</li>
+                        <li>Metodologi pelaksanaan terstruktur dengan baik</li>
+                        <li>Analisis kebutuhan cukup mendalam</li>
+                    </ul>
+
+                    <strong>Saran Perbaikan:</strong>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Perlu ditambahkan analisis risiko</li>
+                        <li>Timeline dapat lebih detail</li>
+                    </ul>
+
+                    <strong>Kesimpulan:</strong><br>
+                    Proposal layak untuk dilanjutkan ke tahap berikutnya dengan perbaikan minor.
+                </div>
+            </div>
+
+            <!-- Review Info -->
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; color: #666; font-size: 14px;">
+                    <div>
+                        <strong>Reviewer:</strong> Dr. Siti Nurhaliza, M.T.<br>
+                        <strong>Reviewed at:</strong> 2026-02-05 14:30
+                    </div>
+                    <div style="text-align: right;">
+                        <strong>Status:</strong> <span class="badge badge-green">COMPLETED</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

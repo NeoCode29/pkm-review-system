@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewer Assignments | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item active">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="reviewer-list.html">Reviewers</a> / <a href="reviewer-detail.html">Dr. Siti Nurhaliza, M.T.</a>
+                / Penugasan
+            </div>
+
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Daftar Penugasan Reviewer</div>
+                <div>
+                    <a href="reviewer-detail.html" class="button">← Kembali</a>
+                    <a href="assign-proposal.html" class="button button-primary">+ Assign Proposals</a>
+                </div>
+            </div>
+
+            <!-- Reviewer Info -->
+            <div class="box" style="background: #e3f2fd;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong style="font-size: 18px;">Dr. Siti Nurhaliza, M.T.</strong><br>
+                        <span style="color: #666;">NIDN: 0123456789 | Teknik Informatika</span>
+                    </div>
+                    <div class="grid-3col" style="gap: 10px;">
+                        <div class="stat-box" style="padding: 10px;">
+                            <div class="number" style="font-size: 20px;">5</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-box" style="padding: 10px; background: #e8f5e9;">
+                            <div class="number" style="font-size: 20px;">3</div>
+                            <div class="stat-label">Done</div>
+                        </div>
+                        <div class="stat-box" style="padding: 10px; background: #fff9c4;">
+                            <div class="number" style="font-size: 20px;">2</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="box">
+                <div class="filter-bar">
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0; width: 180px;">
+                            <option>Semua Status</option>
+                            <option>Pending</option>
+                            <option>In Progress</option>
+                            <option>Completed</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari judul proposal..." style="margin: 0;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Table -->
+            <div class="box">
+                <div class="box-title">📋 Daftar Penugasan (5 assignments)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Judul Proposal</th>
+                            <th>Jenis PKM</th>
+                            <th>Role</th>
+                            <th>Assigned</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e8f5e9;">
+                            <td>Tim Inovasi Digital</td>
+                            <td>Aplikasi AR untuk Pembelajaran</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge">R1</span></td>
+                            <td>2026-01-25</td>
+                            <td><span class="badge badge-green">COMPLETED</span></td>
+                            <td>
+                                <a href="review-detail.html" class="button button-sm">Lihat Detail</a>
+                            </td>
+                        </tr>
+                        <tr style="background: #e8f5e9;">
+                            <td>Tim Green Tech</td>
+                            <td>IoT Monitoring Pertanian</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td><span class="badge">R1</span></td>
+                            <td>2026-01-28</td>
+                            <td><span class="badge badge-green">COMPLETED</span></td>
+                            <td>
+                                <a href="review-detail.html" class="button button-sm">Lihat Detail</a>
+                            </td>
+                        </tr>
+                        <tr style="background: #e8f5e9;">
+                            <td>Tim EcoSmart</td>
+                            <td>Sistem Pengelolaan Sampah</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td><span class="badge">R2</span></td>
+                            <td>2026-01-30</td>
+                            <td><span class="badge badge-green">COMPLETED</span></td>
+                            <td>
+                                <a href="review-detail.html" class="button button-sm">Lihat Detail</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim AI Research</td>
+                            <td>Chatbot NLP Bahasa Indonesia</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge">R2</span></td>
+                            <td>2026-02-01</td>
+                            <td><span class="badge badge-yellow">IN PROGRESS</span></td>
+                            <td>
+                                <button class="button button-sm button-danger">Batalkan</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim HealthTech</td>
+                            <td>Aplikasi Monitoring Kesehatan</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge">R1</span></td>
+                            <td>2026-02-03</td>
+                            <td><span class="badge badge-yellow">IN PROGRESS</span></td>
+                            <td>
+                                <button class="button button-sm button-danger">Batalkan</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ Info:</strong> Penugasan yang sudah completed tidak dapat dibatalkan.
+                Review yang sedang in progress dapat dibatalkan oleh admin jika diperlukan.
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

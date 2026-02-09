@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Prodi | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item active">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">Master Data</div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <a href="master-prodi.html" class="tab active">Program Studi</a>
+                <a href="master-jurusan.html" class="tab">Jurusan</a>
+                <a href="master-pkm.html" class="tab">Jenis PKM</a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid-3col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">15</div>
+                    <div class="stat-label">Total Program Studi</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">5</div>
+                    <div class="stat-label">Total Jurusan</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">234</div>
+                    <div class="stat-label">Mahasiswa Terdaftar</div>
+                </div>
+            </div>
+
+            <!-- Actions & Filters -->
+            <div class="box">
+                <div class="filter-bar">
+                    <div>
+                        <label class="label">Filter by Jurusan</label>
+                        <select class="input-field" style="margin: 0; width: 200px;">
+                            <option>All Jurusan</option>
+                            <option>Teknik</option>
+                            <option>Ekonomi & Bisnis</option>
+                            <option>MIPA</option>
+                            <option>Ilmu Sosial</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari prodi..." style="margin: 0;">
+                    </div>
+                    <div style="align-self: flex-end;">
+                        <button class="button button-primary">+ Tambah Program Studi</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="box">
+                <div class="box-title">Daftar Program Studi (15 prodi)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Jurusan</th>
+                            <th>Nama Program Studi</th>
+                            <th>Kode</th>
+                            <th>Mahasiswa</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><span class="badge badge-blue">Teknik</span></td>
+                            <td>Teknik Informatika</td>
+                            <td>TI</td>
+                            <td>85</td>
+                            <td>
+                                <button class="button button-sm">Edit</button>
+                                <button class="button button-sm button-danger">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><span class="badge badge-blue">Teknik</span></td>
+                            <td>Sistem Informasi</td>
+                            <td>SI</td>
+                            <td>62</td>
+                            <td>
+                                <button class="button button-sm">Edit</button>
+                                <button class="button button-sm button-danger">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><span class="badge badge-blue">Teknik</span></td>
+                            <td>Teknik Elektro</td>
+                            <td>TE</td>
+                            <td>45</td>
+                            <td>
+                                <button class="button button-sm">Edit</button>
+                                <button class="button button-sm button-danger">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><span class="badge badge-yellow">Ekonomi & Bisnis</span></td>
+                            <td>Manajemen</td>
+                            <td>MN</td>
+                            <td>38</td>
+                            <td>
+                                <button class="button button-sm">Edit</button>
+                                <button class="button button-sm button-danger">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><span class="badge badge-yellow">Ekonomi & Bisnis</span></td>
+                            <td>Akuntansi</td>
+                            <td>AK</td>
+                            <td>28</td>
+                            <td>
+                                <button class="button button-sm">Edit</button>
+                                <button class="button button-sm button-danger">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <button class="button">← Previous</button>
+                    <span style="margin: 0 15px;">Page 1 of 3</span>
+                    <button class="button">Next →</button>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Note:</strong> Program Studi yang memiliki mahasiswa terdaftar tidak dapat dihapus.
+                Pindahkan mahasiswa ke prodi lain terlebih dahulu.
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

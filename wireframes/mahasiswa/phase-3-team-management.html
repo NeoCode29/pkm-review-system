@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3: Team Management | Mahasiswa Wireframes</title>
+    <link rel="stylesheet" href="pages/styles.css">
+    <style>
+        .page-section {
+            border: 4px solid #f57c00;
+            margin-bottom: 60px;
+            background: #fff;
+        }
+
+        .page-header {
+            background: #f57c00;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-route {
+            background: #fff3e0;
+            padding: 10px 20px;
+            font-family: monospace;
+            border-bottom: 2px solid #f57c00;
+        }
+
+        .page-content {
+            padding: 0;
+        }
+
+        .phase-nav {
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .phase-nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid #fff;
+        }
+
+        .phase-nav a:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        .phase-nav a.active {
+            background: #f57c00;
+            border-color: #f57c00;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 18px;
+            flex: 1;
+        }
+
+        .proposal-card {
+            border: 2px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .proposal-type {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body style="background: #f0f0f0;">
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <div class="phase-title">📐 Mahasiswa Wireframes - Phase 3: Team Management</div>
+        <a href="pages/index.html">Index</a>
+        <a href="phase-1-auth-dashboard.html">Phase 1</a>
+        <a href="phase-2-team-formation.html">Phase 2</a>
+        <a href="phase-3-team-management.html" class="active">Phase 3</a>
+        <a href="phase-4-review-results.html">Phase 4</a>
+    </div>
+
+    <div style="max-width: 1400px; margin: 40px auto; padding: 20px;">
+
+        <div class="alert alert-warning" style="margin-bottom: 20px; background: #fff3e0;">
+            <strong>Phase 3: Team Management</strong><br>
+            Halaman untuk mengedit tim dan upload proposal (original + revised).
+        </div>
+
+        <!-- PENTING: Sistem Proposal -->
+        <div class="box" style="background: #e3f2fd; border-color: #1565c0; margin-bottom: 40px;">
+            <div class="box-title" style="color: #1565c0;">📋 Sistem Proposal PKM (Sesuai PRD)</div>
+            <div class="grid-2col">
+                <div>
+                    <h4 style="color: #1565c0;">📄 Proposal Original</h4>
+                    <ul style="margin: 10px 0 0 20px; color: #333;">
+                        <li>Proposal pertama yang diupload</li>
+                        <li><strong>Direview oleh 2 reviewer</strong></li>
+                        <li>Toggle: "Upload Proposal"</li>
+                        <li>Status: Draft → Submitted → Under Review → Reviewed</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #f57c00;">📄 Proposal Revised</h4>
+                    <ul style="margin: 10px 0 0 20px; color: #333;">
+                        <li>Proposal revisi/perbaikan</li>
+                        <li><strong>TIDAK direview (dokumentasi saja)</strong></li>
+                        <li>Toggle: "Upload Ulang"</li>
+                        <li>Status: Draft → Submitted → Sudah di Revisi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 1: EDIT TEAM ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 1: Edit Team</div>
+            <div class="page-route">Route: /mahasiswa/teams/:teamId/edit</div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso (123456789012) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item">👥 Tim Saya</a>
+                        <a href="#" class="sidebar-item active">✏️ Edit Tim</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="breadcrumb"><a href="#">Dashboard</a> / <a href="#">Tim Saya</a> / Edit Tim</div>
+                        <div class="page-title">Edit Data Tim</div>
+
+                        <div class="alert alert-info">
+                            <strong>ℹ️ Informasi:</strong> Semua anggota tim memiliki hak yang sama untuk mengedit data
+                            tim.
+                        </div>
+
+                        <div class="box" style="max-width: 800px;">
+                            <div class="box-title">📝 Data Tim</div>
+
+                            <div class="form-group">
+                                <label class="label">Nama Tim <span class="required">*</span></label>
+                                <input type="text" class="input-field" value="Tim Inovasi Digital">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Judul Proposal <span class="required">*</span></label>
+                                <input type="text" class="input-field" value="Aplikasi AR untuk Pembelajaran Sains">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Jenis PKM <span class="required">*</span></label>
+                                <select class="input-field">
+                                    <option selected>PKM-KC (Karsa Cipta)</option>
+                                    <option>PKM-GT (Gagasan Tertulis)</option>
+                                </select>
+                            </div>
+
+                            <hr class="divider">
+
+                            <div class="box-title">👨‍🏫 Dosen Pembimbing <span class="required">*</span></div>
+                            <div class="alert alert-warning">
+                                <strong>⚠️ Wajib Diisi!</strong> Dosen pembimbing harus diisi sebelum dapat upload
+                                proposal original.
+                            </div>
+                            <div class="grid-2col">
+                                <div class="form-group">
+                                    <label class="label">Nama Dosen <span class="required">*</span></label>
+                                    <input type="text" class="input-field" value="Dr. Ahmad Fauzi, M.Kom">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label">NIDN <span class="required">*</span></label>
+                                    <input type="text" class="input-field" value="0123456789">
+                                </div>
+                            </div>
+
+                            <div
+                                style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #e8f5e9; border: 2px solid #388e3c;">
+                                <span style="color: #388e3c; font-size: 20px;">✓</span>
+                                <span style="color: #388e3c;"><strong>Data Dosen Pembimbing Lengkap</strong></span>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                                <a href="#" class="button">← Kembali</a>
+                                <button class="button button-primary">💾 Simpan Perubahan</button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2A: UPLOAD PROPOSAL ORIGINAL ==================== -->
+        <div class="page-section" style="border-color: #1565c0;">
+            <div class="page-header" style="background: #1565c0;">📄 Page 2A: Upload Proposal Original</div>
+            <div class="page-route" style="background: #e3f2fd; border-color: #1565c0;">
+                Route: /mahasiswa/teams/:teamId/proposal<br>
+                <strong>Kondisi:</strong> Toggle "Upload Proposal" = ON, belum ada file
+            </div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">📤 Upload Proposal</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Upload Proposal Original</div>
+
+                        <div class="grid-2col">
+                            <div>
+                                <div class="box">
+                                    <div class="box-title">📋 Informasi Tim</div>
+                                    <table style="width: 100%; font-size: 14px;">
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Nama Tim:</td>
+                                            <td><strong>Tim Inovasi Digital</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Jenis PKM:</td>
+                                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Anggota:</td>
+                                            <td>5 orang <span class="badge badge-green">✓</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Dosen Pembimbing:</td>
+                                            <td>Dr. Ahmad Fauzi <span class="badge badge-green">✓</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="box" style="border-color: #1565c0;">
+                                    <div class="box-title" style="color: #1565c0;">📤 Upload Proposal Original</div>
+                                    <div
+                                        style="border: 3px dashed #1565c0; padding: 40px; text-align: center; background: #f5f5f5;">
+                                        <div style="font-size: 48px;">📄</div>
+                                        <div style="font-size: 18px; font-weight: bold; color: #1565c0;">Klik atau drag
+                                            file ke sini</div>
+                                        <p style="color: #666;">Format: PDF | Max: 10 MB</p>
+                                        <button class="button button-primary" style="margin-top: 10px;">📁 Pilih
+                                            File</button>
+                                    </div>
+                                    <button class="button button-primary" style="width: 100%; margin-top: 20px;">📤
+                                        Upload Proposal Original</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="box">
+                                    <div class="box-title">📋 Persyaratan</div>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div
+                                            style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #e8f5e9;">
+                                            <span style="color: #388e3c;">✓</span> File format PDF
+                                        </div>
+                                        <div
+                                            style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #e8f5e9;">
+                                            <span style="color: #388e3c;">✓</span> Max 10 MB
+                                        </div>
+                                        <div
+                                            style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #e8f5e9;">
+                                            <span style="color: #388e3c;">✓</span> Min 3 anggota
+                                        </div>
+                                        <div
+                                            style="display: flex; align-items: center; gap: 10px; padding: 8px; background: #e8f5e9;">
+                                            <span style="color: #388e3c;">✓</span> Dosen pembimbing terisi
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <strong>ℹ️ Info:</strong> Proposal original akan direview oleh 2 reviewer setelah
+                                    admin buka periode review.
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2B: VIEW PROPOSAL + TOGGLE REVISI OFF ==================== -->
+        <div class="page-section" style="border-color: #388e3c;">
+            <div class="page-header" style="background: #388e3c;">📄 Page 2B: Proposal Original Reviewed (Toggle Revisi
+                OFF)</div>
+            <div class="page-route" style="background: #e8f5e9; border-color: #388e3c;">
+                Route: /mahasiswa/teams/:teamId/proposal<br>
+                <strong>Kondisi:</strong> Proposal original REVIEWED, Toggle "Upload Ulang" = OFF
+            </div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">📄 Proposal</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Proposal Tim</div>
+
+                        <!-- Status Overview -->
+                        <div class="grid-2col" style="margin-bottom: 20px;">
+                            <div class="stat-box" style="background: #e8f5e9; border: 2px solid #388e3c;">
+                                <div class="number" style="color: #388e3c;">REVIEWED</div>
+                                <div class="stat-label">Proposal Original</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff3e0; border: 2px solid #f57c00;">
+                                <div class="number" style="color: #f57c00;">DRAFT</div>
+                                <div class="stat-label">Proposal Revised</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2col">
+                            <!-- Left: Original -->
+                            <div class="proposal-card" style="border-color: #388e3c; background: #f9fff9;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                    <span class="proposal-type" style="color: #388e3c;">📄 Proposal Original</span>
+                                    <span class="badge badge-green">✓ Reviewed</span>
+                                </div>
+
+                                <div
+                                    style="padding: 15px; border: 2px solid #388e3c; background: #e8f5e9; margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <span style="font-size: 30px;">📄</span>
+                                        <div style="flex: 1;">
+                                            <strong>Proposal_Original.pdf</strong>
+                                            <p style="font-size: 12px; color: #666;">5 Feb 2026 | 2.3 MB</p>
+                                        </div>
+                                        <a href="#" class="button button-sm">📥 Download</a>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="button button-primary" style="width: 100%; text-align: center;">
+                                    📊 Lihat Hasil Review
+                                </a>
+                            </div>
+
+                            <!-- Right: Revised (Locked) -->
+                            <div class="proposal-card" style="border-color: #ccc; background: #f5f5f5;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                    <span class="proposal-type" style="color: #999;">📄 Proposal Revised</span>
+                                    <span class="badge badge-gray">🔒 Locked</span>
+                                </div>
+
+                                <div class="alert alert-warning" style="margin-bottom: 0;">
+                                    <strong>⚠️ Toggle "Upload Ulang" = OFF</strong><br>
+                                    <span style="font-size: 14px;">Admin belum membuka periode upload revisi.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2C: UPLOAD REVISI (Toggle ON) ==================== -->
+        <div class="page-section" style="border-color: #f57c00;">
+            <div class="page-header" style="background: #f57c00;">📄 Page 2C: Upload Proposal Revised (Toggle Revisi ON)
+            </div>
+            <div class="page-route" style="background: #fff3e0; border-color: #f57c00;">
+                Route: /mahasiswa/teams/:teamId/proposal<br>
+                <strong>Kondisi:</strong> Proposal original REVIEWED, Toggle "Upload Ulang" = ON
+            </div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">📤 Upload Revisi</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Upload Proposal Revisi</div>
+
+                        <!-- Banner -->
+                        <div class="alert alert-warning" style="margin-bottom: 20px;">
+                            <div>
+                                <div style="font-size: 14px; color: #666;">PERIODE REVISI DIBUKA</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #f57c00;">📤 Upload Revisi
+                                    Tersedia</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2col">
+                            <!-- Left: Original (View Only) -->
+                            <div class="proposal-card" style="border-color: #388e3c; background: #f9fff9;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                    <span class="proposal-type" style="color: #388e3c;">📄 Proposal Original</span>
+                                    <span class="badge badge-green">✓ Reviewed</span>
+                                </div>
+
+                                <div style="padding: 15px; border: 2px solid #388e3c; background: #e8f5e9;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <span style="font-size: 30px;">📄</span>
+                                        <div style="flex: 1;">
+                                            <strong>Proposal_Original.pdf</strong>
+                                            <p style="font-size: 12px; color: #666;">5 Feb 2026 | Reviewed</p>
+                                        </div>
+                                        <div>
+                                            <a href="#" class="button button-sm">📥</a>
+                                            <a href="#" class="button button-sm button-primary">📊</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                                    ℹ️ Gunakan hasil review untuk perbaikan.
+                                </p>
+                            </div>
+
+                            <!-- Right: Upload Revised -->
+                            <div class="proposal-card" style="border-color: #f57c00; background: #fffbf5;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                                    <span class="proposal-type" style="color: #f57c00;">📄 Proposal Revised</span>
+                                    <span class="badge badge-yellow">Draft</span>
+                                </div>
+
+                                <div
+                                    style="border: 3px dashed #f57c00; padding: 40px; text-align: center; background: #fff9c4; margin-bottom: 15px;">
+                                    <div style="font-size: 48px;">📄</div>
+                                    <div style="font-size: 16px; font-weight: bold; color: #f57c00;">Upload Proposal
+                                        Revisi</div>
+                                    <button class="button"
+                                        style="margin-top: 10px; border-color: #f57c00; color: #f57c00;">📁 Pilih
+                                        File</button>
+                                </div>
+
+                                <button class="button button-primary"
+                                    style="width: 100%; background: #f57c00; border-color: #f57c00;">
+                                    📤 Upload Revised
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info" style="margin-top: 20px;">
+                            <strong>ℹ️ Catatan:</strong> Proposal revised TIDAK akan direview lagi. Hanya untuk
+                            dokumentasi perbaikan.
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="box" style="background: #e8f5e9; border-color: #388e3c;">
+            <div class="box-title" style="color: #388e3c;">✅ Phase 3 Selesai</div>
+            <p>Phase 3 mencakup halaman Team Management dengan sistem 2 proposal:</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>Edit Team</strong> - Edit data tim, dosen pembimbing wajib sebelum upload</li>
+                <li><strong>Upload Proposal Original</strong> - Proposal pertama yang akan direview (Toggle "Upload
+                    Proposal")</li>
+                <li><strong>View Proposal</strong> - Lihat status kedua proposal dan hasil review</li>
+                <li><strong>Upload Proposal Revised</strong> - Revisi untuk dokumentasi, TIDAK direview (Toggle "Upload
+                    Ulang")</li>
+            </ul>
+            <a href="phase-4-review-results.html" class="button button-primary">Lanjut ke Phase 4: Review Results →</a>
+        </div>
+
+    </div>
+</body>
+
+</html>

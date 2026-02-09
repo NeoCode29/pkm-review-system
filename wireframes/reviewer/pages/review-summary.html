@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Review | PKM Review - Reviewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <h1>📐 PKM Review - Reviewer</h1>
+        <div class="user-info">Dr. Ahmad Fauzi, M.Kom (NIDN: 0012345678) | <a href="login.html">Logout</a></div>
+    </nav>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <h3>Menu Reviewer</h3>
+            <a href="dashboard.html" class="sidebar-item">🏠 Dashboard</a>
+            <a href="proposal-list.html" class="sidebar-item active">📋 Daftar Proposal</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a> / <a href="proposal-list.html">Daftar Proposal</a> / Hasil Review
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="page-title" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">Hasil Review
+                </div>
+                <span class="badge badge-green" style="font-size: 14px;">✓ Review Tersubmit</span>
+            </div>
+
+            <!-- Success Alert -->
+            <div class="alert alert-success">
+                <strong>✅ Review berhasil disubmit!</strong><br>
+                <span style="font-size: 14px;">Review Anda telah tersimpan. Hasil ini dapat diedit selama fase review
+                    masih dibuka oleh admin.</span>
+            </div>
+
+            <!-- Proposal Info -->
+            <div class="box">
+                <div class="box-title">📄 Informasi Proposal</div>
+                <div class="grid-2col">
+                    <div>
+                        <p><strong>Tim:</strong> Tim Inovasi Digital</p>
+                        <p><strong>Judul:</strong> Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</p>
+                        <p><strong>Jenis PKM:</strong> <span class="badge badge-blue">PKM-KC</span></p>
+                    </div>
+                    <div>
+                        <p><strong>Dosen Pembimbing:</strong> Dr. Ir. Bambang Pratama, M.T.</p>
+                        <p><strong>Jumlah Anggota:</strong> 5 orang</p>
+                        <p><strong>Tanggal Review:</strong> 8 Februari 2026, 14:35</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Penilaian Administratif -->
+                <div class="box">
+                    <div class="box-title">📋 Penilaian Administratif</div>
+
+                    <div class="stat-box" style="margin-bottom: 15px; background: #ffebee;">
+                        <div class="number" style="color: #d32f2f;">2</div>
+                        <div class="stat-label">Total Kesalahan</div>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <strong>Kesalahan yang Ditemukan:</strong>
+                    </div>
+
+                    <div class="checklist-item checked" style="background: #ffebee;">
+                        <span style="color: #d32f2f; margin-right: 10px;">✗</span>
+                        <div>
+                            <strong>Jumlah halaman tidak sesuai</strong><br>
+                            <span style="font-size: 12px; color: #666;">Maksimal 15 halaman (termasuk lampiran)</span>
+                        </div>
+                    </div>
+                    <div class="checklist-item checked" style="background: #ffebee;">
+                        <span style="color: #d32f2f; margin-right: 10px;">✗</span>
+                        <div>
+                            <strong>Struktur proposal tidak lengkap</strong><br>
+                            <span style="font-size: 12px; color: #666;">Harus ada: Abstract, Pendahuluan, Tinjauan
+                                Pustaka, Metode, dll</span>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div>
+                        <strong>Catatan:</strong>
+                        <p
+                            style="margin-top: 10px; padding: 10px; background: #f5f5f5; border-left: 3px solid #f57c00;">
+                            Halaman melebihi batas maksimal. Struktur proposal perlu dilengkapi bagian tinjauan pustaka.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Penilaian Substantif -->
+                <div class="box">
+                    <div class="box-title">📊 Penilaian Substantif</div>
+
+                    <div class="stat-box" style="margin-bottom: 15px; background: #fff3e0;">
+                        <div class="number" style="color: #f57c00;">625</div>
+                        <div class="stat-label">Total Nilai</div>
+                    </div>
+
+                    <table class="table" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th>Kriteria</th>
+                                <th style="width: 50px;">Bobot</th>
+                                <th style="width: 50px;">Skor</th>
+                                <th style="width: 60px;">Nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Gagasan - Orisinalitas</td>
+                                <td>15</td>
+                                <td>6</td>
+                                <td><strong>90</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Gagasan - Penyajian Rumusan</td>
+                                <td>15</td>
+                                <td>7</td>
+                                <td><strong>105</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Gagasan - Perbandingan Riset</td>
+                                <td>10</td>
+                                <td>5</td>
+                                <td><strong>50</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Kesesuaian Metode</td>
+                                <td>15</td>
+                                <td>7</td>
+                                <td><strong>105</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Potensi - Kontribusi Ilmu</td>
+                                <td>10</td>
+                                <td>6</td>
+                                <td><strong>60</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Potensi - Sintesis Literatur</td>
+                                <td>15</td>
+                                <td>6</td>
+                                <td><strong>90</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Potensi - Kemanfaatan</td>
+                                <td>10</td>
+                                <td>7</td>
+                                <td><strong>70</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Penjadwalan Kegiatan</td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td><strong>25</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Penyusunan Anggaran</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td><strong>30</strong></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: #fff3e0;">
+                                <td><strong>TOTAL</strong></td>
+                                <td><strong>100</strong></td>
+                                <td>-</td>
+                                <td><strong style="color: #f57c00;">625</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <hr class="divider">
+
+                    <div>
+                        <strong>Catatan:</strong>
+                        <p
+                            style="margin-top: 10px; padding: 10px; background: #f5f5f5; border-left: 3px solid #f57c00;">
+                            Proposal memiliki ide yang bagus dan metodologi yang tepat. Perlu perbaikan pada bagian
+                            tinjauan pustaka.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="box" style="background: #fff3e0; border-color: #f57c00;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>⚠️ Review dapat diedit selama fase review masih dibuka</strong><br>
+                        <span style="font-size: 12px; color: #666;">Setelah admin menutup fase review, hasil menjadi
+                            FINAL dan tidak bisa diubah.</span>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="review-page.html" class="button button-primary">✏️ Edit Review</a>
+                        <a href="proposal-list.html" class="button">← Kembali ke Daftar</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Tim | Mahasiswa PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Mahasiswa</h1>
+        </div>
+        <div class="user-info">
+            Budi Santoso (123456789012) | <a href="login.html">Logout</a> |
+            <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Mahasiswa</h3>
+            <a href="dashboard.html" class="sidebar-item">🏠 Dashboard</a>
+            <a href="browse-teams.html" class="sidebar-item active">🔍 Cari Tim</a>
+            <a href="create-team.html" class="sidebar-item">➕ Buat Tim</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">Cari Tim untuk Bergabung</div>
+
+            <!-- Info Alert -->
+            <div class="alert alert-info">
+                <strong>ℹ️ Informasi:</strong> Anda hanya dapat bergabung dengan <strong>1 tim</strong>.
+                Pilih tim yang sesuai dengan minat dan keahlian Anda.
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="box">
+                <div class="box-title">🔍 Filter Pencarian</div>
+                <div class="filter-bar">
+                    <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                        <label class="label">Cari Tim</label>
+                        <input type="text" class="input-field" placeholder="Nama tim atau judul proposal..."
+                            style="margin-bottom: 0;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Jenis PKM</label>
+                        <select class="input-field" style="margin-bottom: 0; width: 150px;">
+                            <option value="">Semua</option>
+                            <option value="PKM-KC">PKM-KC</option>
+                            <option value="PKM-GT">PKM-GT</option>
+                            <option value="PKM-K">PKM-K</option>
+                            <option value="PKM-PM">PKM-PM</option>
+                            <option value="PKM-AI">PKM-AI</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Jurusan</label>
+                        <select class="input-field" style="margin-bottom: 0; width: 180px;">
+                            <option value="">Semua Jurusan</option>
+                            <option value="1">Teknik Elektro</option>
+                            <option value="2">Teknik Sipil</option>
+                            <option value="3">Teknik Mesin</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Slot Tersedia</label>
+                        <select class="input-field" style="margin-bottom: 0; width: 150px;">
+                            <option value="">Semua</option>
+                            <option value="1">Min. 1 slot</option>
+                            <option value="2">Min. 2 slot</option>
+                        </select>
+                    </div>
+                    <button class="button button-primary" style="margin: 0; align-self: flex-end;">
+                        🔍 Cari
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="color: #666;">Menampilkan <strong>8 tim</strong> yang tersedia</span>
+                <div>
+                    <label style="font-size: 14px; margin-right: 10px;">Urutkan:</label>
+                    <select class="input-field" style="width: 180px; margin: 0; display: inline-block;">
+                        <option>Terbaru</option>
+                        <option>Slot Terbanyak</option>
+                        <option>Nama A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Team Cards Grid -->
+            <div class="grid-2col">
+                <!-- Team Card 1 -->
+                <div class="team-card">
+                    <div class="team-card-header">
+                        <div>
+                            <div class="team-card-title">Tim Inovasi Digital</div>
+                            <div class="team-card-subtitle">Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</div>
+                        </div>
+                        <span class="badge badge-blue">PKM-KC</span>
+                    </div>
+                    <div class="team-card-info">
+                        <div><span class="team-card-info-label">Ketua:</span> Ahmad Fauzi</div>
+                        <div><span class="team-card-info-label">Anggota:</span> <strong>3/5</strong> (butuh 2 lagi)
+                        </div>
+                        <div><span class="team-card-info-label">Prodi:</span> T. Informatika</div>
+                        <div><span class="team-card-info-label">Status:</span>
+                            <span class="badge badge-green" style="font-size: 10px;">✓ Terbuka</span>
+                        </div>
+                    </div>
+                    <div class="team-card-actions">
+                        <a href="#" class="button button-sm" onclick="showTeamPreview()">👁️ Lihat Detail</a>
+                        <a href="#" class="button button-sm button-primary" onclick="showJoinModal()">📨 Request
+                            Bergabung</a>
+                    </div>
+                </div>
+
+                <!-- Team Card 2 -->
+                <div class="team-card">
+                    <div class="team-card-header">
+                        <div>
+                            <div class="team-card-title">Tim Green Tech</div>
+                            <div class="team-card-subtitle">Smart Agriculture IoT untuk Petani Modern</div>
+                        </div>
+                        <span class="badge badge-yellow">PKM-GT</span>
+                    </div>
+                    <div class="team-card-info">
+                        <div><span class="team-card-info-label">Ketua:</span> Sarah Wijaya</div>
+                        <div><span class="team-card-info-label">Anggota:</span> <strong>4/5</strong> (butuh 1 lagi)
+                        </div>
+                        <div><span class="team-card-info-label">Prodi:</span> T. Elektro</div>
+                        <div><span class="team-card-info-label">Status:</span>
+                            <span class="badge badge-green" style="font-size: 10px;">✓ Terbuka</span>
+                        </div>
+                    </div>
+                    <div class="team-card-actions">
+                        <a href="#" class="button button-sm">👁️ Lihat Detail</a>
+                        <a href="#" class="button button-sm button-primary">📨 Request Bergabung</a>
+                    </div>
+                </div>
+
+                <!-- Team Card 3 -->
+                <div class="team-card">
+                    <div class="team-card-header">
+                        <div>
+                            <div class="team-card-title">Tim AI Research</div>
+                            <div class="team-card-subtitle">Chatbot NLP untuk Konsultasi Kesehatan Mental</div>
+                        </div>
+                        <span class="badge badge-blue">PKM-KC</span>
+                    </div>
+                    <div class="team-card-info">
+                        <div><span class="team-card-info-label">Ketua:</span> Rini Putri</div>
+                        <div><span class="team-card-info-label">Anggota:</span> <strong>3/5</strong> (butuh 2 lagi)
+                        </div>
+                        <div><span class="team-card-info-label">Prodi:</span> T. Informatika</div>
+                        <div><span class="team-card-info-label">Status:</span>
+                            <span class="badge badge-green" style="font-size: 10px;">✓ Terbuka</span>
+                        </div>
+                    </div>
+                    <div class="team-card-actions">
+                        <a href="#" class="button button-sm">👁️ Lihat Detail</a>
+                        <a href="#" class="button button-sm button-primary">📨 Request Bergabung</a>
+                    </div>
+                </div>
+
+                <!-- Team Card 4 -->
+                <div class="team-card">
+                    <div class="team-card-header">
+                        <div>
+                            <div class="team-card-title">Tim Eco Builder</div>
+                            <div class="team-card-subtitle">Material Bangunan Ramah Lingkungan dari Limbah</div>
+                        </div>
+                        <span class="badge" style="background: #e8f5e9; border-color: #388e3c;">PKM-K</span>
+                    </div>
+                    <div class="team-card-info">
+                        <div><span class="team-card-info-label">Ketua:</span> Bambang Sutopo</div>
+                        <div><span class="team-card-info-label">Anggota:</span> <strong>3/5</strong> (butuh 2 lagi)
+                        </div>
+                        <div><span class="team-card-info-label">Prodi:</span> T. Sipil</div>
+                        <div><span class="team-card-info-label">Status:</span>
+                            <span class="badge badge-green" style="font-size: 10px;">✓ Terbuka</span>
+                        </div>
+                    </div>
+                    <div class="team-card-actions">
+                        <a href="#" class="button button-sm">👁️ Lihat Detail</a>
+                        <a href="#" class="button button-sm button-primary">📨 Request Bergabung</a>
+                    </div>
+                </div>
+
+                <!-- Team Card 5 - Already Requested -->
+                <div class="team-card" style="background: #f5f5f5;">
+                    <div class="team-card-header">
+                        <div>
+                            <div class="team-card-title">Tim Smart Campus</div>
+                            <div class="team-card-subtitle">Sistem Monitoring Energi Kampus Berbasis IoT</div>
+                        </div>
+                        <span class="badge badge-yellow">PKM-GT</span>
+                    </div>
+                    <div class="team-card-info">
+                        <div><span class="team-card-info-label">Ketua:</span> Dedi Kurniawan</div>
+                        <div><span class="team-card-info-label">Anggota:</span> <strong>4/5</strong> (butuh 1 lagi)
+                        </div>
+                        <div><span class="team-card-info-label">Prodi:</span> T. Elektro</div>
+                        <div><span class="team-card-info-label">Status:</span>
+                            <span class="badge badge-green" style="font-size: 10px;">✓ Terbuka</span>
+                        </div>
+                    </div>
+                    <div class="team-card-actions">
+                        <a href="#" class="button button-sm">👁️ Lihat Detail</a>
+                        <span class="badge badge-yellow" style="padding: 8px 16px;">⏳ Request Terkirim</span>
+                    </div>
+                </div>
+
+                <!-- Team Card 6 - Full Team -->
+                <div class="team-card" style="opacity: 0.7;">
+                    <div class="team-card-header">
+                        <div>
+                            <div class="team-card-title">Tim FinTech Solution</div>
+                            <div class="team-card-subtitle">Aplikasi Manajemen Keuangan untuk UMKM</div>
+                        </div>
+                        <span class="badge badge-blue">PKM-KC</span>
+                    </div>
+                    <div class="team-card-info">
+                        <div><span class="team-card-info-label">Ketua:</span> Linda Permata</div>
+                        <div><span class="team-card-info-label">Anggota:</span> <strong>5/5</strong> (Penuh)</div>
+                        <div><span class="team-card-info-label">Prodi:</span> T. Informatika</div>
+                        <div><span class="team-card-info-label">Status:</span>
+                            <span class="badge badge-red" style="font-size: 10px;">✗ Penuh</span>
+                        </div>
+                    </div>
+                    <div class="team-card-actions">
+                        <a href="#" class="button button-sm">👁️ Lihat Detail</a>
+                        <span class="badge badge-gray" style="padding: 8px 16px;">Tim Sudah Penuh</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="button button-sm">← Prev</button>
+                <button class="button button-sm button-primary">1</button>
+                <button class="button button-sm">2</button>
+                <button class="button button-sm">3</button>
+                <button class="button button-sm">Next →</button>
+            </div>
+
+            <!-- CTA -->
+            <div class="box" style="background: #e3f2fd; text-align: center; margin-top: 30px;">
+                <p style="margin-bottom: 15px;">Tidak menemukan tim yang cocok? Buat tim Anda sendiri!</p>
+                <a href="create-team.html" class="button button-primary">➕ Buat Tim Baru</a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Join Request Modal (Sample) -->
+    <div class="modal-overlay" id="joinModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">📨 Kirim Request Bergabung</div>
+
+            <div class="box" style="background: #f5f5f5; margin-bottom: 20px;">
+                <strong>Tim Inovasi Digital</strong><br>
+                <span style="color: #666;">Aplikasi AR untuk Pembelajaran Sains</span>
+            </div>
+
+            <div class="form-group">
+                <label class="label">Pesan Perkenalan (opsional)</label>
+                <textarea class="input-field" rows="4"
+                    placeholder="Perkenalkan diri Anda dan jelaskan mengapa tertarik bergabung dengan tim ini..."></textarea>
+                <p class="help-text">Pesan ini akan dilihat oleh anggota tim</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="button" onclick="hideJoinModal()">Batal</button>
+                <button class="button button-primary">📨 Kirim Request</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+        function showJoinModal() {
+            document.getElementById('joinModal').style.display = 'flex';
+        }
+        function hideJoinModal() {
+            document.getElementById('joinModal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

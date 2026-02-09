@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Phase 2 - Management Pages | PKM Review Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Navigation Bar */
+        .phase-nav {
+            background: #fff;
+            border-bottom: 3px solid #333;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .phase-nav h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .phase-nav .phase-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .phase-nav .phase-links a {
+            padding: 8px 16px;
+            background: #eee;
+            border: 2px solid #333;
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .phase-nav .phase-links a.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .phase-nav .page-tabs {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .phase-nav .page-tabs button {
+            padding: 8px 16px;
+            background: #fff;
+            border: 2px solid #333;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .phase-nav .page-tabs button:hover {
+            background: #f0f0f0;
+        }
+
+        .phase-nav .page-tabs button.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Main Layout */
+        .page {
+            display: none;
+            min-height: calc(100vh - 120px);
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #f5f5f5;
+            border-right: 2px solid #333;
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .sidebar-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sidebar-item:hover {
+            background: #eee;
+        }
+
+        .sidebar-item.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: #fff;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+
+        /* Components */
+        .box {
+            border: 2px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background: #f0f0f0;
+        }
+
+        .button-primary {
+            background: #333;
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            background: #555;
+        }
+
+        .button-danger {
+            background: #fff;
+            border-color: #d32f2f;
+            color: #d32f2f;
+        }
+
+        .button-danger:hover {
+            background: #ffebee;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th,
+        .table td {
+            border: 2px solid #333;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .table th {
+            background: #ddd;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 2px solid #333;
+            background: #fff;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .badge-green {
+            background: #e8f5e9;
+        }
+
+        .badge-blue {
+            background: #e3f2fd;
+        }
+
+        .badge-yellow {
+            background: #fff9c4;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #333;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border: 3px solid #333;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <h1>📐 PKM Review - Admin Wireframes (Low-Fidelity)</h1>
+
+        <div class="phase-links">
+            <a href="phase-1-core.html">Phase 1: Core</a>
+            <a href="phase-2-management.html" class="active">Phase 2: Management</a>
+            <a href="phase-3-reviewer.html">Phase 3: Reviewer</a>
+            <a href="phase-4-master.html">Phase 4: Master Data</a>
+        </div>
+
+        <div class="page-tabs">
+            <button onclick="showPage('create-reviewer')" class="active">1. Create Reviewer</button>
+            <button onclick="showPage('team-list')">2. Team List</button>
+            <button onclick="showPage('team-detail')">3. Team Detail</button>
+            <button onclick="showPage('team-edit')">4. Team Edit</button>
+            <button onclick="showPage('kriteria-substantif')">5. Kriteria Substantif</button>
+        </div>
+    </div>
+
+    <!-- PAGE 1: CREATE REVIEWER -->
+    <div id="create-reviewer" class="page active">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item active">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0;">Tambah Reviewer Baru</div>
+                <button class="button" onclick="alert('Back to user list')">← Kembali</button>
+            </div>
+
+            <div class="alert alert-info" style="margin-top: 20px;">
+                <strong>Info:</strong> Form ini akan membuat user baru dengan role Reviewer sekaligus profile
+                reviewer-nya.
+            </div>
+
+            <div class="box">
+                <div class="box-title">Data Reviewer</div>
+
+                <div class="form-group">
+                    <label class="label">Nama Lengkap <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Dr. Ahmad Fauzi, M.Kom">
+                </div>
+
+                <div class="grid-2col">
+                    <div class="form-group">
+                        <label class="label">NIDN <span class="required">*</span></label>
+                        <input type="text" class="input-field" placeholder="0123456789">
+                        <div style="font-size: 12px; color: #666; margin-top: -10px;">Must be unique</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">No HP</label>
+                        <input type="tel" class="input-field" placeholder="08123456789">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Email <span class="required">*</span></label>
+                    <input type="email" class="input-field" placeholder="ahmad.fauzi@staff.ac.id">
+                    <div style="font-size: 12px; color: #666; margin-top: -10px;">Must be unique and valid format</div>
+                </div>
+
+                <div class="grid-2col">
+                    <div class="form-group">
+                        <label class="label">Password <span class="required">*</span></label>
+                        <input type="password" class="input-field" placeholder="Min. 8 characters">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">Program Studi <span class="required">*</span></label>
+                        <select class="input-field">
+                            <option>-- Pilih Prodi --</option>
+                            <option>Teknik Informatika</option>
+                            <option>Sistem Informasi</option>
+                            <option>Teknik Elektro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #ddd;">
+                    <button class="button">Batal</button>
+                    <button class="button button-primary">✓ Simpan Reviewer</button>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>Validation Rules:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>NIDN must be unique (check against existing)</li>
+                    <li>Email must be unique and valid format</li>
+                    <li>Password minimum 8 characters</li>
+                    <li>Program Studi must be selected</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: TEAM LIST -->
+    <div id="team-list" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item active">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-title">Manajemen Team</div>
+
+            <!-- Filters -->
+            <div class="box">
+                <div class="box-title">Filters</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 2fr; gap: 15px;">
+                    <div>
+                        <label class="label">Jenis PKM</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>All</option>
+                            <option>PKM-KC</option>
+                            <option>PKM-GT</option>
+                            <option>PKM-K</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>All</option>
+                            <option>DRAFT</option>
+                            <option>SUBMITTED</option>
+                            <option>REVIEWED</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Jurusan</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>All</option>
+                            <option>Teknik</option>
+                            <option>Ekonomi</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Team name or proposal title..."
+                            style="margin: 0;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Table -->
+            <div class="box">
+                <div class="box-title">Team List (45 teams)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama Team</th>
+                            <th>Judul Proposal</th>
+                            <th>Ketua</th>
+                            <th>PKM</th>
+                            <th>Members</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tim Inovasi Digital</td>
+                            <td>Aplikasi AR untuk Pembelajaran</td>
+                            <td>Budi Santoso</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td>5/5</td>
+                            <td><span class="badge badge-green">SUBMITTED</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim Teknologi Hijau</td>
+                            <td>Monitoring IoT Pertanian</td>
+                            <td>Andi Prasetyo</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td>3/5</td>
+                            <td><span class="badge">DRAFT</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim AI Research</td>
+                            <td>Chatbot NLP Bahasa Indonesia</td>
+                            <td>Sarah Widya</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td>4/5</td>
+                            <td><span class="badge badge-green">REVIEWED</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="button">← Previous</button>
+                    <span style="margin: 0 15px;">Page 1 of 5</span>
+                    <button class="button">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: TEAM DETAIL -->
+    <div id="team-detail" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item active">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0;">Detail Team: Tim Inovasi Digital</div>
+                <div>
+                    <button class="button">← Back</button>
+                    <button class="button">Edit Team</button>
+                    <button class="button button-danger">Delete Team</button>
+                </div>
+            </div>
+
+            <div class="grid-2col" style="margin-top: 20px;">
+                <!-- Left Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">Team Info</div>
+                        <div style="line-height: 1.8;">
+                            <strong>Nama Team:</strong> Tim Inovasi Digital<br>
+                            <strong>Judul Proposal:</strong> Aplikasi AR untuk Pembelajaran Interaktif<br>
+                            <strong>Jenis PKM:</strong> <span class="badge badge-blue">PKM-KC</span><br>
+                            <strong>Dosen Pembimbing:</strong> Dr. Ahmad Fauzi, M.Kom<br>
+                            <strong>Open to Join:</strong> No<br>
+                            <strong>Created:</strong> 2026-01-15<br>
+                            <strong>Last Updated:</strong> 2026-02-01
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">Admin Controls</div>
+                        <button class="button button-primary" style="width: 100%; margin: 0 0 10px 0;">Assign
+                            Reviewers</button>
+                        <button class="button" style="width: 100%; margin: 0 0 10px 0;">Override Status</button>
+                        <button class="button button-danger" style="width: 100%; margin: 0;">Delete Team</button>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">Anggota Team (5)</div>
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Budi Santoso</strong> <span class="badge">KETUA</span><br>
+                                    <span style="font-size: 13px; color: #666;">NIM: 123456 | Teknik Informatika</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px;">
+                            <div>
+                                <strong>Andi Prasetyo</strong><br>
+                                <span style="font-size: 13px; color: #666;">NIM: 123457 | Teknik Informatika</span>
+                            </div>
+                        </div>
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px;">
+                            <div>
+                                <strong>Sarah Widya</strong><br>
+                                <span style="font-size: 13px; color: #666;">NIM: 123458 | Sistem Informasi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proposal Awal -->
+                    <div class="box">
+                        <div class="box-title">📄 Proposal Awal (Initial Submission)</div>
+                        <div style="line-height: 1.8;">
+                            <strong>Status:</strong> <span class="badge badge-green">SUBMITTED</span><br>
+                            <strong>Upload Date:</strong> 2026-02-01 14:30<br>
+                            <strong>File Size:</strong> 2.4 MB<br>
+                            <strong>Pages:</strong> 15<br>
+                            <strong>Filename:</strong> PKM_KC_Tim_Inovasi_v1.pdf
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button class="button" style="margin: 5px 5px 0 0;">📥 Download PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- Proposal Revisi -->
+                    <div class="box">
+                        <div class="box-title">📝 Proposal Revisi (Revision Submission)</div>
+                        <div style="line-height: 1.8;">
+                            <strong>Status:</strong> <span class="badge badge-yellow">PENDING</span><br>
+                            <strong>Upload Date:</strong> <em style="color: #999;">Not uploaded yet</em><br>
+                            <strong>Phase Status:</strong> <span class="badge">LOCKED</span>
+                        </div>
+                        <div style="margin-top: 15px; padding: 10px; background: #fff3e0; border: 2px solid #ff9800;">
+                            <strong>Note:</strong> Revision upload will be available during "Upload Revision" phase.
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">Reviews</div>
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px;">
+                            <strong>Reviewer #1:</strong> Dr. Siti Nurhaliza<br>
+                            <span class="badge badge-green">COMPLETED</span>
+                            <button class="button" style="margin: 5px 0 0 0; padding: 6px 12px;">View Detail</button>
+                        </div>
+                        <div style="border: 2px solid #333; padding: 10px;">
+                            <strong>Reviewer #2:</strong> Not assigned<br>
+                            <button class="button button-primary" style="margin: 5px 0 0 0; padding: 6px 12px;">Assign
+                                Reviewer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: TEAM EDIT -->
+    <div id="team-edit" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item active">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0;">Edit Team: Tim Inovasi Digital</div>
+                <button class="button">← Kembali</button>
+            </div>
+
+            <div class="alert alert-warning" style="margin-top: 20px;">
+                <strong>Warning:</strong> Editing team data will not affect submitted proposals. Only metadata and team
+                composition can be changed.
+            </div>
+
+            <div class="grid-2col" style="margin-top: 20px;">
+                <!-- Left Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">Team Information</div>
+
+                        <div class="form-group">
+                            <label class="label">Nama Team <span class="required">*</span></label>
+                            <input type="text" class="input-field" value="Tim Inovasi Digital">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Judul Proposal</label>
+                            <input type="text" class="input-field" value="Aplikasi AR untuk Pembelajaran Interaktif"
+                                disabled>
+                            <div style="font-size: 12px; color: #666; margin-top: -10px;">Cannot edit after submission
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Jenis PKM</label>
+                            <select class="input-field" disabled>
+                                <option>PKM-KC</option>
+                            </select>
+                            <div style="font-size: 12px; color: #666; margin-top: -10px;">Cannot edit after submission
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Dosen Pembimbing <span class="required">*</span></label>
+                            <input type="text" class="input-field" value="Dr. Ahmad Fauzi, M.Kom"
+                                placeholder="Ketik nama dosen pembimbing...">
+                            <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                                Ketik minimal 3 karakter untuk mencari dosen (autocomplete)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">
+                                <input type="checkbox"> Open to Join
+                            </label>
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">Allow other students to request
+                                to join this team</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                        <button class="button">Batal</button>
+                        <button class="button button-primary">✓ Simpan Perubahan</button>
+                        <button class="button button-danger">🗑️ Delete Team</button>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">Team Members (3/5)</div>
+
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Budi Santoso</strong> <span class="badge">KETUA</span><br>
+                                    <span style="font-size: 13px; color: #666;">NIM: 123456 | Teknik Informatika</span>
+                                </div>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Remove</button>
+                            </div>
+                        </div>
+
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Andi Prasetyo</strong><br>
+                                    <span style="font-size: 13px; color: #666;">NIM: 123457 | Teknik Informatika</span>
+                                </div>
+                                <div>
+                                    <button class="button" style="margin: 0; padding: 6px 12px;">Set as Ketua</button>
+                                    <button class="button button-danger"
+                                        style="margin: 0; padding: 6px 12px;">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Sarah Widya</strong><br>
+                                    <span style="font-size: 13px; color: #666;">NIM: 123458 | Sistem Informasi</span>
+                                </div>
+                                <div>
+                                    <button class="button" style="margin: 0; padding: 6px 12px;">Set as Ketua</button>
+                                    <button class="button button-danger"
+                                        style="margin: 0; padding: 6px 12px;">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="button button-primary" style="width: 100%; margin-top: 15px;">+ Add
+                            Member</button>
+
+                        <div class="alert alert-info" style="margin-top: 15px; padding: 10px;">
+                            <strong>Rules:</strong>
+                            <ul style="margin-top: 5px; padding-left: 20px; font-size: 13px;">
+                                <li>Minimum 3 members required</li>
+                                <li>Maximum 5 members allowed</li>
+                                <li>Must have exactly 1 ketua</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: KRITERIA SUBSTANTIF -->
+    <div id="kriteria-substantif" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item active">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-title">Manajemen Kriteria Substantif</div>
+
+            <div class="alert alert-warning">
+                <strong>IMPORTANT:</strong> Total bobot for each PKM type MUST equal exactly 100. Changes will affect
+                all future reviews.
+            </div>
+
+            <!-- PKM Type Selector -->
+            <div class="box">
+                <div class="box-title">Pilih Jenis PKM</div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <select class="input-field" style="margin: 0; max-width: 300px;" id="pkmTypeSelect"
+                        onchange="switchPKMType(this.value)">
+                        <option value="PKM-KC">PKM-KC (Karsa Cipta)</option>
+                        <option value="PKM-GT">PKM-GT (Gagasan Tertulis)</option>
+                        <option value="PKM-K">PKM-K (Kewirausahaan)</option>
+                        <option value="PKM-PM">PKM-PM (Pengabdian Masyarakat)</option>
+                        <option value="PKM-PI">PKM-PI (Penelitian Ilmiah)</option>
+                    </select>
+                    <div>
+                        <span class="badge badge-blue" id="selectedPKMBadge">PKM-KC</span>
+                        Total Kriteria: <strong>4</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kriteria Table for Selected PKM Type -->
+            <div class="box" id="kriteriaBox">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="box-title" style="margin: 0;">Kriteria untuk PKM-KC (Karsa Cipta)</div>
+                    <div style="font-size: 18px; font-weight: bold;">
+                        Total Bobot: <span id="totalBobot" style="color: #2e7d32;">100/100</span> ✓
+                    </div>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Kriteria</th>
+                            <th style="width: 150px;">Bobot (%)</th>
+                            <th style="width: 150px;">Skor Range</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Kreativitas dan Inovasi</td>
+                            <td>
+                                <input type="number" class="input-field" value="30" min="0" max="100" style="margin: 0;"
+                                    onchange="updateTotal()">
+                            </td>
+                            <td>1 - 7</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Kelayakan Teknis</td>
+                            <td>
+                                <input type="number" class="input-field" value="25" min="0" max="100" style="margin: 0;"
+                                    onchange="updateTotal()">
+                            </td>
+                            <td>1 - 7</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Manfaat dan Dampak</td>
+                            <td>
+                                <input type="number" class="input-field" value="25" min="0" max="100" style="margin: 0;"
+                                    onchange="updateTotal()">
+                            </td>
+                            <td>1 - 7</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Kualitas Proposal</td>
+                            <td>
+                                <input type="number" class="input-field" value="20" min="0" max="100" style="margin: 0;"
+                                    onchange="updateTotal()">
+                            </td>
+                            <td>1 - 7</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 15px;">
+                    <button class="button">+ Tambah Kriteria</button>
+                    <button class="button button-primary">✓ Simpan Perubahan</button>
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 15px; padding: 10px;">
+                    <strong>Calculation Preview:</strong><br>
+                    Example: If bobot=30 and skor=6 → nilai = 30 × 6 = 180<br>
+                    Total Nilai = Sum of all (bobot × skor)
+                </div>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="alert alert-warning">
+                <strong>Important Notes:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Total bobot MUST = 100 for each PKM type</li>
+                    <li>Score range is typically 1-7 (but can be customized)</li>
+                    <li>Formula: nilai = bobot × skor</li>
+                    <li>Total Nilai = Sum of all (bobot × skor)</li>
+                    <li>Changes will apply to NEW reviews only, not existing ones</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.querySelectorAll('.page-tabs button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

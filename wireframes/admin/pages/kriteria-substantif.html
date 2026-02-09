@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kriteria Substantif | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item active">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Manajemen Penilaian</div>
+                <a href="add-kriteria-substantif.html" class="button button-primary">+ Tambah Kriteria</a>
+            </div>
+
+            <!-- Tabs for Administratif vs Substantif -->
+            <div class="tabs">
+                <a href="kriteria-administratif.html" class="tab">Kriteria Administratif</a>
+                <a href="kriteria-substantif.html" class="tab active">Kriteria Substantif</a>
+            </div>
+
+            <!-- PKM Type Tabs -->
+            <div class="tabs">
+                <div class="tab active">PKM-KC</div>
+                <div class="tab">PKM-GT</div>
+                <div class="tab">PKM-K</div>
+                <div class="tab">PKM-PM</div>
+                <div class="tab">PKM-PI</div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ PKM-KC (Karsa Cipta)</strong><br>
+                Kreativitas dalam menciptakan karya cipta yang inovatif dan bermanfaat.
+            </div>
+
+            <!-- Kriteria Table -->
+            <div class="box">
+                <div class="box-title">Kriteria Penilaian PKM-KC (4 kriteria)</div>
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th>Nama Kriteria</th>
+                                <th>Deskripsi</th>
+                                <th style="width: 100px;">Bobot</th>
+                                <th style="width: 100px;">Max Skor</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><strong>Kreativitas</strong></td>
+                                <td>Tingkat kreativitas dan kebaruan ide yang diajukan</td>
+                                <td style="text-align: center;"><span class="badge badge-blue">30%</span></td>
+                                <td style="text-align: center;">100</td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><strong>Inovasi</strong></td>
+                                <td>Tingkat inovasi dan solusi yang ditawarkan</td>
+                                <td style="text-align: center;"><span class="badge badge-blue">25%</span></td>
+                                <td style="text-align: center;">100</td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><strong>Kebermanfaatan</strong></td>
+                                <td>Manfaat nyata bagi masyarakat atau pengguna</td>
+                                <td style="text-align: center;"><span class="badge badge-blue">25%</span></td>
+                                <td style="text-align: center;">100</td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><strong>Kelayakan</strong></td>
+                                <td>Kelayakan teknis dan metodologi pelaksanaan</td>
+                                <td style="text-align: center;"><span class="badge badge-blue">20%</span></td>
+                                <td style="text-align: center;">100</td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: #ddd;">
+                                <td colspan="3" style="text-align: right;"><strong>Total Bobot:</strong></td>
+                                <td style="text-align: center;"><strong><span
+                                            class="badge badge-green">100%</span></strong>
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-title">📊 Preview Penilaian</div>
+                <div style="background: #f5f5f5; padding: 15px; border: 2px dashed #333;">
+                    <strong>Contoh perhitungan skor:</strong><br><br>
+                    Kreativitas: 85 × 30% = 25.5<br>
+                    Inovasi: 80 × 25% = 20.0<br>
+                    Kebermanfaatan: 90 × 25% = 22.5<br>
+                    Kelayakan: 85 × 20% = 17.0<br>
+                    <hr style="margin: 10px 0;">
+                    <strong>Total Score: 85.0 / 100</strong>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Rules:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Total bobot untuk setiap jenis PKM harus 100%</li>
+                    <li>Setiap jenis PKM minimal memiliki 1 kriteria</li>
+                    <li>Kriteria yang sudah digunakan tidak dapat dihapus</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

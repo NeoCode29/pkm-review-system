@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Review | Mahasiswa PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .reviewer-card {
+            border: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .reviewer-header {
+            background: #f5f5f5;
+            padding: 15px 20px;
+            border-bottom: 2px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reviewer-content {
+            padding: 20px;
+        }
+
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .score-table th,
+        .score-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .score-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .score-table .total-row {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+
+        .score-table .score-value {
+            text-align: center;
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .admin-error-box {
+            background: #ffebee;
+            border: 2px solid #d32f2f;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .admin-error-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+
+        .pdf-viewer-placeholder {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .highlight-legend {
+            display: flex;
+            gap: 20px;
+            padding: 10px 20px;
+            background: #fff9c4;
+            border: 2px solid #f9a825;
+            margin-bottom: 15px;
+        }
+
+        .highlight-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-color {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Mahasiswa</h1>
+        </div>
+        <div class="user-info">
+            Budi Santoso (123456789012) | <a href="login.html">Logout</a> |
+            <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Mahasiswa</h3>
+            <a href="dashboard.html" class="sidebar-item">🏠 Dashboard</a>
+            <a href="team-detail.html" class="sidebar-item">👥 Tim Saya</a>
+            <a href="upload-proposal.html" class="sidebar-item">📄 Proposal</a>
+            <a href="review-results.html" class="sidebar-item active">📊 Hasil Review</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a> /
+                <a href="team-detail.html">Tim Saya</a> / Hasil Review
+            </div>
+            <div class="page-title">Hasil Review Proposal</div>
+
+            <!-- Proposal Info -->
+            <div class="box" style="margin-bottom: 30px;">
+                <div class="grid-2col">
+                    <div>
+                        <table style="width: 100%; font-size: 14px;">
+                            <tr>
+                                <td style="padding: 5px 0; color: #666; width: 40%;">Tim:</td>
+                                <td><strong>Tim Inovasi Digital</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Judul Proposal:</td>
+                                <td>Aplikasi AR untuk Pembelajaran Sains</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Jenis PKM:</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <table style="width: 100%; font-size: 14px;">
+                            <tr>
+                                <td style="padding: 5px 0; color: #666; width: 40%;">Status:</td>
+                                <td><span class="badge badge-green">✓ Reviewed</span></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Direview oleh:</td>
+                                <td>2 Reviewer</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px 0; color: #666;">Proposal:</td>
+                                <td><a href="#" class="button button-sm">📥 Download Original</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Alert -->
+            <div class="alert alert-info" style="margin-bottom: 30px;">
+                <strong>ℹ️ Tentang Hasil Review:</strong>
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Penilaian Administratif: Ditampilkan <strong>daftar kriteria yang salah</strong> agar dapat
+                        diperbaiki</li>
+                    <li>Penilaian Substantif: Ditampilkan <strong>tabel perhitungan lengkap</strong> (Bobot × Skor =
+                        Nilai)</li>
+                    <li>Anda dapat melihat highlight/anotasi dari kedua reviewer pada PDF viewer</li>
+                </ul>
+            </div>
+
+            <!-- ==================== REVIEWER 1 ==================== -->
+            <div class="reviewer-card" style="border-color: #1565c0;">
+                <div class="reviewer-header" style="background: #e3f2fd; border-color: #1565c0;">
+                    <div>
+                        <span class="badge badge-blue">Reviewer 1</span>
+                        <strong style="margin-left: 10px;">Dr. Reviewer Pertama</strong>
+                    </div>
+                    <span style="color: #666; font-size: 14px;">Direview: 10 Feb 2026</span>
+                </div>
+                <div class="reviewer-content">
+                    <div class="grid-2col">
+                        <!-- Penilaian Administratif -->
+                        <div>
+                            <h4 style="margin-bottom: 15px; color: #d32f2f;">📋 Penilaian Administratif</h4>
+
+                            <!-- Summary -->
+                            <div
+                                style="background: #ffebee; border: 2px solid #d32f2f; padding: 15px; margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 24px; font-weight: bold; color: #d32f2f;">3</span>
+                                    <span style="color: #d32f2f;">Kriteria Tidak Sesuai</span>
+                                </div>
+                            </div>
+
+                            <!-- List Kesalahan -->
+                            <div class="box" style="border-color: #d32f2f;">
+                                <div class="box-title" style="font-size: 14px; color: #d32f2f;">❌ Kriteria yang Perlu
+                                    Diperbaiki:</div>
+                                <ul style="margin: 10px 0 0 0; padding-left: 20px; font-size: 14px;">
+                                    <li style="color: #d32f2f; margin-bottom: 8px;">
+                                        <strong>Format Margin</strong> - Margin tidak sesuai standar (3cm kiri, 2.5cm
+                                        lainnya)
+                                    </li>
+                                    <li style="color: #d32f2f; margin-bottom: 8px;">
+                                        <strong>Daftar Pustaka</strong> - Format penulisan tidak sesuai APA Style
+                                    </li>
+                                    <li style="color: #d32f2f; margin-bottom: 8px;">
+                                        <strong>Penomoran Halaman</strong> - Posisi nomor halaman tidak konsisten
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="box" style="margin-top: 15px;">
+                                <div class="box-title" style="font-size: 14px;">📝 Catatan Reviewer</div>
+                                <p style="font-size: 14px; color: #666; font-style: italic;">
+                                    "Perhatikan format margin dan penulisan daftar pustaka.
+                                    Beberapa referensi tidak sesuai dengan format yang ditentukan."
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Penilaian Substantif -->
+                        <div>
+                            <h4 style="margin-bottom: 15px; color: #1565c0;">📊 Penilaian Substantif</h4>
+                            <table class="score-table">
+                                <thead>
+                                    <tr>
+                                        <th>Kriteria</th>
+                                        <th style="width: 60px; text-align: center;">Bobot</th>
+                                        <th style="width: 60px; text-align: center;">Skor</th>
+                                        <th style="width: 80px; text-align: center;">Nilai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Gagasan: Orisinalitas</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gagasan: Penyajian Rumusan</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">7</td>
+                                        <td style="text-align: center;">= 105</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gagasan: Perbandingan Riset</td>
+                                        <td style="text-align: center;">10</td>
+                                        <td class="score-value">5</td>
+                                        <td style="text-align: center;">= 50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kesesuaian Metode</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">7</td>
+                                        <td style="text-align: center;">= 105</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potensi: Kontribusi Ilmu</td>
+                                        <td style="text-align: center;">10</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 60</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potensi: Sintesis Literatur</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potensi: Kemanfaatan</td>
+                                        <td style="text-align: center;">10</td>
+                                        <td class="score-value">7</td>
+                                        <td style="text-align: center;">= 70</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penjadwalan Kegiatan</td>
+                                        <td style="text-align: center;">5</td>
+                                        <td class="score-value">5</td>
+                                        <td style="text-align: center;">= 25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penyusunan Anggaran</td>
+                                        <td style="text-align: center;">5</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 30</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>TOTAL</strong></td>
+                                        <td style="text-align: center;"><strong>100</strong></td>
+                                        <td></td>
+                                        <td style="text-align: center; font-size: 18px; color: #1565c0;">
+                                            <strong>625</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                                * Nilai = Bobot × Skor | Skala Skor: 1 (Buruk) - 7 (Sangat Baik)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== REVIEWER 2 ==================== -->
+            <div class="reviewer-card" style="border-color: #388e3c;">
+                <div class="reviewer-header" style="background: #e8f5e9; border-color: #388e3c;">
+                    <div>
+                        <span class="badge badge-green">Reviewer 2</span>
+                        <strong style="margin-left: 10px;">Prof. Reviewer Kedua</strong>
+                    </div>
+                    <span style="color: #666; font-size: 14px;">Direview: 12 Feb 2026</span>
+                </div>
+                <div class="reviewer-content">
+                    <div class="grid-2col">
+                        <!-- Penilaian Administratif -->
+                        <div>
+                            <h4 style="margin-bottom: 15px; color: #d32f2f;">📋 Penilaian Administratif</h4>
+
+                            <!-- Summary -->
+                            <div
+                                style="background: #ffebee; border: 2px solid #d32f2f; padding: 15px; margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 24px; font-weight: bold; color: #d32f2f;">2</span>
+                                    <span style="color: #d32f2f;">Kriteria Tidak Sesuai</span>
+                                </div>
+                            </div>
+
+                            <!-- List Kesalahan -->
+                            <div class="box" style="border-color: #d32f2f;">
+                                <div class="box-title" style="font-size: 14px; color: #d32f2f;">❌ Kriteria yang Perlu
+                                    Diperbaiki:</div>
+                                <ul style="margin: 10px 0 0 0; padding-left: 20px; font-size: 14px;">
+                                    <li style="color: #d32f2f; margin-bottom: 8px;">
+                                        <strong>Format Margin</strong> - Margin kiri kurang dari 3cm
+                                    </li>
+                                    <li style="color: #d32f2f; margin-bottom: 8px;">
+                                        <strong>Font Judul</strong> - Judul bab tidak menggunakan huruf kapital
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="box" style="margin-top: 15px;">
+                                <div class="box-title" style="font-size: 14px;">📝 Catatan Reviewer</div>
+                                <p style="font-size: 14px; color: #666; font-style: italic;">
+                                    "Secara umum format sudah baik. Perlu perbaikan pada margin halaman."
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Penilaian Substantif -->
+                        <div>
+                            <h4 style="margin-bottom: 15px; color: #1565c0;">📊 Penilaian Substantif</h4>
+                            <table class="score-table">
+                                <thead>
+                                    <tr>
+                                        <th>Kriteria</th>
+                                        <th style="width: 60px; text-align: center;">Bobot</th>
+                                        <th style="width: 60px; text-align: center;">Skor</th>
+                                        <th style="width: 80px; text-align: center;">Nilai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Gagasan: Orisinalitas</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">5</td>
+                                        <td style="text-align: center;">= 75</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gagasan: Penyajian Rumusan</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gagasan: Perbandingan Riset</td>
+                                        <td style="text-align: center;">10</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 60</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kesesuaian Metode</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potensi: Kontribusi Ilmu</td>
+                                        <td style="text-align: center;">10</td>
+                                        <td class="score-value">5</td>
+                                        <td style="text-align: center;">= 50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potensi: Sintesis Literatur</td>
+                                        <td style="text-align: center;">15</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Potensi: Kemanfaatan</td>
+                                        <td style="text-align: center;">10</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 60</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penjadwalan Kegiatan</td>
+                                        <td style="text-align: center;">5</td>
+                                        <td class="score-value">5</td>
+                                        <td style="text-align: center;">= 25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penyusunan Anggaran</td>
+                                        <td style="text-align: center;">5</td>
+                                        <td class="score-value">6</td>
+                                        <td style="text-align: center;">= 30</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td><strong>TOTAL</strong></td>
+                                        <td style="text-align: center;"><strong>100</strong></td>
+                                        <td></td>
+                                        <td style="text-align: center; font-size: 18px; color: #1565c0;">
+                                            <strong>570</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                                * Nilai = Bobot × Skor | Skala Skor: 1 (Buruk) - 7 (Sangat Baik)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== PDF VIEWER WITH HIGHLIGHTS ==================== -->
+            <div class="box" style="margin-top: 30px;">
+                <div class="box-title">📄 Proposal dengan Highlight Reviewer</div>
+
+                <!-- Legend -->
+                <div class="highlight-legend">
+                    <span style="font-weight: bold;">Keterangan Warna:</span>
+                    <div class="highlight-item">
+                        <div class="highlight-color" style="background: #bbdefb;"></div>
+                        <span>Highlight Reviewer 1</span>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-color" style="background: #c8e6c9;"></div>
+                        <span>Highlight Reviewer 2</span>
+                    </div>
+                </div>
+
+                <!-- PDF Viewer Placeholder -->
+                <div class="pdf-viewer-placeholder">
+                    <div style="font-size: 64px;">📄</div>
+                    <div style="font-size: 18px; font-weight: bold; color: #666; margin-top: 10px;">
+                        PDF Viewer dengan Annotations
+                    </div>
+                    <p style="color: #999;">
+                        Proposal ditampilkan di sini dengan highlight dari kedua reviewer
+                    </p>
+                    <div style="margin-top: 15px;">
+                        <button class="button">⬅️ Prev</button>
+                        <span style="margin: 0 15px; color: #666;">Halaman 1 / 15</span>
+                        <button class="button">Next ➡️</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;">
+                    <button class="button">🔍 Zoom In</button>
+                    <button class="button">🔍 Zoom Out</button>
+                    <button class="button button-primary">📥 Download PDF dengan Annotations</button>
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <div style="margin-top: 30px;">
+                <a href="upload-proposal.html" class="button">← Kembali ke Proposal</a>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

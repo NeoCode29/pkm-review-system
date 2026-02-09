@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1: Core | Reviewer Wireframes</title>
+    <link rel="stylesheet" href="pages/styles.css">
+    <style>
+        .page-section {
+            border: 4px solid #f57c00;
+            margin-bottom: 60px;
+            background: #fff;
+        }
+
+        .page-header {
+            background: #f57c00;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-route {
+            background: #fff3e0;
+            padding: 10px 20px;
+            font-family: monospace;
+            border-bottom: 2px solid #f57c00;
+        }
+
+        .page-content {
+            padding: 0;
+        }
+
+        .phase-nav {
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .phase-nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid #fff;
+        }
+
+        .phase-nav a:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        .phase-nav a.active {
+            background: #f57c00;
+            border-color: #f57c00;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 18px;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body style="background: #f0f0f0;">
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <div class="phase-title">📐 Reviewer Wireframes - Phase 1: Core</div>
+        <a href="pages/index.html">Index</a>
+        <a href="phase-1-core.html" class="active">Phase 1</a>
+        <a href="phase-2-review.html">Phase 2</a>
+    </div>
+
+    <div style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+
+        <div class="alert alert-warning" style="margin-bottom: 40px;">
+            <strong>Phase 1: Core (Login & Dashboard)</strong><br>
+            Entry point dan landing page untuk reviewer. Include statistik dan overview proposal yang ditugaskan.
+        </div>
+
+        <!-- ==================== PAGE 1: LOGIN ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 1: Login</div>
+            <div class="page-route">Route: /reviewer/login</div>
+            <div class="page-content">
+                <!-- Login Content -->
+                <div
+                    style="min-height: 600px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);">
+                    <div class="auth-box">
+                        <div class="auth-logo">
+                            <h1>📐 PKM Review</h1>
+                            <p>Sistem Review Proposal PKM</p>
+                        </div>
+
+                        <div class="auth-title">Login Reviewer</div>
+
+                        <form>
+                            <div class="form-group">
+                                <label class="label">Username <span class="required">*</span></label>
+                                <input type="text" class="input-field" placeholder="Username dari Administrator">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Password <span class="required">*</span></label>
+                                <input type="password" class="input-field" placeholder="Masukkan password">
+                            </div>
+
+                            <div class="form-group"
+                                style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
+                                    <input type="checkbox"> Ingat saya
+                                </label>
+                                <span style="color: #666; font-size: 14px;">Lupa password? Hubungi Admin</span>
+                            </div>
+
+                            <button type="button" class="button button-primary" style="width: 100%; margin: 0;">
+                                🔐 Login
+                            </button>
+                        </form>
+
+                        <div class="auth-footer"
+                            style="background: #fff3e0; padding: 15px; margin-top: 20px; border: 2px solid #f57c00;">
+                            <p style="font-size: 12px; margin: 0;">
+                                ℹ️ <strong>Informasi:</strong><br>
+                                Kredensial login (username & password) diberikan oleh Administrator.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2: DASHBOARD ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 2: Dashboard</div>
+            <div class="page-route">Route: /reviewer/dashboard</div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Reviewer</h1>
+                    <div class="user-info">Dr. Ahmad Fauzi, M.Kom (NIDN: 0012345678) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Reviewer</h3>
+                        <a href="#" class="sidebar-item active">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item">📋 Daftar Proposal</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Dashboard Reviewer</div>
+
+                        <!-- Phase Status Alert -->
+                        <div class="alert alert-success"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 14px; color: #666;">Status Fase Review</div>
+                                <div style="font-size: 20px; font-weight: bold; color: #388e3c;">📝 PERIODE REVIEW AKTIF
+                                </div>
+                                <div style="font-size: 14px; color: #666;">Anda dapat melakukan penilaian proposal</div>
+                            </div>
+                            <span class="badge badge-green" style="font-size: 14px;">Review: DIBUKA</span>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div class="grid-4col" style="margin-bottom: 25px;">
+                            <div class="stat-box">
+                                <div class="number">12</div>
+                                <div class="stat-label">Total Ditugaskan</div>
+                            </div>
+                            <div class="stat-box" style="background: #e8f5e9;">
+                                <div class="number" style="color: #388e3c;">7</div>
+                                <div class="stat-label">Review Selesai</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff3e0;">
+                                <div class="number" style="color: #f57c00;">3</div>
+                                <div class="stat-label">Sedang Direview</div>
+                            </div>
+                            <div class="stat-box" style="background: #ffebee;">
+                                <div class="number" style="color: #d32f2f;">2</div>
+                                <div class="stat-label">Belum Dimulai</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="box">
+                            <div class="box-title">📊 Progress Review</div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 58%;">7/12 (58%)</div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
+                                <span>Selesai: 7 proposal</span>
+                                <span>Tersisa: 5 proposal</span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div style="margin-bottom: 25px;">
+                            <a href="#" class="button button-primary" style="font-size: 16px; padding: 15px 30px;">
+                                📋 Lihat Semua Proposal
+                            </a>
+                        </div>
+
+                        <!-- Proposal Preview Table -->
+                        <div class="box">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <div class="box-title" style="margin-bottom: 0;">📑 Proposal yang Ditugaskan (Preview)
+                                </div>
+                            </div>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tim</th>
+                                        <th>Judul Proposal</th>
+                                        <th>Jenis PKM</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Tim Inovasi Digital</td>
+                                        <td>Aplikasi AR untuk Pembelajaran Sains</td>
+                                        <td><span class="badge badge-blue">PKM-KC</span></td>
+                                        <td><span class="badge badge-green">Selesai</span></td>
+                                        <td><a href="#" class="button button-sm">👁️ Lihat</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Tim Green Tech</td>
+                                        <td>Smart Agriculture IoT System</td>
+                                        <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                        <td><span class="badge badge-orange">Sedang</span></td>
+                                        <td><a href="#" class="button button-sm button-primary">✏️ Lanjutkan</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Tim Eco Solution</td>
+                                        <td>Pengolahan Limbah Plastik</td>
+                                        <td><span class="badge badge-blue">PKM-RE</span></td>
+                                        <td><span class="badge badge-gray">Belum</span></td>
+                                        <td><a href="#" class="button button-sm button-primary">▶️ Mulai</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Info Box -->
+                        <div class="box" style="background: #fff3e0; border-color: #f57c00;">
+                            <div class="box-title" style="color: #f57c00;">ℹ️ Informasi Penting</div>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                                <li>Review bersifat <strong>independen</strong> - Anda tidak bisa melihat review dari
+                                    reviewer lain</li>
+                                <li>Hasil review dapat diedit selama fase review masih <strong>DIBUKA</strong></li>
+                                <li>Setelah fase ditutup admin, review menjadi <strong>FINAL</strong></li>
+                            </ul>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="box" style="background: #e8f5e9; border-color: #388e3c;">
+            <div class="box-title" style="color: #388e3c;">✅ Phase 1 Selesai</div>
+            <p>Phase 1 mencakup 2 halaman utama:</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>Login</strong> - Entry point autentikasi reviewer (kredensial dari admin)</li>
+                <li><strong>Dashboard</strong> - Overview statistik dan progress review</li>
+            </ul>
+            <a href="phase-2-review.html" class="button button-primary">Lanjut ke Phase 2: Review Workflow →</a>
+        </div>
+
+    </div>
+</body>
+
+</html>

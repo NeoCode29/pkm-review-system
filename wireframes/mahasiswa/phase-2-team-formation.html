@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2: Team Formation | Mahasiswa Wireframes</title>
+    <link rel="stylesheet" href="pages/styles.css">
+    <style>
+        .page-section {
+            border: 4px solid #f9a825;
+            margin-bottom: 60px;
+            background: #fff;
+        }
+
+        .page-header {
+            background: #f9a825;
+            color: #000;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-route {
+            background: #fff9c4;
+            padding: 10px 20px;
+            font-family: monospace;
+            border-bottom: 2px solid #f9a825;
+        }
+
+        .page-content {
+            padding: 0;
+        }
+
+        .phase-nav {
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .phase-nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid #fff;
+        }
+
+        .phase-nav a:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        .phase-nav a.active {
+            background: #f9a825;
+            border-color: #f9a825;
+            color: #000;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 18px;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body style="background: #f0f0f0;">
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <div class="phase-title">📐 Mahasiswa Wireframes - Phase 2: Team Formation</div>
+        <a href="pages/index.html">Index</a>
+        <a href="phase-1-auth-dashboard.html">Phase 1</a>
+        <a href="phase-2-team-formation.html" class="active">Phase 2</a>
+        <a href="phase-3-team-management.html">Phase 3</a>
+        <a href="phase-4-review-results.html">Phase 4</a>
+    </div>
+
+    <div style="max-width: 1400px; margin: 40px auto; padding: 20px;">
+
+        <div class="alert alert-warning" style="margin-bottom: 40px; background: #fff9c4;">
+            <strong>Phase 2: Team Formation</strong><br>
+            Halaman untuk mencari tim, membuat tim baru, dan melihat detail tim.
+        </div>
+
+        <!-- ==================== PAGE 1: BROWSE TEAMS ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 1: Browse Teams</div>
+            <div class="page-route">Route: /mahasiswa/teams/browse</div>
+            <div class="page-content">
+                <!-- Browse Teams Content -->
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso (123456789012) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">🔍 Cari Tim</a>
+                        <a href="#" class="sidebar-item">➕ Buat Tim</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Cari Tim untuk Bergabung</div>
+
+                        <div class="alert alert-info">
+                            <strong>ℹ️ Informasi:</strong> Anda hanya dapat bergabung dengan <strong>1 tim</strong>.
+                        </div>
+
+                        <!-- Filter -->
+                        <div class="box">
+                            <div class="box-title">🔍 Filter Pencarian</div>
+                            <div class="filter-bar">
+                                <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                                    <label class="label">Cari Tim</label>
+                                    <input type="text" class="input-field" placeholder="Nama tim atau judul proposal..."
+                                        style="margin-bottom: 0;">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="label">Jenis PKM</label>
+                                    <select class="input-field" style="margin-bottom: 0; width: 150px;">
+                                        <option>Semua</option>
+                                        <option>PKM-KC</option>
+                                        <option>PKM-GT</option>
+                                    </select>
+                                </div>
+                                <button class="button button-primary" style="margin: 0; align-self: flex-end;">🔍
+                                    Cari</button>
+                            </div>
+                        </div>
+
+                        <!-- Team Cards -->
+                        <div class="grid-2col">
+                            <div class="team-card">
+                                <div class="team-card-header">
+                                    <div>
+                                        <div class="team-card-title">Tim Inovasi Digital</div>
+                                        <div class="team-card-subtitle">Aplikasi AR untuk Pembelajaran Sains</div>
+                                    </div>
+                                    <span class="badge badge-blue">PKM-KC</span>
+                                </div>
+                                <div class="team-card-info">
+                                    <div><span class="team-card-info-label">Ketua:</span> Ahmad Fauzi</div>
+                                    <div><span class="team-card-info-label">Anggota:</span> <strong>3/5</strong></div>
+                                </div>
+                                <div class="team-card-actions">
+                                    <a href="#" class="button button-sm">👁️ Detail</a>
+                                    <a href="#" class="button button-sm button-primary">📨 Request Bergabung</a>
+                                </div>
+                            </div>
+
+                            <div class="team-card">
+                                <div class="team-card-header">
+                                    <div>
+                                        <div class="team-card-title">Tim Green Tech</div>
+                                        <div class="team-card-subtitle">Smart Agriculture IoT</div>
+                                    </div>
+                                    <span class="badge badge-yellow">PKM-GT</span>
+                                </div>
+                                <div class="team-card-info">
+                                    <div><span class="team-card-info-label">Ketua:</span> Sarah Wijaya</div>
+                                    <div><span class="team-card-info-label">Anggota:</span> <strong>4/5</strong></div>
+                                </div>
+                                <div class="team-card-actions">
+                                    <a href="#" class="button button-sm">👁️ Detail</a>
+                                    <a href="#" class="button button-sm button-primary">📨 Request Bergabung</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box" style="background: #e3f2fd; text-align: center; margin-top: 20px;">
+                            <p style="margin-bottom: 15px;">Tidak menemukan tim yang cocok?</p>
+                            <a href="#" class="button button-primary">➕ Buat Tim Baru</a>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2: CREATE TEAM ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 2: Create Team</div>
+            <div class="page-route">Route: /mahasiswa/teams/create</div>
+            <div class="page-content">
+                <!-- Create Team Content -->
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso (123456789012) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item">🔍 Cari Tim</a>
+                        <a href="#" class="sidebar-item active">➕ Buat Tim</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="breadcrumb"><a href="#">Dashboard</a> / Buat Tim Baru</div>
+                        <div class="page-title">Buat Tim Baru</div>
+
+                        <div class="alert alert-info">
+                            <strong>ℹ️ Informasi:</strong> Anda akan menjadi <strong>Ketua Tim</strong>. Min 3 anggota
+                            untuk upload proposal.
+                        </div>
+
+                        <div class="box" style="max-width: 800px;">
+                            <div class="box-title">📝 Data Tim</div>
+
+                            <div class="form-group">
+                                <label class="label">Nama Tim <span class="required">*</span></label>
+                                <input type="text" class="input-field" placeholder="Contoh: Tim Inovasi Digital">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Judul Proposal <span class="required">*</span></label>
+                                <input type="text" class="input-field" placeholder="Judul lengkap proposal PKM">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Jenis PKM <span class="required">*</span></label>
+                                <select class="input-field">
+                                    <option>Pilih Jenis PKM</option>
+                                    <option>PKM-KC (Karsa Cipta)</option>
+                                    <option>PKM-GT (Gagasan Tertulis)</option>
+                                </select>
+                            </div>
+
+                            <hr class="divider">
+
+                            <div class="box-title">👨‍🏫 Dosen Pembimbing</div>
+                            <div class="alert alert-warning">
+                                <strong>⚠️ Penting:</strong> Wajib diisi sebelum upload proposal (bisa diisi nanti).
+                            </div>
+                            <div class="grid-2col">
+                                <div class="form-group">
+                                    <label class="label">Nama Dosen</label>
+                                    <input type="text" class="input-field" placeholder="Dr. Ahmad Fauzi, M.Kom">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label">NIDN</label>
+                                    <input type="text" class="input-field" placeholder="0123456789">
+                                </div>
+                            </div>
+
+                            <hr class="divider">
+
+                            <div class="box-title">⚙️ Pengaturan</div>
+                            <div class="form-group">
+                                <div class="toggle-switch">
+                                    <div class="toggle-box on"></div>
+                                    <span><strong>Terbuka untuk Bergabung</strong></span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                                <a href="#" class="button">Batal</a>
+                                <button class="button button-primary">➕ Buat Tim</button>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 3: TEAM DETAIL ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 3: Team Detail</div>
+            <div class="page-route">Route: /mahasiswa/teams/:teamId</div>
+            <div class="page-content">
+                <!-- Team Detail Content -->
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso (123456789012) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">👥 Tim Saya</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="breadcrumb"><a href="#">Dashboard</a> / Tim Saya</div>
+                        <div class="page-title">Detail Tim</div>
+
+                        <!-- Header -->
+                        <div class="box" style="background: #e3f2fd;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h2 style="color: #1565c0; margin-bottom: 10px;">Tim Inovasi Digital</h2>
+                                    <p>Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</p>
+                                    <span class="badge badge-blue" style="margin-top: 10px;">PKM-KC</span>
+                                </div>
+                                <a href="#" class="button button-primary">✏️ Edit Tim</a>
+                            </div>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="grid-4col" style="margin-bottom: 20px;">
+                            <div class="stat-box">
+                                <div class="number">5</div>
+                                <div class="stat-label">Anggota</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff3e0;">
+                                <div class="number" style="color: #f57c00;">DRAFT</div>
+                                <div class="stat-label">Status Proposal</div>
+                            </div>
+                            <div class="stat-box" style="background: #e8f5e9;">
+                                <div class="number" style="color: #388e3c;">✓</div>
+                                <div class="stat-label">Dosen Pembimbing</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff9c4;">
+                                <div class="number" style="color: #f57f17;">2</div>
+                                <div class="stat-label">Join Requests</div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2col">
+                            <!-- Left: Team Info -->
+                            <div>
+                                <div class="box">
+                                    <div class="box-title">📋 Informasi Tim</div>
+                                    <table style="width: 100%; font-size: 14px;">
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Nama Tim:</td>
+                                            <td><strong>Tim Inovasi Digital</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Jenis PKM:</td>
+                                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color: #666; padding: 5px 0;">Visibilitas:</td>
+                                            <td><span class="badge badge-green">✓ Terbuka</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="box">
+                                    <div class="box-title">👨‍🏫 Dosen Pembimbing</div>
+                                    <div class="member-item" style="border-color: #1565c0;">
+                                        <div class="member-avatar" style="background: #1565c0; color: #fff;">DP</div>
+                                        <div class="member-info">
+                                            <div class="member-name">Dr. Ahmad Fauzi, M.Kom</div>
+                                            <div class="member-detail">NIDN: 0123456789</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Members -->
+                            <div>
+                                <div class="box">
+                                    <div class="box-title">👥 Anggota Tim (5/5)</div>
+                                    <div class="member-item" style="background: #e3f2fd; border-color: #1565c0;">
+                                        <div class="member-avatar">BU</div>
+                                        <div class="member-info">
+                                            <div class="member-name">Budi Santoso <span class="badge badge-blue"
+                                                    style="font-size: 10px;">Ketua</span></div>
+                                            <div class="member-detail">123456789012</div>
+                                        </div>
+                                    </div>
+                                    <div class="member-item">
+                                        <div class="member-avatar">AF</div>
+                                        <div class="member-info">
+                                            <div class="member-name">Ahmad Fauzi</div>
+                                            <div class="member-detail">123456789013</div>
+                                        </div>
+                                        <button class="button button-sm button-danger">Kick</button>
+                                    </div>
+                                    <div class="member-item">
+                                        <div class="member-avatar">SW</div>
+                                        <div class="member-info">
+                                            <div class="member-name">Sarah Wijaya</div>
+                                            <div class="member-detail">123456789014</div>
+                                        </div>
+                                        <button class="button button-sm button-danger">Kick</button>
+                                    </div>
+                                    <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                                        ℹ️ Semua anggota memiliki hak yang sama untuk manage tim.
+                                    </p>
+                                </div>
+
+                                <div class="box" style="background: #fff9c4; border-color: #f9a825;">
+                                    <div class="box-title" style="color: #f57f17;">📨 Join Requests (2)</div>
+                                    <div class="member-item" style="background: #fff;">
+                                        <div class="member-avatar">LM</div>
+                                        <div class="member-info">
+                                            <div class="member-name">Linda Maharani</div>
+                                            <div class="member-detail">123456789017</div>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                        <button class="button button-sm button-success">✓ Approve</button>
+                                        <button class="button button-sm button-danger">✗ Reject</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="box" style="background: #e8f5e9; border-color: #388e3c;">
+            <div class="box-title" style="color: #388e3c;">✅ Phase 2 Selesai</div>
+            <p>Phase 2 mencakup 3 halaman untuk flow pembentukan tim:</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>Browse Teams</strong> - Cari tim yang tersedia, filter, dan request bergabung</li>
+                <li><strong>Create Team</strong> - Buat tim baru dengan data proposal dan dosen pembimbing</li>
+                <li><strong>Team Detail</strong> - Lihat detail tim, manage members, approve/reject join requests</li>
+            </ul>
+            <a href="phase-3-team-management.html" class="button button-primary">Lanjut ke Phase 3: Team Management
+                →</a>
+        </div>
+
+    </div>
+</body>
+
+</html>

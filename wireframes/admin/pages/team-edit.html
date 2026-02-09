@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Edit | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item active">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="team-list.html">Teams</a> / <a href="team-detail.html">Tim Inovasi Digital</a> / Edit
+            </div>
+
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Edit Team</div>
+                <a href="team-detail.html" class="button">← Batal</a>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Left Column - Basic Info -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📋 Informasi Dasar</div>
+
+                        <div class="form-group">
+                            <label class="label">Nama Team <span class="required">*</span></label>
+                            <input type="text" class="input-field" value="Tim Inovasi Digital">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Judul Proposal <span class="required">*</span></label>
+                            <input type="text" class="input-field"
+                                value="Aplikasi Pembelajaran dengan Augmented Reality">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Jenis PKM <span class="required">*</span></label>
+                            <select class="input-field">
+                                <option selected>PKM-KC (Karsa Cipta)</option>
+                                <option>PKM-GT (Gagasan Tertulis)</option>
+                                <option>PKM-K (Kewirausahaan)</option>
+                                <option>PKM-PM (Pengabdian Masyarakat)</option>
+                                <option>PKM-PI (Penelitian Ilmiah)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Dosen Pembimbing <span class="required">*</span></label>
+                            <input type="text" class="input-field" value="Dr. Siti Nurhaliza, M.T."
+                                placeholder="Ketik minimal 3 karakter untuk mencari dosen">
+                            <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                                Ketik minimal 3 karakter untuk mencari dosen (autocomplete)
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Open to Join</label>
+                            <select class="input-field">
+                                <option selected>Yes - Menerima anggota baru</option>
+                                <option>No - Tidak menerima anggota</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label">Status Override (Admin)</label>
+                            <select class="input-field">
+                                <option>DRAFT</option>
+                                <option selected>SUBMITTED</option>
+                                <option>UNDER_REVIEW</option>
+                                <option>REVIEWED</option>
+                                <option>NEEDS_REVISION</option>
+                                <option>ACCEPTED</option>
+                                <option>REJECTED</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Members -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">👥 Manage Members (4/5)</div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>NIM</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Budi Santoso</td>
+                                    <td>123456</td>
+                                    <td>
+                                        <select class="input-field" style="margin: 0; width: 100px;">
+                                            <option selected>Ketua</option>
+                                            <option>Anggota</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="button button-sm button-danger" disabled>🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Rina Wijaya</td>
+                                    <td>123457</td>
+                                    <td>
+                                        <select class="input-field" style="margin: 0; width: 100px;">
+                                            <option>Ketua</option>
+                                            <option selected>Anggota</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="button button-sm button-danger">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ahmad Fauzi</td>
+                                    <td>123458</td>
+                                    <td>
+                                        <select class="input-field" style="margin: 0; width: 100px;">
+                                            <option>Ketua</option>
+                                            <option selected>Anggota</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="button button-sm button-danger">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dewi Sartika</td>
+                                    <td>123459</td>
+                                    <td>
+                                        <select class="input-field" style="margin: 0; width: 100px;">
+                                            <option>Ketua</option>
+                                            <option selected>Anggota</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="button button-sm button-danger">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <button class="button" style="margin-top: 15px;">+ Add Member</button>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Rules:</strong>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>Team harus memiliki tepat 1 Ketua</li>
+                            <li>Ketua tidak bisa dihapus dari team</li>
+                            <li>Max 5 anggota per team</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box" style="margin-top: 20px;">
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <a href="team-detail.html" class="button">Batal</a>
+                    <button class="button button-primary">✓ Simpan Perubahan</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

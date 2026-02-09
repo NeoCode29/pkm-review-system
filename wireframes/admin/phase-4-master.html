@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Phase 4 - Master Data | PKM Review Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Navigation Bar */
+        .phase-nav {
+            background: #fff;
+            border-bottom: 3px solid #333;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .phase-nav h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .phase-nav .phase-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .phase-nav .phase-links a {
+            padding: 8px 16px;
+            background: #eee;
+            border: 2px solid #333;
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .phase-nav .phase-links a.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .phase-nav .page-tabs {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .phase-nav .page-tabs button {
+            padding: 8px 16px;
+            background: #fff;
+            border: 2px solid #333;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .phase-nav .page-tabs button:hover {
+            background: #f0f0f0;
+        }
+
+        .phase-nav .page-tabs button.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Main Layout */
+        .page {
+            display: none;
+            min-height: calc(100vh - 120px);
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #f5f5f5;
+            border-right: 2px solid #333;
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .sidebar-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sidebar-item:hover {
+            background: #eee;
+        }
+
+        .sidebar-item.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: #fff;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+
+        /* Components */
+        .box {
+            border: 2px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background: #f0f0f0;
+        }
+
+        .button-primary {
+            background: #333;
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            background: #555;
+        }
+
+        .button-danger {
+            background: #fff;
+            border-color: #d32f2f;
+            color: #d32f2f;
+        }
+
+        .button-danger:hover {
+            background: #ffebee;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th,
+        .table td {
+            border: 2px solid #333;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .table th {
+            background: #ddd;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 2px solid #333;
+            background: #fff;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .badge-green {
+            background: #e8f5e9;
+        }
+
+        .badge-blue {
+            background: #e3f2fd;
+        }
+
+        .badge-yellow {
+            background: #fff9c4;
+        }
+
+        .badge-red {
+            background: #ffebee;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #333;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border: 3px solid #333;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+        }
+
+        .stat-box {
+            border: 2px solid #333;
+            padding: 15px;
+            text-align: center;
+            background: #fff;
+        }
+
+        .stat-box .number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: -2px;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+        }
+
+        .tab.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: #fff;
+            border: 3px solid #333;
+            padding: 25px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <h1>📐 PKM Review - Admin Wireframes (Low-Fidelity)</h1>
+
+        <div class="phase-links">
+            <a href="phase-1-core.html">Phase 1: Core</a>
+            <a href="phase-2-management.html">Phase 2: Management</a>
+            <a href="phase-3-reviewer.html">Phase 3: Reviewer</a>
+            <a href="phase-4-master.html" class="active">Phase 4: Master Data</a>
+        </div>
+
+        <div class="page-tabs">
+            <button onclick="showPage('master-prodi')" class="active">1. Program Studi</button>
+            <button onclick="showPage('master-jurusan')">2. Jurusan</button>
+            <button onclick="showPage('master-pkm')">3. Jenis PKM</button>
+            <button onclick="showPage('add-prodi-modal')">4. Modal: Add Prodi</button>
+            <button onclick="showPage('add-jurusan-modal')">5. Modal: Add Jurusan</button>
+            <button onclick="showPage('add-pkm-modal')">6. Modal: Add PKM</button>
+        </div>
+    </div>
+
+    <!-- PAGE 1: MASTER PRODI -->
+    <div id="master-prodi" class="page active">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item active">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-title">Master Data</div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active">Program Studi</div>
+                <div class="tab">Jurusan</div>
+                <div class="tab">Jenis PKM</div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid-3col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">15</div>
+                    <div class="label">Total Program Studi</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">5</div>
+                    <div class="label">Total Jurusan</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">234</div>
+                    <div class="label">Mahasiswa Terdaftar</div>
+                </div>
+            </div>
+
+            <!-- Actions & Filters -->
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div>
+                            <label class="label">Filter by Jurusan</label>
+                            <select class="input-field" style="margin: 0; width: 200px;">
+                                <option>All Jurusan</option>
+                                <option>Teknik</option>
+                                <option>Ekonomi & Bisnis</option>
+                                <option>MIPA</option>
+                                <option>Ilmu Sosial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="label">Search</label>
+                            <input type="text" class="input-field" placeholder="Cari prodi..."
+                                style="margin: 0; width: 200px;">
+                        </div>
+                    </div>
+                    <button class="button button-primary">+ Tambah Program Studi</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="box">
+                <div class="box-title">Daftar Program Studi (15 prodi)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Jurusan</th>
+                            <th>Nama Program Studi</th>
+                            <th>Kode</th>
+                            <th>Mahasiswa</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><span class="badge badge-blue">Teknik</span></td>
+                            <td>Teknik Informatika</td>
+                            <td>TI</td>
+                            <td>85</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><span class="badge badge-blue">Teknik</span></td>
+                            <td>Sistem Informasi</td>
+                            <td>SI</td>
+                            <td>62</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><span class="badge badge-blue">Teknik</span></td>
+                            <td>Teknik Elektro</td>
+                            <td>TE</td>
+                            <td>45</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><span class="badge badge-yellow">Ekonomi & Bisnis</span></td>
+                            <td>Manajemen</td>
+                            <td>MN</td>
+                            <td>38</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><span class="badge badge-yellow">Ekonomi & Bisnis</span></td>
+                            <td>Akuntansi</td>
+                            <td>AK</td>
+                            <td>28</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="button">← Previous</button>
+                    <span style="margin: 0 15px;">Page 1 of 3</span>
+                    <button class="button">Next →</button>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Note:</strong> Program Studi yang memiliki mahasiswa terdaftar tidak dapat dihapus.
+                Pindahkan mahasiswa ke prodi lain terlebih dahulu.
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: MASTER JURUSAN -->
+    <div id="master-jurusan" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item active">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-title">Master Data</div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab">Program Studi</div>
+                <div class="tab active">Jurusan</div>
+                <div class="tab">Jenis PKM</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari jurusan..."
+                            style="margin: 0; width: 300px;">
+                    </div>
+                    <button class="button button-primary">+ Tambah Jurusan</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="box">
+                <div class="box-title">Daftar Jurusan (5 jurusan)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Nama Jurusan</th>
+                            <th>Kode</th>
+                            <th>Jumlah Prodi</th>
+                            <th>Total Mahasiswa</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Teknik</td>
+                            <td>TK</td>
+                            <td><span class="badge badge-blue">5</span></td>
+                            <td>192</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;" disabled
+                                    title="Has 5 prodi">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Ekonomi & Bisnis</td>
+                            <td>EB</td>
+                            <td><span class="badge badge-blue">4</span></td>
+                            <td>156</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;" disabled
+                                    title="Has 4 prodi">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>MIPA</td>
+                            <td>MP</td>
+                            <td><span class="badge badge-blue">3</span></td>
+                            <td>89</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;" disabled
+                                    title="Has 3 prodi">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Ilmu Sosial</td>
+                            <td>IS</td>
+                            <td><span class="badge badge-blue">2</span></td>
+                            <td>67</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;" disabled
+                                    title="Has 2 prodi">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Hukum</td>
+                            <td>HK</td>
+                            <td><span class="badge">1</span></td>
+                            <td>45</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;" disabled
+                                    title="Has 1 prodi">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ Info:</strong> Jurusan yang memiliki Program Studi tidak dapat dihapus.
+                Hapus atau pindahkan semua Prodi terlebih dahulu.
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: MASTER JENIS PKM -->
+    <div id="master-pkm" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item active">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-title">Master Data</div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab">Program Studi</div>
+                <div class="tab">Jurusan</div>
+                <div class="tab active">Jenis PKM</div>
+            </div>
+
+            <!-- Actions -->
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari jenis PKM..."
+                            style="margin: 0; width: 300px;">
+                    </div>
+                    <button class="button button-primary">+ Tambah Jenis PKM</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="box">
+                <div class="box-title">Daftar Jenis PKM (5 jenis)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th style="width: 100px;">Kode</th>
+                            <th>Nama Lengkap</th>
+                            <th>Deskripsi</th>
+                            <th>Teams</th>
+                            <th>Kriteria</th>
+                            <th style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td>Karsa Cipta</td>
+                            <td>Kreativitas dalam menciptakan karya cipta...</td>
+                            <td><span class="badge">12</span></td>
+                            <td><span class="badge badge-green">4 kriteria</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;"
+                                    disabled>🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td>Gagasan Tertulis</td>
+                            <td>Penulisan artikel ilmiah berupa gagasan...</td>
+                            <td><span class="badge">8</span></td>
+                            <td><span class="badge badge-green">4 kriteria</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;"
+                                    disabled>🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><span class="badge">PKM-K</span></td>
+                            <td>Kewirausahaan</td>
+                            <td>Pengembangan kewirausahaan mahasiswa...</td>
+                            <td><span class="badge">6</span></td>
+                            <td><span class="badge badge-green">5 kriteria</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;"
+                                    disabled>🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><span class="badge badge-green">PKM-PM</span></td>
+                            <td>Pengabdian Masyarakat</td>
+                            <td>Program pengabdian kepada masyarakat...</td>
+                            <td><span class="badge">5</span></td>
+                            <td><span class="badge badge-green">4 kriteria</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;"
+                                    disabled>🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><span class="badge badge-red">PKM-PI</span></td>
+                            <td>Penelitian Ilmiah</td>
+                            <td>Penelitian ilmiah yang menghasilkan...</td>
+                            <td><span class="badge">7</span></td>
+                            <td><span class="badge badge-green">6 kriteria</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Edit</button>
+                                <button class="button button-danger" style="margin: 0; padding: 6px 12px;"
+                                    disabled>🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Important:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Jenis PKM yang sudah digunakan oleh team tidak dapat dihapus</li>
+                    <li>Setiap jenis PKM harus memiliki minimal 1 kriteria substantif</li>
+                    <li>Kode PKM harus unik (tidak boleh duplikat)</li>
+                </ul>
+            </div>
+
+            <div class="box">
+                <div class="box-title">📊 Quick Stats by PKM Type</div>
+                <div class="grid-3col" style="margin-top: 10px;">
+                    <div class="stat-box" style="border-color: #1976d2;">
+                        <div class="number" style="color: #1976d2;">12</div>
+                        <div class="label">PKM-KC Teams</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #f9a825;">
+                        <div class="number" style="color: #f9a825;">8</div>
+                        <div class="label">PKM-GT Teams</div>
+                    </div>
+                    <div class="stat-box" style="border-color: #388e3c;">
+                        <div class="number" style="color: #388e3c;">18</div>
+                        <div class="label">Other PKM Teams</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: MODAL ADD PRODI -->
+    <div id="add-prodi-modal" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item active">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content"
+            style="background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+
+            <!-- Modal -->
+            <div class="modal">
+                <div class="modal-title">➕ Tambah Program Studi</div>
+
+                <div class="form-group">
+                    <label class="label">Jurusan <span class="required">*</span></label>
+                    <select class="input-field">
+                        <option>-- Pilih Jurusan --</option>
+                        <option>Teknik</option>
+                        <option>Ekonomi & Bisnis</option>
+                        <option>MIPA</option>
+                        <option>Ilmu Sosial</option>
+                        <option>Hukum</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Kode Prodi <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Contoh: TI, SI, TE">
+                    <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                        Maksimal 5 karakter, hanya huruf kapital
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Nama Program Studi <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Contoh: Teknik Informatika">
+                </div>
+
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="button">Batal</button>
+                    <button class="button button-primary">✓ Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: MODAL ADD JURUSAN -->
+    <div id="add-jurusan-modal" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item active">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content"
+            style="background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+
+            <!-- Modal -->
+            <div class="modal">
+                <div class="modal-title">➕ Tambah Jurusan</div>
+
+                <div class="form-group">
+                    <label class="label">Kode Jurusan <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Contoh: TK, EB, MP">
+                    <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                        Maksimal 5 karakter, hanya huruf kapital
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Nama Jurusan <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Contoh: Teknik">
+                </div>
+
+                <div class="alert alert-info" style="margin-bottom: 15px;">
+                    <strong>ℹ️ Note:</strong> Setelah membuat jurusan baru, Anda dapat menambahkan Program Studi ke
+                    jurusan ini.
+                </div>
+
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="button">Batal</button>
+                    <button class="button button-primary">✓ Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: MODAL ADD JENIS PKM -->
+    <div id="add-pkm-modal" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item active">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content"
+            style="background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+
+            <!-- Modal -->
+            <div class="modal" style="width: 500px;">
+                <div class="modal-title">➕ Tambah Jenis PKM</div>
+
+                <div class="form-group">
+                    <label class="label">Kode PKM <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Contoh: PKM-KC">
+                    <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                        Format: PKM-XX (harus unik)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Nama Lengkap <span class="required">*</span></label>
+                    <input type="text" class="input-field" placeholder="Contoh: Karsa Cipta">
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Deskripsi</label>
+                    <textarea class="input-field" rows="3" placeholder="Deskripsi singkat jenis PKM ini..."></textarea>
+                </div>
+
+                <div class="alert alert-info" style="margin-bottom: 15px;">
+                    <strong>ℹ️ Note:</strong> Setelah membuat jenis PKM baru, Anda perlu menambahkan kriteria substantif
+                    melalui menu "Manajemen Penilaian".
+                </div>
+
+                <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="button">Batal</button>
+                    <button class="button button-primary">✓ Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.querySelectorAll('.page-tabs button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

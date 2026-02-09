@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Demo - Design Test | PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional table styles for demo */
+        .demo-section {
+            margin-bottom: var(--spacing-10);
+        }
+
+        .demo-section-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-gray-800);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .demo-section-desc {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-500);
+            margin-bottom: var(--spacing-5);
+        }
+
+        /* Table Header Actions */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .table-title {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-gray-800);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: var(--spacing-3);
+        }
+
+        /* Table with Checkbox */
+        .table-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        /* User Avatar in Table */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--color-gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-gray-600);
+        }
+
+        .user-avatar.blue {
+            background: var(--color-info-light);
+            color: var(--color-info);
+        }
+
+        .user-avatar.green {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .user-avatar.orange {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+
+        .user-avatar.purple {
+            background: #EDE9FE;
+            color: #7C3AED;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: var(--font-weight-medium);
+            color: var(--color-gray-800);
+        }
+
+        .user-email {
+            font-size: var(--font-size-xs);
+            color: var(--color-gray-500);
+        }
+
+        /* Action Buttons in Table */
+        .table-action-btn {
+            padding: var(--spacing-1) var(--spacing-2);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-gray-500);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .table-action-btn:hover {
+            background: var(--color-gray-100);
+            color: var(--color-gray-800);
+        }
+
+        .table-action-btn.danger:hover {
+            background: var(--color-error-light);
+            color: var(--color-error);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-4);
+            border-top: 1px solid var(--color-gray-200);
+        }
+
+        .pagination-info {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-500);
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: var(--spacing-2);
+        }
+
+        .pagination-btn {
+            padding: var(--spacing-2) var(--spacing-3);
+            font-size: var(--font-size-sm);
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .pagination-btn:hover {
+            background: var(--color-gray-50);
+            border-color: var(--color-gray-400);
+        }
+
+        .pagination-btn.active {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Sortable Header */
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sortable:hover {
+            background: var(--color-gray-100);
+        }
+
+        .sort-icon {
+            margin-left: var(--spacing-2);
+            opacity: 0.5;
+        }
+
+        .sortable:hover .sort-icon {
+            opacity: 1;
+        }
+
+        /* Empty State */
+        .table-empty {
+            text-align: center;
+            padding: var(--spacing-12);
+            color: var(--color-gray-500);
+        }
+
+        .table-empty-icon {
+            margin-bottom: var(--spacing-4);
+            color: var(--color-gray-300);
+        }
+
+        .table-empty-title {
+            font-weight: var(--font-weight-medium);
+            color: var(--color-gray-700);
+            margin-bottom: var(--spacing-2);
+        }
+
+        /* Striped Table */
+        .table-striped tbody tr:nth-child(even) {
+            background: var(--color-gray-50);
+        }
+
+        /* Compact Table */
+        .table-compact th,
+        .table-compact td {
+            padding: var(--spacing-2) var(--spacing-3);
+            font-size: var(--font-size-xs);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-4);
+            flex-wrap: wrap;
+        }
+
+        .filter-input {
+            padding: var(--spacing-2) var(--spacing-3);
+            font-family: var(--font-family);
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-800);
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-md);
+            min-width: 150px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-input:hover {
+            border-color: var(--color-gray-400);
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+        }
+
+        /* Select dropdown arrow */
+        select.filter-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+
+        /* Search Input */
+        .search-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-gray-400);
+            pointer-events: none;
+        }
+
+        .search-input {
+            padding-left: 40px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <p class="sidebar-section-title">Menu</p>
+                <nav class="sidebar-menu">
+                    <a href="dashboard.html" class="sidebar-item">
+                        <!-- Lucide: LayoutDashboard -->
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="form-demo.html" class="sidebar-item">
+                        <!-- Lucide: ClipboardList -->
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <path d="M12 11h4"></path>
+                            <path d="M12 16h4"></path>
+                            <path d="M8 11h.01"></path>
+                            <path d="M8 16h.01"></path>
+                        </svg>
+                        Forms
+                    </a>
+                    <a href="table-demo.html" class="sidebar-item active">
+                        <!-- Lucide: Table -->
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="3" y1="15" x2="21" y2="15"></line>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                            <line x1="15" y1="3" x2="15" y2="21"></line>
+                        </svg>
+                        Tables
+                    </a>
+                    <a href="detail-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Detail
+                    </a>
+                    <a href="modal-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <rect x="7" y="7" width="10" height="10" rx="1" ry="1"></rect>
+                        </svg>
+                        Modals
+                    </a>
+                    <a href="states-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4"></path>
+                            <path d="M12 18v4"></path>
+                            <path d="M4.93 4.93l2.83 2.83"></path>
+                            <path d="M16.24 16.24l2.83 2.83"></path>
+                            <path d="M2 12h4"></path>
+                            <path d="M18 12h4"></path>
+                            <path d="M4.93 19.07l2.83-2.83"></path>
+                            <path d="M16.24 7.76l2.83-2.83"></path>
+                        </svg>
+                        States
+                    </a>
+                    <a href="navigation-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg>
+                        Navigation
+                    </a>
+                    <a href="toast-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        Toasts
+                    </a>
+                    <a href="responsive-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                        Responsive
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mobile Menu Toggle -->
+            <div style="display: flex; align-items: center; gap: var(--spacing-4); margin-bottom: var(--spacing-4);">
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                    <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h2 class="section-title" style="margin: 0;">Table Components Demo</h2>
+            </div>
+
+            <!-- Basic Table -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Basic Table with Actions</h3>
+                <p class="demo-section-desc">Standard table with user info, badges, and action buttons</p>
+
+                <div class="table-header">
+                    <span class="table-title">Users (150)</span>
+                    <div class="table-actions">
+                        <button class="btn btn-secondary">
+                            <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="btn btn-primary">
+                            <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add User
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" class="table-checkbox">
+                                </th>
+                                <th class="sortable">
+                                    Name
+                                    <svg class="icon icon-xs sort-icon" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
+                                    </svg>
+                                </th>
+                                <th>Role</th>
+                                <th class="sortable">
+                                    Status
+                                    <svg class="icon icon-xs sort-icon" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
+                                    </svg>
+                                </th>
+                                <th>Last Active</th>
+                                <th style="width: 100px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="table-checkbox"></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar blue">BS</div>
+                                        <div class="user-info">
+                                            <span class="user-name">Budi Santoso</span>
+                                            <span class="user-email">budi@example.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-info">Admin</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>2 hours ago</td>
+                                <td>
+                                    <button class="table-action-btn" title="Edit">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="table-action-btn danger" title="Delete">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="table-checkbox"></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar green">SW</div>
+                                        <div class="user-info">
+                                            <span class="user-name">Sarah Widya</span>
+                                            <span class="user-email">sarah@example.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-neutral">Mahasiswa</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>5 hours ago</td>
+                                <td>
+                                    <button class="table-action-btn" title="Edit">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="table-action-btn danger" title="Delete">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="table-checkbox"></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar orange">AP</div>
+                                        <div class="user-info">
+                                            <span class="user-name">Andi Prasetyo</span>
+                                            <span class="user-email">andi@example.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-warning">Reviewer</span></td>
+                                <td><span class="badge badge-warning">Pending</span></td>
+                                <td>1 day ago</td>
+                                <td>
+                                    <button class="table-action-btn" title="Edit">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="table-action-btn danger" title="Delete">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="table-checkbox"></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar purple">DN</div>
+                                        <div class="user-info">
+                                            <span class="user-name">Dewi Nurhaliza</span>
+                                            <span class="user-email">dewi@example.com</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-neutral">Mahasiswa</span></td>
+                                <td><span class="badge badge-error">Inactive</span></td>
+                                <td>3 days ago</td>
+                                <td>
+                                    <button class="table-action-btn" title="Edit">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="table-action-btn danger" title="Delete">
+                                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <span class="pagination-info">Showing 1-4 of 150 results</span>
+                        <div class="pagination-buttons">
+                            <button class="pagination-btn" disabled>Previous</button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <button class="pagination-btn">...</button>
+                            <button class="pagination-btn">38</button>
+                            <button class="pagination-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table with Filters -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Table with Filters</h3>
+                <p class="demo-section-desc">Table with search and filter options</p>
+
+                <div class="filter-bar">
+                    <div class="search-wrapper">
+                        <svg class="search-icon icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" class="form-input search-input" placeholder="Search teams..."
+                            style="min-width: 250px;">
+                    </div>
+                    <select class="filter-input">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                        <option value="submitted">Submitted</option>
+                    </select>
+                    <select class="filter-input">
+                        <option value="">All PKM Types</option>
+                        <option value="pkm-kc">PKM-KC</option>
+                        <option value="pkm-gt">PKM-GT</option>
+                        <option value="pkm-k">PKM-K</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Proposal Title</th>
+                                <th>PKM Type</th>
+                                <th>Members</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Tim Inovasi Digital</strong></td>
+                                <td>Aplikasi AR untuk Pembelajaran</td>
+                                <td><span class="badge badge-info">PKM-KC</span></td>
+                                <td>5/5</td>
+                                <td><span class="badge badge-success">Submitted</span></td>
+                                <td>
+                                    <button class="btn btn-secondary"
+                                        style="padding: 4px 12px; font-size: 12px;">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tim Teknologi Hijau</strong></td>
+                                <td>Monitoring IoT Pertanian</td>
+                                <td><span class="badge badge-warning">PKM-GT</span></td>
+                                <td>3/5</td>
+                                <td><span class="badge badge-neutral">Draft</span></td>
+                                <td>
+                                    <button class="btn btn-secondary"
+                                        style="padding: 4px 12px; font-size: 12px;">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tim AI Research</strong></td>
+                                <td>Chatbot NLP Bahasa Indonesia</td>
+                                <td><span class="badge badge-info">PKM-KC</span></td>
+                                <td>4/5</td>
+                                <td><span class="badge badge-success">Reviewed</span></td>
+                                <td>
+                                    <button class="btn btn-secondary"
+                                        style="padding: 4px 12px; font-size: 12px;">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Striped Table -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Striped Table</h3>
+                <p class="demo-section-desc">Alternating row colors for better readability</p>
+
+                <div class="table-container">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kriteria</th>
+                                <th>Bobot</th>
+                                <th>Skor Max</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Kreativitas dan Inovasi</td>
+                                <td>25%</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Kelayakan Teknis</td>
+                                <td>20%</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Dampak dan Manfaat</td>
+                                <td>20%</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Kualitas Penulisan</td>
+                                <td>15%</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Anggaran dan Jadwal</td>
+                                <td>10%</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Referensi dan Literatur</td>
+                                <td>10%</td>
+                                <td>100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Compact Table -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Compact Table</h3>
+                <p class="demo-section-desc">Smaller padding for dense data display</p>
+
+                <div class="table-container">
+                    <table class="table table-compact">
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama Jurusan</th>
+                                <th>Fakultas</th>
+                                <th>Prodi</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>JTI</td>
+                                <td>Teknik Informatika</td>
+                                <td>Fakultas Teknik</td>
+                                <td>3</td>
+                                <td><span class="badge badge-success" style="font-size: 10px;">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>JSI</td>
+                                <td>Sistem Informasi</td>
+                                <td>Fakultas Teknik</td>
+                                <td>2</td>
+                                <td><span class="badge badge-success" style="font-size: 10px;">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>JTE</td>
+                                <td>Teknik Elektro</td>
+                                <td>Fakultas Teknik</td>
+                                <td>2</td>
+                                <td><span class="badge badge-success" style="font-size: 10px;">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>JMN</td>
+                                <td>Manajemen</td>
+                                <td>Fakultas Ekonomi</td>
+                                <td>4</td>
+                                <td><span class="badge badge-success" style="font-size: 10px;">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>JAK</td>
+                                <td>Akuntansi</td>
+                                <td>Fakultas Ekonomi</td>
+                                <td>2</td>
+                                <td><span class="badge badge-neutral" style="font-size: 10px;">Inactive</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="demo-section">
+                <h3 class="demo-section-title">Empty State</h3>
+                <p class="demo-section-desc">When there's no data to display</p>
+
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="table-empty">
+                                        <div class="table-empty-icon">
+                                            <svg class="icon icon-xl" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z">
+                                                </path>
+                                                <polyline points="13 2 13 9 20 9"></polyline>
+                                            </svg>
+                                        </div>
+                                        <p class="table-empty-title">No data found</p>
+                                        <p>Try adjusting your search or filter to find what you're looking for.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Detail | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item active">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="team-list.html">Teams</a> / Tim Inovasi Digital
+            </div>
+
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Detail Team</div>
+                <div>
+                    <a href="team-list.html" class="button">← Kembali</a>
+                    <a href="team-edit.html" class="button">✏️ Edit Team</a>
+                    <a href="assign-reviewer.html" class="button button-primary">📝 Assign Reviewers</a>
+                </div>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Left Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📋 Team Information</div>
+                        <div style="line-height: 2;">
+                            <strong>Nama Team:</strong> Tim Inovasi Digital<br>
+                            <strong>Judul Proposal:</strong> Aplikasi Pembelajaran dengan Augmented Reality<br>
+                            <strong>Jenis PKM:</strong> <span class="badge badge-blue">PKM-KC</span><br>
+                            <strong>Dosen Pembimbing:</strong> Dr. Siti Nurhaliza, M.T.<br>
+                            <strong>Open to Join:</strong> <span class="badge badge-green">Yes</span><br>
+                            <strong>Created:</strong> 2026-01-15<br>
+                            <strong>Last Updated:</strong> 2026-02-01
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">👥 Team Members (4/5)</div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>NIM</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Budi Santoso</td>
+                                    <td>123456</td>
+                                    <td><span class="badge badge-yellow">Ketua</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rina Wijaya</td>
+                                    <td>123457</td>
+                                    <td><span class="badge">Anggota</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Ahmad Fauzi</td>
+                                    <td>123458</td>
+                                    <td><span class="badge">Anggota</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dewi Sartika</td>
+                                    <td>123459</td>
+                                    <td><span class="badge">Anggota</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📄 Proposal Status</div>
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">📄</div>
+                            <div><span class="badge badge-green"
+                                    style="font-size: 16px; padding: 10px 20px;">SUBMITTED</span></div>
+                            <div style="margin-top: 10px; color: #666;">Submitted on 2026-01-20</div>
+                        </div>
+                        <div style="border-top: 2px solid #333; padding-top: 15px; margin-top: 15px;">
+                            <strong>Proposal File:</strong><br>
+                            proposal_tim_inovasi.pdf (2.3 MB)
+                            <button class="button" style="margin-left: 10px;">📥 Download</button>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">👨‍🏫 Assigned Reviewers</div>
+                        <div style="border: 2px solid #333; padding: 15px; margin-bottom: 10px; background: #fff;">
+                            <strong>Reviewer 1:</strong> Dr. Siti Nurhaliza, M.T.<br>
+                            <span class="badge badge-green">COMPLETED</span>
+                            <a href="review-detail.html" class="button button-sm" style="margin-left: 10px;">View
+                                Review</a>
+                        </div>
+                        <div style="border: 2px solid #333; padding: 15px; background: #fff;">
+                            <strong>Reviewer 2:</strong> Prof. Ahmad Fauzi, M.Kom<br>
+                            <span class="badge badge-yellow">IN PROGRESS</span>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">⚙️ Admin Actions</div>
+                        <button class="button" style="width: 100%; margin: 0 0 10px 0;">Override Status</button>
+                        <button class="button button-danger" style="width: 100%; margin: 0;">Delete Team</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

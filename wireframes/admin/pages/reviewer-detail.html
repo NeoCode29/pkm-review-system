@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewer Detail | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item active">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="reviewer-list.html">Reviewers</a> / Dr. Siti Nurhaliza, M.T.
+            </div>
+
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Detail Reviewer</div>
+                <div>
+                    <a href="reviewer-list.html" class="button">← Kembali</a>
+                    <a href="reviewer-assignments.html" class="button">📋 Lihat Penugasan</a>
+                    <a href="assign-proposal.html" class="button button-primary">+ Assign Proposals</a>
+                </div>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Left Column - Profile -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">👤 Profile Reviewer</div>
+                        <div class="profile-picture">
+                            <div style="font-size: 80px;">👤</div>
+                            <div style="margin-top: 10px; font-weight: bold;">Dr. Siti Nurhaliza, M.T.</div>
+                        </div>
+                        <div style="line-height: 2;">
+                            <strong>NIDN:</strong> 0123456789<br>
+                            <strong>Email:</strong> siti.nurhaliza@staff.ac.id<br>
+                            <strong>Program Studi:</strong> Teknik Informatika<br>
+                            <strong>Jabatan:</strong> Dosen Tetap<br>
+                            <strong>Status:</strong> <span class="badge badge-green">ACTIVE</span>
+                        </div>
+                        <div style="margin-top: 20px; border-top: 2px solid #333; padding-top: 15px;">
+                            <button class="button" style="width: 100%; margin: 0 0 10px 0;">✏️ Edit Profile</button>
+                            <button class="button button-danger" style="width: 100%; margin: 0;">Deactivate
+                                Reviewer</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Stats & Assignments -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📊 Review Statistics</div>
+                        <div class="grid-3col">
+                            <div class="stat-box">
+                                <div class="number">5</div>
+                                <div class="stat-label">Total Assigned</div>
+                            </div>
+                            <div class="stat-box" style="background: #e8f5e9;">
+                                <div class="number">3</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff9c4;">
+                                <div class="number">2</div>
+                                <div class="stat-label">Pending</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border: 2px solid #333;">
+                            <strong>Completion Rate:</strong> 60%<br>
+                            <div style="height: 20px; background: #ddd; margin-top: 10px; border: 2px solid #333;">
+                                <div style="height: 100%; width: 60%; background: #333;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">📋 Current Assignments (Preview)</div>
+                        <div style="border: 2px solid #333; padding: 12px; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Tim Inovasi Digital</strong><br>
+                                    <span style="font-size: 13px; color: #666;">PKM-KC | R1</span>
+                                </div>
+                                <span class="badge badge-green">COMPLETED</span>
+                            </div>
+                        </div>
+                        <div style="border: 2px solid #333; padding: 12px; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Tim AI Research</strong><br>
+                                    <span style="font-size: 13px; color: #666;">PKM-KC | R2</span>
+                                </div>
+                                <span class="badge badge-yellow">IN PROGRESS</span>
+                            </div>
+                        </div>
+                        <div style="border: 2px solid #333; padding: 12px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Tim HealthTech</strong><br>
+                                    <span style="font-size: 13px; color: #666;">PKM-KC | R1</span>
+                                </div>
+                                <span class="badge badge-yellow">IN PROGRESS</span>
+                            </div>
+                        </div>
+                        <a href="reviewer-assignments.html" class="button" style="margin-top: 15px;">View All
+                            Assignments →</a>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">📅 Recent Activity</div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-02-05 14:30</div>
+                                Completed review: Tim Inovasi Digital
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-02-03 10:15</div>
+                                Assigned to: Tim HealthTech
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-02-01 09:00</div>
+                                Completed review: Tim Green Tech
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

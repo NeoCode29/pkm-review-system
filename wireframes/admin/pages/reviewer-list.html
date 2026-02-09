@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewer List | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item active">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Manajemen Reviewer</div>
+                <a href="assign-reviewer.html" class="button button-primary">📝 Assign Reviewers</a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid-4col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">12</div>
+                    <div class="stat-label">Total Reviewers</div>
+                </div>
+                <div class="stat-box" style="background: #e8f5e9;">
+                    <div class="number">10</div>
+                    <div class="stat-label">Active</div>
+                </div>
+                <div class="stat-box" style="background: #e3f2fd;">
+                    <div class="number">45</div>
+                    <div class="stat-label">Total Assignments</div>
+                </div>
+                <div class="stat-box" style="background: #fff9c4;">
+                    <div class="number">8</div>
+                    <div class="stat-label">Pending Reviews</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="box">
+                <div class="filter-bar">
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0; width: 150px;">
+                            <option>All</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Prodi</label>
+                        <select class="input-field" style="margin: 0; width: 200px;">
+                            <option>All</option>
+                            <option>Teknik Informatika</option>
+                            <option>Sistem Informasi</option>
+                            <option>Teknik Elektro</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari nama atau NIDN..." style="margin: 0;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviewer Table -->
+            <div class="box">
+                <div class="box-title">Daftar Reviewer (12 orang)</div>
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>NIDN</th>
+                                <th>Prodi</th>
+                                <th>Assignments</th>
+                                <th>Completed</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="reviewer-detail.html" style="color: #000; font-weight: bold;">Dr. Siti
+                                        Nurhaliza, M.T.</a></td>
+                                <td>0123456789</td>
+                                <td>Teknik Informatika</td>
+                                <td><span class="badge badge-blue">5</span></td>
+                                <td><span class="badge badge-green">3</span></td>
+                                <td><span class="badge badge-green">ACTIVE</span></td>
+                                <td>
+                                    <a href="reviewer-detail.html" class="button button-sm">Detail</a>
+                                    <a href="reviewer-assignments.html" class="button button-sm">Penugasan</a>
+                                    <a href="assign-proposal.html" class="button button-sm button-primary">+ Assign</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="reviewer-detail.html" style="color: #000; font-weight: bold;">Prof. Ahmad
+                                        Fauzi, M.Kom</a></td>
+                                <td>0234567890</td>
+                                <td>Teknik Informatika</td>
+                                <td><span class="badge badge-blue">4</span></td>
+                                <td><span class="badge badge-green">4</span></td>
+                                <td><span class="badge badge-green">ACTIVE</span></td>
+                                <td>
+                                    <a href="reviewer-detail.html" class="button button-sm">Detail</a>
+                                    <a href="reviewer-assignments.html" class="button button-sm">Penugasan</a>
+                                    <a href="assign-proposal.html" class="button button-sm button-primary">+ Assign</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="reviewer-detail.html" style="color: #000; font-weight: bold;">Dr. Rina
+                                        Wijaya,
+                                        S.T., M.Eng</a></td>
+                                <td>0345678901</td>
+                                <td>Sistem Informasi</td>
+                                <td><span class="badge badge-blue">3</span></td>
+                                <td><span class="badge badge-green">1</span></td>
+                                <td><span class="badge badge-green">ACTIVE</span></td>
+                                <td>
+                                    <a href="reviewer-detail.html" class="button button-sm">Detail</a>
+                                    <a href="reviewer-assignments.html" class="button button-sm">Penugasan</a>
+                                    <a href="assign-proposal.html" class="button button-sm button-primary">+ Assign</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a href="reviewer-detail.html" style="color: #000; font-weight: bold;">Dr. Bambang
+                                        Sukarno, M.M.</a></td>
+                                <td>0456789012</td>
+                                <td>Manajemen</td>
+                                <td><span class="badge badge-blue">2</span></td>
+                                <td><span class="badge badge-green">2</span></td>
+                                <td><span class="badge">INACTIVE</span></td>
+                                <td>
+                                    <a href="reviewer-detail.html" class="button button-sm">Detail</a>
+                                    <a href="reviewer-assignments.html" class="button button-sm">Penugasan</a>
+                                    <a href="assign-proposal.html" class="button button-sm button-primary">+ Assign</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button class="button">← Previous</button>
+                    <span style="margin: 0 15px;">Page 1 of 2</span>
+                    <button class="button">Next →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

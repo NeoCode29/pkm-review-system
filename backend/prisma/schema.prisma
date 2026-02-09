@@ -1,0 +1,450 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum TeamStatus {
+  active
+  inactive
+}
+
+enum MemberRole {
+  ketua
+  anggota
+}
+
+enum ProposalType {
+  original
+  revised
+}
+
+enum ProposalStatus {
+  draft
+  submitted
+  under_review
+  reviewed
+  not_reviewed
+  needs_revision
+  revised
+}
+
+enum AnnotationType {
+  highlight
+  comment
+}
+
+// ============================================
+// MASTER DATA TABLES
+// ============================================
+
+model Jurusan {
+  id            BigInt         @id @default(autoincrement())
+  nama          String         @unique @db.VarChar(255)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  createdBy     String?        @map("created_by") @db.Uuid
+  updatedBy     String?        @map("updated_by") @db.Uuid
+
+  programStudi  ProgramStudi[]
+  mahasiswa     Mahasiswa[]
+
+  @@map("jurusan")
+}
+
+model ProgramStudi {
+  id            BigInt      @id @default(autoincrement())
+  jurusanId     BigInt      @map("jurusan_id")
+  nama          String      @db.VarChar(255)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  createdBy     String?     @map("created_by") @db.Uuid
+  updatedBy     String?     @map("updated_by") @db.Uuid
+
+  jurusan       Jurusan     @relation(fields: [jurusanId], references: [id], onDelete: Cascade)
+  mahasiswa     Mahasiswa[]
+
+  @@unique([jurusanId, nama])
+  @@index([jurusanId])
+  @@map("program_studi")
+}
+
+model JenisPkm {
+  id                      BigInt                  @id @default(autoincrement())
+  nama                    String                  @unique @db.VarChar(100)
+  kode                    String?                 @unique @db.VarChar(20)
+  deskripsi               String?                 @db.Text
+  createdAt               DateTime                @default(now()) @map("created_at")
+  updatedAt               DateTime                @updatedAt @map("updated_at")
+  createdBy               String?                 @map("created_by") @db.Uuid
+  updatedBy               String?                 @map("updated_by") @db.Uuid
+
+  teams                   Team[]
+  kriteriaAdministrasi    KriteriaAdministrasi[]
+  kriteriaSubstansi       KriteriaSubstansi[]
+  proposalTemplates       ProposalTemplate[]
+
+  @@map("jenis_pkm")
+}
+
+model KriteriaAdministrasi {
+  id                            BigInt                              @id @default(autoincrement())
+  jenisPkmId                    BigInt                              @map("jenis_pkm_id")
+  deskripsi                     String                              @db.Text
+  urutan                        Int?
+  createdAt                     DateTime                            @default(now()) @map("created_at")
+  updatedAt                     DateTime                            @updatedAt @map("updated_at")
+  createdBy                     String?                             @map("created_by") @db.Uuid
+  updatedBy                     String?                             @map("updated_by") @db.Uuid
+
+  jenisPkm                      JenisPkm                            @relation(fields: [jenisPkmId], references: [id], onDelete: Cascade)
+  detailPenilaianAdministrasi   DetailPenilaianAdministrasi[]
+
+  @@index([jenisPkmId])
+  @@map("kriteria_administrasi")
+}
+
+model KriteriaSubstansi {
+  id                        BigInt                      @id @default(autoincrement())
+  jenisPkmId                BigInt                      @map("jenis_pkm_id")
+  nama                      String                      @db.VarChar(255)
+  deskripsi                 String?                     @db.Text
+  skorMin                   Int                         @default(0) @map("skor_min")
+  skorMax                   Int                         @map("skor_max")
+  bobot                     Int
+  urutan                    Int?
+  createdAt                 DateTime                    @default(now()) @map("created_at")
+  updatedAt                 DateTime                    @updatedAt @map("updated_at")
+  createdBy                 String?                     @map("created_by") @db.Uuid
+  updatedBy                 String?                     @map("updated_by") @db.Uuid
+
+  jenisPkm                  JenisPkm                    @relation(fields: [jenisPkmId], references: [id], onDelete: Cascade)
+  detailPenilaianSubstansi  DetailPenilaianSubstansi[]
+
+  @@index([jenisPkmId])
+  @@map("kriteria_substansi")
+}
+
+// ============================================
+// USER TABLES
+// ============================================
+
+model Mahasiswa {
+  id              BigInt        @id @default(autoincrement())
+  userId          String        @unique @map("user_id") @db.Uuid
+  nama            String        @db.VarChar(255)
+  nim             String        @unique @db.VarChar(12)
+  email           String        @unique @db.VarChar(255)
+  noHp            String?       @map("no_hp") @db.VarChar(20)
+  jurusanId       BigInt        @map("jurusan_id")
+  programStudiId  BigInt        @map("program_studi_id")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  createdBy       String?       @map("created_by") @db.Uuid
+  updatedBy       String?       @map("updated_by") @db.Uuid
+
+  jurusan         Jurusan       @relation(fields: [jurusanId], references: [id], onDelete: Cascade)
+  programStudi    ProgramStudi  @relation(fields: [programStudiId], references: [id], onDelete: Cascade)
+  teamMembers     TeamMember[]
+
+  @@index([userId])
+  @@index([nim])
+  @@index([email])
+  @@index([jurusanId])
+  @@index([programStudiId])
+  @@map("mahasiswa")
+}
+
+model ReviewerUser {
+  id                  BigInt                @id @default(autoincrement())
+  userId              String                @unique @map("user_id") @db.Uuid
+  nama                String                @db.VarChar(255)
+  nidn                String?               @db.VarChar(20)
+  email               String                @unique @db.VarChar(255)
+  noHp                String?               @map("no_hp") @db.VarChar(20)
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  createdBy           String?               @map("created_by") @db.Uuid
+  updatedBy           String?               @map("updated_by") @db.Uuid
+
+  reviewerAssignments ReviewerAssignment[]
+
+  @@index([userId])
+  @@index([email])
+  @@map("reviewer_user")
+}
+
+model DosenPembimbing {
+  id        BigInt    @id @default(autoincrement())
+  nama      String    @db.VarChar(255)
+  nidn      String?   @db.VarChar(20)
+  email     String?   @db.VarChar(255)
+  noHp      String?   @map("no_hp") @db.VarChar(20)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  createdBy String?   @map("created_by") @db.Uuid
+  updatedBy String?   @map("updated_by") @db.Uuid
+
+  teams     Team[]
+
+  @@index([nama])
+  @@map("dosen_pembimbing")
+}
+
+// ============================================
+// TEAM & PROPOSAL TABLES
+// ============================================
+
+model Team {
+  id                  BigInt            @id @default(autoincrement())
+  namaTeam            String            @map("nama_team") @db.VarChar(255)
+  judulProposal       String            @map("judul_proposal") @db.Text
+  jenisPkmId          BigInt            @map("jenis_pkm_id")
+  dosenPembimbingId   BigInt?           @map("dosen_pembimbing_id")
+  status              TeamStatus        @default(active)
+  openToJoin          Boolean           @default(true) @map("open_to_join")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+  createdBy           String?           @map("created_by") @db.Uuid
+  updatedBy           String?           @map("updated_by") @db.Uuid
+
+  jenisPkm            JenisPkm          @relation(fields: [jenisPkmId], references: [id], onDelete: Cascade)
+  dosenPembimbing     DosenPembimbing?  @relation(fields: [dosenPembimbingId], references: [id], onDelete: SetNull)
+  teamMembers         TeamMember[]
+  proposals           Proposal[]
+
+  @@index([jenisPkmId])
+  @@index([dosenPembimbingId])
+  @@index([status])
+  @@map("team")
+}
+
+model TeamMember {
+  id          BigInt      @id @default(autoincrement())
+  teamId      BigInt      @map("team_id")
+  mahasiswaId BigInt      @map("mahasiswa_id")
+  role        MemberRole  @default(anggota)
+  joinedAt    DateTime    @default(now()) @map("joined_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  team        Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  mahasiswa   Mahasiswa   @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, mahasiswaId])
+  @@unique([mahasiswaId], name: "one_team_per_mahasiswa")  // NEW: Enforce one team per mahasiswa
+  @@index([teamId])
+  @@index([mahasiswaId])
+  @@map("team_member")
+}
+
+model Proposal {
+  id                  BigInt                @id @default(autoincrement())
+  teamId              BigInt                @map("team_id")
+  type                ProposalType
+  status              ProposalStatus        @default(draft)
+  
+  // Separated scoring (no total score)
+  administratifScore  Decimal?              @map("administratif_score") @db.Decimal(5, 2)
+  substantifScore     Decimal?              @map("substantif_score") @db.Decimal(5, 2)
+  
+  createdAt           DateTime              @default(now()) @map("created_at")
+  updatedAt           DateTime              @updatedAt @map("updated_at")
+  createdBy           String?               @map("created_by") @db.Uuid
+  updatedBy           String?               @map("updated_by") @db.Uuid
+
+  team                Team                  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  proposalFiles       ProposalFile[]
+  reviewerAssignments ReviewerAssignment[]
+
+  @@unique([teamId, type])
+  @@index([teamId])
+  @@index([status])
+  @@index([type])
+  @@map("proposal")
+}
+
+model ProposalFile {
+  id              BigInt          @id @default(autoincrement())
+  proposalId      BigInt          @map("proposal_id")
+  filePath        String          @map("file_path") @db.VarChar(500)
+  fileName        String          @map("file_name") @db.VarChar(255)
+  fileSize        BigInt          @map("file_size")
+  mimeType        String          @default("application/pdf") @map("mime_type") @db.VarChar(100)
+  uploadedBy      String          @map("uploaded_by") @db.Uuid
+  uploadedAt      DateTime        @default(now()) @map("uploaded_at")
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  proposal        Proposal        @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  pdfAnnotations  PdfAnnotation[]
+
+  @@index([proposalId])
+  @@index([uploadedBy])
+  @@map("proposal_file")
+}
+
+// ============================================
+// REVIEW & ASSESSMENT TABLES
+// ============================================
+
+model ReviewerAssignment {
+  id                      BigInt                    @id @default(autoincrement())
+  proposalId              BigInt                    @map("proposal_id")
+  reviewerUserId          BigInt                    @map("reviewer_user_id")
+  reviewerNumber          Int                       @map("reviewer_number") @db.SmallInt
+  assignedAt              DateTime                  @default(now()) @map("assigned_at")
+  assignedBy              String                    @map("assigned_by") @db.Uuid
+  createdAt               DateTime                  @default(now()) @map("created_at")
+
+  proposal                Proposal                  @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  reviewerUser            ReviewerUser              @relation(fields: [reviewerUserId], references: [id], onDelete: Cascade)
+  penilaianAdministrasi   PenilaianAdministrasi?
+  penilaianSubstansi      PenilaianSubstansi?
+  pdfAnnotations          PdfAnnotation[]
+
+  @@unique([proposalId, reviewerNumber])
+  @@index([proposalId])
+  @@index([reviewerUserId])
+  @@map("reviewer_assignment")
+}
+
+model PenilaianAdministrasi {
+  id                          BigInt                            @id @default(autoincrement())
+  reviewerAssignmentId        BigInt                            @unique @map("reviewer_assignment_id")
+  totalKesalahan              Int                               @default(0) @map("total_kesalahan")
+  catatan                     String?                           @db.Text
+  isComplete                  Boolean                           @default(false) @map("is_complete")
+  createdAt                   DateTime                          @default(now()) @map("created_at")
+  updatedAt                   DateTime                          @updatedAt @map("updated_at")
+
+  reviewerAssignment          ReviewerAssignment                @relation(fields: [reviewerAssignmentId], references: [id], onDelete: Cascade)
+  detailPenilaianAdministrasi DetailPenilaianAdministrasi[]
+
+  @@index([reviewerAssignmentId])
+  @@map("penilaian_administrasi")
+}
+
+model DetailPenilaianAdministrasi {
+  id                        BigInt                  @id @default(autoincrement())
+  penilaianAdministrasiId   BigInt                  @map("penilaian_administrasi_id")
+  kriteriaAdministrasiId    BigInt                  @map("kriteria_administrasi_id")
+  adaKesalahan              Boolean                 @default(false) @map("ada_kesalahan")
+  createdAt                 DateTime                @default(now()) @map("created_at")
+  updatedAt                 DateTime                @updatedAt @map("updated_at")
+
+  penilaianAdministrasi     PenilaianAdministrasi   @relation(fields: [penilaianAdministrasiId], references: [id], onDelete: Cascade)
+  kriteriaAdministrasi      KriteriaAdministrasi    @relation(fields: [kriteriaAdministrasiId], references: [id], onDelete: Cascade)
+
+  @@unique([penilaianAdministrasiId, kriteriaAdministrasiId])
+  @@index([penilaianAdministrasiId])
+  @@index([kriteriaAdministrasiId])
+  @@map("detail_penilaian_administrasi")
+}
+
+model PenilaianSubstansi {
+  id                        BigInt                      @id @default(autoincrement())
+  reviewerAssignmentId      BigInt                      @unique @map("reviewer_assignment_id")
+  totalSkor                 Decimal                     @default(0) @map("total_skor") @db.Decimal(10, 2)
+  catatan                   String?                     @db.Text
+  isComplete                Boolean                     @default(false) @map("is_complete")
+  createdAt                 DateTime                    @default(now()) @map("created_at")
+  updatedAt                 DateTime                    @updatedAt @map("updated_at")
+
+  reviewerAssignment        ReviewerAssignment          @relation(fields: [reviewerAssignmentId], references: [id], onDelete: Cascade)
+  detailPenilaianSubstansi  DetailPenilaianSubstansi[]
+
+  @@index([reviewerAssignmentId])
+  @@map("penilaian_substansi")
+}
+
+model DetailPenilaianSubstansi {
+  id                    BigInt              @id @default(autoincrement())
+  penilaianSubstansiId  BigInt              @map("penilaian_substansi_id")
+  kriteriaSubstansiId   BigInt              @map("kriteria_substansi_id")
+  skor                  Decimal             @db.Decimal(10, 2)
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+
+  penilaianSubstansi    PenilaianSubstansi  @relation(fields: [penilaianSubstansiId], references: [id], onDelete: Cascade)
+  kriteriaSubstansi     KriteriaSubstansi   @relation(fields: [kriteriaSubstansiId], references: [id], onDelete: Cascade)
+
+  @@unique([penilaianSubstansiId, kriteriaSubstansiId])
+  @@index([penilaianSubstansiId])
+  @@index([kriteriaSubstansiId])
+  @@map("detail_penilaian_substansi")
+}
+
+model PdfAnnotation {
+  id                    BigInt              @id @default(autoincrement())
+  proposalFileId        BigInt              @map("proposal_file_id")
+  reviewerAssignmentId  BigInt              @map("reviewer_assignment_id")
+  type                  AnnotationType
+  pageNumber            Int                 @map("page_number")
+  annotationData        Json                @map("annotation_data")
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+
+  proposalFile          ProposalFile        @relation(fields: [proposalFileId], references: [id], onDelete: Cascade)
+  reviewerAssignment    ReviewerAssignment  @relation(fields: [reviewerAssignmentId], references: [id], onDelete: Cascade)
+
+  @@index([proposalFileId])
+  @@index([reviewerAssignmentId])
+  @@index([pageNumber])
+  @@map("pdf_annotation")
+}
+
+// ============================================
+// CONFIGURATION TABLES
+// ============================================
+
+model SystemSettings {
+  id          BigInt    @id @default(autoincrement())
+  fieldName   String    @unique @map("field_name") @db.VarChar(100)
+  fieldValue  String    @map("field_value") @db.VarChar(255)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([fieldName])
+  @@map("system_settings")
+}
+
+model SystemConfig {
+  id          BigInt    @id @default(autoincrement())
+  configKey   String    @unique @map("config_key") @db.VarChar(100)
+  configValue Json      @map("config_value")
+  deskripsi   String?   @db.Text
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  updatedBy   String?   @map("updated_by") @db.Uuid
+
+  @@index([configKey])
+  @@map("system_config")
+}
+
+model ProposalTemplate {
+  id            BigInt    @id @default(autoincrement())
+  jenisPkmId    BigInt    @map("jenis_pkm_id")
+  namaTemplate  String    @map("nama_template") @db.VarChar(255)
+  filePath      String    @map("file_path") @db.VarChar(500)
+  fileName      String    @map("file_name") @db.VarChar(255)
+  deskripsi     String?   @db.Text
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  createdBy     String?   @map("created_by") @db.Uuid
+  updatedBy     String?   @map("updated_by") @db.Uuid
+
+  jenisPkm      JenisPkm  @relation(fields: [jenisPkmId], references: [id], onDelete: Cascade)
+
+  @@index([jenisPkmId])
+  @@map("proposal_template")
+}

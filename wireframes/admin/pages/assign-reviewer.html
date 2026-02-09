@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Reviewer | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item active">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Assign Reviewers ke Proposal</div>
+                <a href="team-detail.html" class="button">← Kembali ke Team</a>
+            </div>
+
+            <!-- Proposal Info -->
+            <div class="box" style="background: #fff9c4;">
+                <div class="box-title">📋 Proposal Information</div>
+                <div style="line-height: 1.8;">
+                    <strong>Team:</strong> Tim Inovasi Digital<br>
+                    <strong>Judul:</strong> Aplikasi Pembelajaran dengan Augmented Reality<br>
+                    <strong>Jenis PKM:</strong> <span class="badge badge-blue">PKM-KC</span><br>
+                    <strong>Status:</strong> <span class="badge badge-green">SUBMITTED</span>
+                </div>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Reviewer 1 -->
+                <div class="box">
+                    <div class="box-title">👨‍🏫 Reviewer 1 (R1) <span class="required">*</span></div>
+                    <div style="margin-bottom: 15px;">
+                        <label class="label">Pilih Reviewer:</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option value="">-- Pilih Reviewer --</option>
+                            <option selected>Dr. Siti Nurhaliza, M.T. (TI - 5 assignments)</option>
+                            <option>Prof. Ahmad Fauzi, M.Kom (TI - 4 assignments)</option>
+                            <option>Dr. Rina Wijaya, S.T., M.Eng (SI - 3 assignments)</option>
+                            <option>Dr. Bambang Sukarno, M.M. (MN - 2 assignments)</option>
+                        </select>
+                    </div>
+                    <div style="padding: 15px; background: #e8f5e9; border: 2px solid #333;">
+                        <strong>Selected:</strong> Dr. Siti Nurhaliza, M.T.<br>
+                        <span style="font-size: 13px; color: #666;">
+                            Current load: 5 assignments | Completed: 3
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Reviewer 2 -->
+                <div class="box">
+                    <div class="box-title">👨‍🏫 Reviewer 2 (R2) <span class="required">*</span></div>
+                    <div style="margin-bottom: 15px;">
+                        <label class="label">Pilih Reviewer:</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option value="">-- Pilih Reviewer --</option>
+                            <option>Dr. Siti Nurhaliza, M.T. (TI - 5 assignments)</option>
+                            <option selected>Prof. Ahmad Fauzi, M.Kom (TI - 4 assignments)</option>
+                            <option>Dr. Rina Wijaya, S.T., M.Eng (SI - 3 assignments)</option>
+                            <option>Dr. Bambang Sukarno, M.M. (MN - 2 assignments)</option>
+                        </select>
+                    </div>
+                    <div style="padding: 15px; background: #e8f5e9; border: 2px solid #333;">
+                        <strong>Selected:</strong> Prof. Ahmad Fauzi, M.Kom<br>
+                        <span style="font-size: 13px; color: #666;">
+                            Current load: 4 assignments | Completed: 4
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Rules -->
+            <div class="box">
+                <div class="box-title">✅ Validation Rules</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="checkbox-item checked">
+                        <span style="color: #388e3c;">✓</span>
+                        <span>Reviewer 1 dan Reviewer 2 harus berbeda</span>
+                    </div>
+                    <div class="checkbox-item checked">
+                        <span style="color: #388e3c;">✓</span>
+                        <span>Reviewer tidak boleh menjadi dosen pembimbing team ini</span>
+                    </div>
+                    <div class="checkbox-item checked">
+                        <span style="color: #388e3c;">✓</span>
+                        <span>Setiap proposal harus memiliki 2 reviewer</span>
+                    </div>
+                    <div class="checkbox-item checked">
+                        <span style="color: #388e3c;">✓</span>
+                        <span>Reviewer harus dalam status ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ Info:</strong>
+                Setelah assign, proposal akan otomatis berubah status menjadi UNDER_REVIEW
+                dan reviewer akan menerima notifikasi untuk melakukan review.
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <a href="team-detail.html" class="button">Batal</a>
+                <button class="button button-primary">✓ Assign Reviewers</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

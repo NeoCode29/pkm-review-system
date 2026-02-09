@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Tim | Mahasiswa PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Mahasiswa</h1>
+        </div>
+        <div class="user-info">
+            Budi Santoso (123456789012) | <a href="login.html">Logout</a> |
+            <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Mahasiswa</h3>
+            <a href="dashboard.html" class="sidebar-item">🏠 Dashboard</a>
+            <a href="team-detail.html" class="sidebar-item active">👥 Tim Saya</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a> / Tim Saya
+            </div>
+            <div class="page-title">Detail Tim</div>
+
+            <!-- Team Header -->
+            <div class="box" style="background: #e3f2fd;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h2 style="color: #1565c0; margin-bottom: 10px; font-size: 24px;">Tim Inovasi Digital</h2>
+                        <p style="color: #333; font-size: 16px;">Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar
+                        </p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <span class="badge badge-blue" style="padding: 8px 16px; font-size: 14px;">PKM-KC</span>
+                            <span class="badge badge-green" style="padding: 8px 16px; font-size: 14px;">✓ Terbuka</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <a href="edit-team.html" class="button button-primary">✏️ Edit Tim</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid-4col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">5</div>
+                    <div class="stat-label">Anggota Tim</div>
+                </div>
+                <div class="stat-box" style="background: #fff3e0;">
+                    <div class="number" style="color: #f57c00;">DRAFT</div>
+                    <div class="stat-label">Status Proposal</div>
+                </div>
+                <div class="stat-box" style="background: #e8f5e9;">
+                    <div class="number" style="color: #388e3c;">✓</div>
+                    <div class="stat-label">Dosen Pembimbing</div>
+                </div>
+                <div class="stat-box" style="background: #fff9c4;">
+                    <div class="number" style="color: #f57f17;">2</div>
+                    <div class="stat-label">Join Requests</div>
+                </div>
+            </div>
+
+            <div class="grid-2col">
+                <!-- Left Column -->
+                <div>
+                    <!-- Team Info -->
+                    <div class="box">
+                        <div class="box-title">📋 Informasi Tim</div>
+                        <table style="width: 100%; font-size: 14px;">
+                            <tr>
+                                <td style="padding: 8px 0; color: #666; width: 40%;">Nama Tim:</td>
+                                <td style="padding: 8px 0;"><strong>Tim Inovasi Digital</strong></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #666;">Judul Proposal:</td>
+                                <td style="padding: 8px 0;">Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #666;">Jenis PKM:</td>
+                                <td style="padding: 8px 0;"><span class="badge badge-blue">PKM-KC</span></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #666;">Dibuat pada:</td>
+                                <td style="padding: 8px 0;">1 Februari 2026</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #666;">Visibilitas:</td>
+                                <td style="padding: 8px 0;">
+                                    <span class="badge badge-green">✓ Terbuka untuk Bergabung</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Dosen Pembimbing -->
+                    <div class="box">
+                        <div class="box-title">👨‍🏫 Dosen Pembimbing</div>
+                        <div class="member-item" style="border-color: #1565c0;">
+                            <div class="member-avatar" style="background: #1565c0; color: #fff;">DP</div>
+                            <div class="member-info">
+                                <div class="member-name">Dr. Ahmad Fauzi, M.Kom</div>
+                                <div class="member-detail">
+                                    NIDN: 0123456789<br>
+                                    📧 ahmad.fauzi@staff.ac.id<br>
+                                    📱 08123456789
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proposal Status -->
+                    <div class="box">
+                        <div class="box-title">📄 Status Proposal</div>
+
+                        <div class="alert alert-warning">
+                            <strong>⚠️ Proposal belum diupload</strong><br>
+                            <span style="font-size: 14px;">Upload proposal sebelum deadline submission</span>
+                        </div>
+
+                        <a href="upload-proposal.html" class="button button-primary"
+                            style="width: 100%; text-align: center;">
+                            📤 Upload Proposal Sekarang
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <!-- Team Members -->
+                    <div class="box">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div class="box-title" style="margin-bottom: 0;">👥 Anggota Tim (5/5)</div>
+                            <span class="badge badge-gray">Slot Penuh</span>
+                        </div>
+
+                        <!-- Ketua -->
+                        <div class="member-item" style="border-color: #1565c0; background: #e3f2fd;">
+                            <div class="member-avatar">BU</div>
+                            <div class="member-info">
+                                <div class="member-name">
+                                    Budi Santoso
+                                    <span class="badge badge-blue" style="font-size: 10px;">Ketua</span>
+                                    <span class="badge badge-green" style="font-size: 10px;">Anda</span>
+                                </div>
+                                <div class="member-detail">123456789012 • T. Informatika</div>
+                            </div>
+                        </div>
+
+                        <!-- Member 2 -->
+                        <div class="member-item">
+                            <div class="member-avatar">AF</div>
+                            <div class="member-info">
+                                <div class="member-name">Ahmad Fauzi</div>
+                                <div class="member-detail">123456789013 • T. Informatika</div>
+                            </div>
+                            <button class="button button-sm button-danger" onclick="showKickModal()">Kick</button>
+                        </div>
+
+                        <!-- Member 3 -->
+                        <div class="member-item">
+                            <div class="member-avatar">SW</div>
+                            <div class="member-info">
+                                <div class="member-name">Sarah Wijaya</div>
+                                <div class="member-detail">123456789014 • T. Elektro</div>
+                            </div>
+                            <button class="button button-sm button-danger">Kick</button>
+                        </div>
+
+                        <!-- Member 4 -->
+                        <div class="member-item">
+                            <div class="member-avatar">RP</div>
+                            <div class="member-info">
+                                <div class="member-name">Rini Putri</div>
+                                <div class="member-detail">123456789015 • T. Informatika</div>
+                            </div>
+                            <button class="button button-sm button-danger">Kick</button>
+                        </div>
+
+                        <!-- Member 5 -->
+                        <div class="member-item">
+                            <div class="member-avatar">DK</div>
+                            <div class="member-info">
+                                <div class="member-name">Dedi Kurniawan</div>
+                                <div class="member-detail">123456789016 • T. Elektro</div>
+                            </div>
+                            <button class="button button-sm button-danger">Kick</button>
+                        </div>
+
+                        <p style="font-size: 12px; color: #666; margin-top: 15px;">
+                            ℹ️ Semua anggota memiliki hak yang sama untuk edit tim, kick member, dan approve join
+                            request.
+                        </p>
+                    </div>
+
+                    <!-- Join Requests -->
+                    <div class="box" style="background: #fff9c4; border-color: #f9a825;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div class="box-title" style="color: #f57f17; margin-bottom: 0;">📨 Permintaan Bergabung
+                            </div>
+                            <span class="badge badge-yellow">2 Pending</span>
+                        </div>
+
+                        <!-- Request 1 -->
+                        <div class="member-item" style="background: #fff;">
+                            <div class="member-avatar">LM</div>
+                            <div class="member-info">
+                                <div class="member-name">Linda Maharani</div>
+                                <div class="member-detail">123456789017 • T. Informatika</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px; font-style: italic;">
+                                    "Saya tertarik dengan proyek AR ini karena memiliki pengalaman dalam Unity..."
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px; padding-left: 55px;">
+                            <button class="button button-sm button-success">✓ Approve</button>
+                            <button class="button button-sm button-danger">✗ Reject</button>
+                        </div>
+
+                        <!-- Request 2 -->
+                        <div class="member-item" style="background: #fff;">
+                            <div class="member-avatar">JW</div>
+                            <div class="member-info">
+                                <div class="member-name">Joko Widodo</div>
+                                <div class="member-detail">123456789018 • T. Sipil</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px; font-style: italic;">
+                                    "Ingin bergabung untuk belajar tentang aplikasi pendidikan"
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; padding-left: 55px;">
+                            <button class="button button-sm button-success">✓ Approve</button>
+                            <button class="button button-sm button-danger">✗ Reject</button>
+                        </div>
+
+                        <div class="alert alert-info" style="margin-top: 15px; margin-bottom: 0;">
+                            <strong>⚠️ Tim sudah penuh!</strong><br>
+                            <span style="font-size: 12px;">Anda perlu kick anggota terlebih dahulu jika ingin approve
+                                request baru.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="box" style="border-color: #d32f2f; margin-top: 20px;">
+                <div class="box-title" style="color: #d32f2f;">⚠️ Danger Zone</div>
+                <div class="grid-2col">
+                    <div>
+                        <strong>Keluar dari Tim</strong>
+                        <p style="font-size: 14px; color: #666; margin-top: 5px;">
+                            Anda akan keluar dari tim ini. Jika Anda ketua dan satu-satunya anggota, tim akan dihapus.
+                        </p>
+                    </div>
+                    <div style="text-align: right;">
+                        <button class="button button-danger" onclick="showLeaveModal()">🚪 Keluar dari Tim</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Kick Confirmation Modal -->
+    <div class="modal-overlay" id="kickModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">⚠️ Konfirmasi Kick Member</div>
+            <p style="margin-bottom: 20px;">
+                Apakah Anda yakin ingin mengeluarkan <strong>Ahmad Fauzi</strong> dari tim?
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="button" onclick="hideKickModal()">Batal</button>
+                <button class="button button-danger">Ya, Kick Member</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Team Modal -->
+    <div class="modal-overlay" id="leaveModal" style="display: none;">
+        <div class="modal">
+            <div class="modal-title">⚠️ Konfirmasi Keluar Tim</div>
+            <p style="margin-bottom: 20px;">
+                Apakah Anda yakin ingin keluar dari <strong>Tim Inovasi Digital</strong>?<br><br>
+                <span style="color: #d32f2f;">Anda adalah ketua tim. Jika keluar, salah satu anggota akan dipilih secara
+                    random menjadi ketua baru.</span>
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="button" onclick="hideLeaveModal()">Batal</button>
+                <button class="button button-danger">Ya, Keluar dari Tim</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+        function showKickModal() { document.getElementById('kickModal').style.display = 'flex'; }
+        function hideKickModal() { document.getElementById('kickModal').style.display = 'none'; }
+        function showLeaveModal() { document.getElementById('leaveModal').style.display = 'flex'; }
+        function hideLeaveModal() { document.getElementById('leaveModal').style.display = 'none'; }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item active">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">Dashboard</div>
+
+            <!-- Current Phase -->
+            <div class="box" style="background: #e3f2fd;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 14px; color: #666;">Current System Phase</div>
+                        <div style="font-size: 24px; font-weight: bold;">📝 REVIEW PERIOD</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px;">
+                            Reviewers can now evaluate submitted proposals
+                        </div>
+                    </div>
+                    <a href="settings.html" class="button button-primary">⚙️ Manage Phase</a>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid-4col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">156</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">38</div>
+                    <div class="stat-label">Total Teams</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">12</div>
+                    <div class="stat-label">Reviewers</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">28</div>
+                    <div class="stat-label">Proposals Submitted</div>
+                </div>
+            </div>
+
+            <!-- Two Column Content -->
+            <div class="grid-2col">
+                <!-- Recent Teams -->
+                <div class="box">
+                    <div class="box-title">📋 Recent Teams</div>
+                    <div class="table-scroll-wrapper">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Team Name</th>
+                                    <th>PKM Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Tim Inovasi Digital</td>
+                                    <td><span class="badge badge-blue">PKM-KC</span></td>
+                                    <td><span class="badge badge-green">SUBMITTED</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tim AI Research</td>
+                                    <td><span class="badge badge-blue">PKM-KC</span></td>
+                                    <td><span class="badge badge-yellow">IN REVIEW</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tim Green Tech</td>
+                                    <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                    <td><span class="badge">DRAFT</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="team-list.html" class="button">View All Teams →</a>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="box">
+                    <div class="box-title">⚡ Quick Actions</div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <a href="assign-reviewer.html" class="button button-primary"
+                            style="text-align: center; margin: 0;">
+                            📝 Assign Reviewers
+                        </a>
+                        <a href="team-list.html" class="button" style="text-align: center; margin: 0;">
+                            👥 Manage Teams
+                        </a>
+                        <a href="reviewer-list.html" class="button" style="text-align: center; margin: 0;">
+                            🔍 View Reviewers
+                        </a>
+                        <a href="settings.html" class="button" style="text-align: center; margin: 0;">
+                            ⚙️ System Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Progress -->
+            <div class="box">
+                <div class="box-title">📊 Review Progress</div>
+                <div class="grid-4col">
+                    <div class="stat-box" style="background: #fff9c4;">
+                        <div class="number">8</div>
+                        <div class="stat-label">Pending Assignment</div>
+                    </div>
+                    <div class="stat-box" style="background: #e3f2fd;">
+                        <div class="number">12</div>
+                        <div class="stat-label">Under Review</div>
+                    </div>
+                    <div class="stat-box" style="background: #e8f5e9;">
+                        <div class="number">6</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-box" style="background: #ffebee;">
+                        <div class="number">2</div>
+                        <div class="stat-label">Needs Revision</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

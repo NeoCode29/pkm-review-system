@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Demo - Design Test | PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional form styles for demo */
+        .form-section {
+            margin-bottom: var(--spacing-8);
+        }
+
+        .form-section-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-gray-800);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-2);
+            border-bottom: 1px solid var(--color-gray-200);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-5);
+        }
+
+        .form-hint {
+            font-size: var(--font-size-xs);
+            color: var(--color-gray-500);
+            margin-top: var(--spacing-1);
+        }
+
+        .form-error {
+            font-size: var(--font-size-xs);
+            color: var(--color-error);
+            margin-top: var(--spacing-1);
+        }
+
+        .form-input.error {
+            border-color: var(--color-error);
+        }
+
+        .form-input.success {
+            border-color: var(--color-success);
+        }
+
+        /* Textarea */
+        .form-textarea {
+            width: 100%;
+            padding: var(--spacing-3) var(--spacing-4);
+            font-family: var(--font-family);
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-800);
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            min-height: 100px;
+            transition: all var(--transition-fast);
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+        }
+
+        /* Checkbox & Radio */
+        .checkbox-group,
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            cursor: pointer;
+        }
+
+        .checkbox-input,
+        .radio-input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        .checkbox-label,
+        .radio-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-700);
+            cursor: pointer;
+        }
+
+        /* Toggle Switch */
+        .toggle-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-3) var(--spacing-4);
+            background: var(--color-gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .toggle-label {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-1);
+        }
+
+        .toggle-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-gray-800);
+        }
+
+        .toggle-description {
+            font-size: var(--font-size-xs);
+            color: var(--color-gray-500);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--color-gray-300);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--color-white);
+            border-radius: var(--radius-full);
+            transition: transform var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-switch.active {
+            background: var(--color-success);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-8);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .file-upload:hover {
+            border-color: var(--color-primary);
+            background: var(--color-gray-50);
+        }
+
+        .file-upload-icon {
+            margin-bottom: var(--spacing-3);
+            color: var(--color-gray-400);
+        }
+
+        .file-upload-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-600);
+        }
+
+        .file-upload-hint {
+            font-size: var(--font-size-xs);
+            color: var(--color-gray-400);
+            margin-top: var(--spacing-2);
+        }
+
+        /* Search Input */
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-gray-400);
+        }
+
+        .search-input {
+            padding-left: 44px;
+        }
+
+        /* Input with Icon */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon-left {
+            position: absolute;
+            left: var(--spacing-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-gray-400);
+        }
+
+        .input-icon-right {
+            position: absolute;
+            right: var(--spacing-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-gray-400);
+            cursor: pointer;
+        }
+
+        .form-input.with-icon-left {
+            padding-left: 44px;
+        }
+
+        .form-input.with-icon-right {
+            padding-right: 44px;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            gap: var(--spacing-3);
+            margin-top: var(--spacing-6);
+            padding-top: var(--spacing-6);
+            border-top: 1px solid var(--color-gray-200);
+        }
+
+        /* Required indicator */
+        .required {
+            color: var(--color-error);
+        }
+
+        /* Disabled state */
+        .form-input:disabled,
+        .form-textarea:disabled {
+            background: var(--color-gray-100);
+            color: var(--color-gray-500);
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <p class="sidebar-section-title">Menu</p>
+                <nav class="sidebar-menu">
+                    <a href="dashboard.html" class="sidebar-item">
+                        <!-- Lucide: LayoutDashboard -->
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="form-demo.html" class="sidebar-item active">
+                        <!-- Lucide: ClipboardList -->
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <path d="M12 11h4"></path>
+                            <path d="M12 16h4"></path>
+                            <path d="M8 11h.01"></path>
+                            <path d="M8 16h.01"></path>
+                        </svg>
+                        Forms
+                    </a>
+                    <a href="table-demo.html" class="sidebar-item">
+                        <!-- Lucide: Table -->
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="3" y1="15" x2="21" y2="15"></line>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                            <line x1="15" y1="3" x2="15" y2="21"></line>
+                        </svg>
+                        Tables
+                    </a>
+                    <a href="detail-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Detail
+                    </a>
+                    <a href="modal-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <rect x="7" y="7" width="10" height="10" rx="1" ry="1"></rect>
+                        </svg>
+                        Modals
+                    </a>
+                    <a href="states-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4"></path>
+                            <path d="M12 18v4"></path>
+                            <path d="M4.93 4.93l2.83 2.83"></path>
+                            <path d="M16.24 16.24l2.83 2.83"></path>
+                            <path d="M2 12h4"></path>
+                            <path d="M18 12h4"></path>
+                            <path d="M4.93 19.07l2.83-2.83"></path>
+                            <path d="M16.24 7.76l2.83-2.83"></path>
+                        </svg>
+                        States
+                    </a>
+                    <a href="navigation-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg>
+                        Navigation
+                    </a>
+                    <a href="toast-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        Toasts
+                    </a>
+                    <a href="responsive-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                        Responsive
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mobile Menu Toggle -->
+            <div style="display: flex; align-items: center; gap: var(--spacing-4); margin-bottom: var(--spacing-4);">
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                    <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h2 class="section-title" style="margin: 0;">Form Components Demo</h2>
+            </div>
+
+            <!-- Text Inputs Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Text Inputs</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Text Input <span class="required">*</span></label>
+                        <input type="text" class="form-input" placeholder="Enter your name">
+                        <p class="form-hint">This is a helper text</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Input</label>
+                        <input type="email" class="form-input" placeholder="email@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password Input</label>
+                        <div class="input-wrapper">
+                            <input type="password" class="form-input with-icon-right" placeholder="Enter password">
+                            <svg class="input-icon-right icon icon-sm" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Number Input</label>
+                        <input type="number" class="form-input" placeholder="0" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Input with Error</label>
+                        <input type="text" class="form-input error" value="Invalid input">
+                        <p class="form-error">This field has an error</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Input with Success</label>
+                        <input type="text" class="form-input success" value="Valid input">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Disabled Input</label>
+                        <input type="text" class="form-input" value="Cannot edit this" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Search Input</label>
+                        <div class="search-wrapper">
+                            <svg class="search-icon icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" class="form-input search-input" placeholder="Search...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select & Date Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Select & Date</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Select / Dropdown</label>
+                        <select class="form-input form-select">
+                            <option value="">Select an option</option>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Date Input</label>
+                        <input type="date" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Time Input</label>
+                        <input type="time" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">DateTime Input</label>
+                        <input type="datetime-local" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Textarea Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Textarea</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" placeholder="Enter your description here..."></textarea>
+                    <p class="form-hint">Maximum 500 characters</p>
+                </div>
+            </div>
+
+            <!-- Checkbox & Radio Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Checkbox & Radio</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Checkboxes</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox-input" checked>
+                                <span class="checkbox-label">Option 1 (checked)</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox-input">
+                                <span class="checkbox-label">Option 2</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" class="checkbox-input">
+                                <span class="checkbox-label">Option 3</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Radio Buttons</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="radio-demo" class="radio-input" checked>
+                                <span class="radio-label">Option A (selected)</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="radio-demo" class="radio-input">
+                                <span class="radio-label">Option B</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="radio-demo" class="radio-input">
+                                <span class="radio-label">Option C</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Toggle Switches</h3>
+
+                <div class="toggle-group">
+                    <div class="toggle-item">
+                        <div class="toggle-label">
+                            <span class="toggle-title">Email Notifications</span>
+                            <span class="toggle-description">Receive email updates about your account</span>
+                        </div>
+                        <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-label">
+                            <span class="toggle-title">Push Notifications</span>
+                            <span class="toggle-description">Receive push notifications on your device</span>
+                        </div>
+                        <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                    <div class="toggle-item">
+                        <div class="toggle-label">
+                            <span class="toggle-title">Dark Mode</span>
+                            <span class="toggle-description">Enable dark theme for the application</span>
+                        </div>
+                        <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">File Upload</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Document</label>
+                    <div class="file-upload">
+                        <div class="file-upload-icon">
+                            <svg class="icon icon-xl" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <p class="file-upload-text">
+                            <strong>Click to upload</strong> or drag and drop
+                        </p>
+                        <p class="file-upload-hint">PDF, DOC, DOCX up to 10MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Buttons</h3>
+
+                <div class="flex gap-3" style="flex-wrap: wrap;">
+                    <button class="btn btn-primary">
+                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Save Changes
+                    </button>
+                    <button class="btn btn-secondary">Cancel</button>
+                    <button class="btn btn-success">
+                        <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Approve
+                    </button>
+                    <button class="btn btn-ghost">Learn More</button>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="button-group">
+                <button class="btn btn-primary">Submit Form</button>
+                <button class="btn btn-secondary">Reset</button>
+                <button class="btn btn-ghost">Cancel</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

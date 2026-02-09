@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kriteria Administratif | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-administratif.html" class="sidebar-item active">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Manajemen Penilaian</div>
+                <a href="add-kriteria-admin.html" class="button button-primary">+ Tambah Kriteria</a>
+            </div>
+
+            <!-- Tabs for Administratif vs Substantif -->
+            <div class="tabs">
+                <a href="kriteria-administratif.html" class="tab active">Kriteria Administratif</a>
+                <a href="kriteria-substantif.html" class="tab">Kriteria Substantif</a>
+            </div>
+
+            <!-- PKM Type Tabs -->
+            <div class="tabs" style="margin-top: -20px; border-top: none;">
+                <div class="tab active" style="background: #1976d2; color: #fff; border-color: #1976d2;">PKM-KC</div>
+                <div class="tab">PKM-GT</div>
+                <div class="tab">PKM-K</div>
+                <div class="tab">PKM-PM</div>
+                <div class="tab">PKM-PI</div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ PKM-KC (Karsa Cipta) - Kriteria Administratif</strong><br>
+                Kriteria kelengkapan dan format proposal khusus untuk PKM Karsa Cipta.
+            </div>
+
+            <!-- Kriteria Table -->
+            <div class="box">
+                <div class="box-title">📋 Kriteria Administratif PKM-KC (7 kriteria)</div>
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th>Nama Kriteria</th>
+                                <th>Deskripsi</th>
+                                <th style="width: 120px;">Berlaku</th>
+                                <th style="width: 100px;">Wajib</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><strong>Format Proposal</strong></td>
+                                <td>Proposal mengikuti template yang ditetapkan</td>
+                                <td><span class="badge">Semua PKM</span></td>
+                                <td><span class="badge badge-red">Wajib</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><strong>Kelengkapan BAB</strong></td>
+                                <td>BAB 1-5 lengkap sesuai panduan</td>
+                                <td><span class="badge">Semua PKM</span></td>
+                                <td><span class="badge badge-red">Wajib</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><strong>Jumlah Halaman</strong></td>
+                                <td>Proposal 15-20 halaman</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-red">Wajib</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><strong>Daftar Pustaka</strong></td>
+                                <td>Minimal 10 referensi</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-red">Wajib</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td><strong>Lampiran RAB</strong></td>
+                                <td>RAB maksimal Rp 12.500.000</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-red">Wajib</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td><strong>Desain/Prototipe</strong></td>
+                                <td>Lampiran desain atau prototipe karya cipta</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-red">Wajib</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td><strong>Biodata Tim</strong></td>
+                                <td>Biodata ketua dan anggota tim terlampir</td>
+                                <td><span class="badge">Semua PKM</span></td>
+                                <td><span class="badge">Opsional</span></td>
+                                <td>
+                                    <button class="button button-sm">Edit</button>
+                                    <button class="button button-sm button-danger">🗑️</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Validation Rules -->
+            <div class="box">
+                <div class="box-title">✅ Logika Kelulusan Administratif</div>
+                <div class="grid-2col">
+                    <div>
+                        <div class="alert alert-success" style="margin: 0;">
+                            <strong>✓ LOLOS</strong><br>
+                            Semua kriteria WAJIB terpenuhi
+                        </div>
+                    </div>
+                    <div>
+                        <div class="alert alert-warning" style="margin: 0; background: #ffebee;">
+                            <strong>✗ TIDAK LOLOS</strong><br>
+                            Minimal 1 kriteria WAJIB tidak terpenuhi
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Note:</strong> Kriteria dengan label "Semua PKM" berlaku untuk semua jenis PKM.
+                Kriteria yang sudah digunakan dalam review tidak dapat dihapus.
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

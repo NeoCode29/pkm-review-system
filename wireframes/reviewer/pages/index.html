@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index | PKM Review - Reviewer Wireframes</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .index-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .index-header {
+            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+            color: #fff;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .index-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .phase-section {
+            margin-bottom: 30px;
+        }
+
+        .phase-header {
+            background: #f57c00;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .phase-links {
+            border: 2px solid #f57c00;
+            border-top: none;
+        }
+
+        .page-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .page-link:last-child {
+            border-bottom: none;
+        }
+
+        .page-link:hover {
+            background: #fff3e0;
+        }
+
+        .page-link .icon {
+            font-size: 24px;
+            margin-right: 15px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .page-link .info {
+            flex: 1;
+        }
+
+        .page-link .title {
+            font-weight: bold;
+            color: #f57c00;
+        }
+
+        .page-link .route {
+            font-size: 12px;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body style="background: #f0f0f0;">
+    <div class="index-container">
+        <div class="index-header">
+            <h1>📐 PKM Review - Reviewer Wireframes</h1>
+            <p>Navigation Hub untuk semua halaman wireframe Reviewer</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="box" style="margin-bottom: 30px;">
+            <div class="box-title">🚀 Quick Links - Phase Files</div>
+            <p style="margin-bottom: 15px; color: #666;">Lihat semua halaman dalam satu file per phase:</p>
+            <div class="quick-links">
+                <a href="../phase-1-core.html" class="button button-primary">Phase 1: Core</a>
+                <a href="../phase-2-review.html" class="button button-primary">Phase 2: Review</a>
+            </div>
+        </div>
+
+        <!-- Phase 1 -->
+        <div class="phase-section">
+            <div class="phase-header">🔵 Phase 1: Core (Login & Dashboard)</div>
+            <div class="phase-links">
+                <a href="login.html" class="page-link">
+                    <span class="icon">🔐</span>
+                    <div class="info">
+                        <div class="title">Login</div>
+                        <div class="route">/reviewer/login</div>
+                    </div>
+                </a>
+                <a href="dashboard.html" class="page-link">
+                    <span class="icon">🏠</span>
+                    <div class="info">
+                        <div class="title">Dashboard</div>
+                        <div class="route">/reviewer/dashboard</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="phase-section">
+            <div class="phase-header">🟡 Phase 2: Review Workflow</div>
+            <div class="phase-links">
+                <a href="proposal-list.html" class="page-link">
+                    <span class="icon">📋</span>
+                    <div class="info">
+                        <div class="title">Daftar Proposal</div>
+                        <div class="route">/reviewer/proposals</div>
+                    </div>
+                </a>
+                <a href="review-page.html" class="page-link">
+                    <span class="icon">✏️</span>
+                    <div class="info">
+                        <div class="title">Review Proposal</div>
+                        <div class="route">/reviewer/proposals/:id/review</div>
+                    </div>
+                </a>
+                <a href="review-summary.html" class="page-link">
+                    <span class="icon">📊</span>
+                    <div class="info">
+                        <div class="title">Hasil Review</div>
+                        <div class="route">/reviewer/proposals/:id/summary</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Other Roles -->
+        <div class="box" style="background: #f5f5f5;">
+            <div class="box-title">🔗 Wireframe Role Lain</div>
+            <div style="display: flex; gap: 15px;">
+                <a href="../../mahasiswa/pages/index.html" class="button">🎓 Mahasiswa</a>
+                <a href="../../admin/pages/index.html" class="button">🔧 Admin</a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="box">
+            <div class="box-title">📊 Statistik Wireframe</div>
+            <div class="grid-3col">
+                <div class="stat-box">
+                    <div class="number">5</div>
+                    <div class="stat-label">Total Halaman</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">2</div>
+                    <div class="stat-label">Total Phase</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">1</div>
+                    <div class="stat-label">CSS File</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

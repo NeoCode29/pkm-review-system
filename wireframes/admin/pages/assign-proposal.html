@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Proposal | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">â˜°</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item active">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="action-bar">
+                <div class="page-title" style="margin: 0; border: none; padding: 0;">Assign Proposal ke Reviewer</div>
+                <a href="reviewer-list.html" class="button">← Kembali ke Reviewers</a>
+            </div>
+
+            <!-- Reviewer Info -->
+            <div class="box" style="background: #e8f5e9;">
+                <div class="box-title">👤 Reviewer Information</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="line-height: 1.8;">
+                        <strong style="font-size: 18px;">Dr. Siti Nurhaliza, M.T.</strong><br>
+                        <strong>NIDN:</strong> 0123456789<br>
+                        <strong>Prodi:</strong> Teknik Informatika<br>
+                        <strong>Status:</strong> <span class="badge badge-green">ACTIVE</span>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #fff; border: 2px solid #333;">
+                        <div style="font-size: 24px; font-weight: bold;">5</div>
+                        <div style="font-size: 12px; color: #666;">Current Assignments</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Proposals -->
+            <div class="box">
+                <div class="box-title">📋 Pilih Proposal untuk Di-assign</div>
+
+                <!-- Filters -->
+                <div class="filter-bar" style="margin-bottom: 15px;">
+                    <div>
+                        <label class="label">Jenis PKM</label>
+                        <select class="input-field" style="margin: 0; width: 150px;">
+                            <option>All</option>
+                            <option>PKM-KC</option>
+                            <option>PKM-GT</option>
+                            <option>PKM-K</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0; width: 180px;">
+                            <option>Butuh Reviewer</option>
+                            <option>Sudah 1 Reviewer</option>
+                            <option>Semua</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari judul atau nama team..."
+                            style="margin: 0;">
+                    </div>
+                </div>
+
+                <!-- Proposal List -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" title="Select All"></th>
+                            <th>Team</th>
+                            <th>Judul Proposal</th>
+                            <th>Jenis PKM</th>
+                            <th>Slot</th>
+                            <th>Current Reviewers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e3f2fd;">
+                            <td><input type="checkbox" checked></td>
+                            <td>Tim HealthTech</td>
+                            <td>Aplikasi Monitoring Kesehatan</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge badge-yellow">R2</span></td>
+                            <td>R1: Prof. Ahmad Fauzi</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>Tim EcoSmart</td>
+                            <td>Sistem Pengelolaan Sampah Cerdas</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td><span class="badge badge-red">R1 & R2</span></td>
+                            <td><em style="color: #999;">Belum ada</em></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>Tim AgriTech</td>
+                            <td>Drone Pertanian Otomatis</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge badge-red">R1 & R2</span></td>
+                            <td><em style="color: #999;">Belum ada</em></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>Tim FinTech Solutions</td>
+                            <td>Aplikasi Manajemen Keuangan</td>
+                            <td><span class="badge">PKM-K</span></td>
+                            <td><span class="badge badge-yellow">R2</span></td>
+                            <td>R1: Dr. Rina Wijaya</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ Info:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Reviewer tidak bisa di-assign ke proposal yang dia bimbing</li>
+                    <li>Proposal yang sudah memiliki reviewer akan otomatis mengisi slot yang kosong</li>
+                    <li>Pilih beberapa proposal sekaligus untuk batch assignment</li>
+                </ul>
+            </div>
+
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                <div>
+                    <strong>1 proposal selected</strong>
+                </div>
+                <div>
+                    <a href="reviewer-list.html" class="button">Batal</a>
+                    <button class="button button-primary">✓ Simpan Assignment</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

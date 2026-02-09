@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1: Auth & Dashboard | Mahasiswa Wireframes</title>
+    <link rel="stylesheet" href="pages/styles.css">
+    <style>
+        .page-section {
+            border: 4px solid #1565c0;
+            margin-bottom: 60px;
+            background: #fff;
+        }
+
+        .page-header {
+            background: #1565c0;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-route {
+            background: #e3f2fd;
+            padding: 10px 20px;
+            font-family: monospace;
+            border-bottom: 2px solid #1565c0;
+        }
+
+        .page-content {
+            padding: 0;
+        }
+
+        .phase-nav {
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .phase-nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid #fff;
+        }
+
+        .phase-nav a:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        .phase-nav a.active {
+            background: #1565c0;
+            border-color: #1565c0;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 18px;
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body style="background: #f0f0f0;">
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <div class="phase-title">📐 Mahasiswa Wireframes - Phase 1: Authentication & Dashboard</div>
+        <a href="pages/index.html">Index</a>
+        <a href="phase-1-auth-dashboard.html" class="active">Phase 1</a>
+        <a href="phase-2-team-formation.html">Phase 2</a>
+        <a href="phase-3-team-management.html">Phase 3</a>
+        <a href="phase-4-review-results.html">Phase 4</a>
+    </div>
+
+    <div style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+
+        <div class="alert alert-info" style="margin-bottom: 40px;">
+            <strong>Phase 1: Authentication & Dashboard</strong><br>
+            Entry point dan landing page untuk mahasiswa. Termasuk kondisional dashboard berdasarkan status tim.
+        </div>
+
+        <!-- ==================== PAGE 1: LOGIN ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 1: Login</div>
+            <div class="page-route">Route: /login</div>
+            <div class="page-content">
+                <!-- Login Content -->
+                <div
+                    style="min-height: 600px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);">
+                    <div class="auth-box">
+                        <div class="auth-logo">
+                            <h1>📐 PKM Review</h1>
+                            <p>Sistem Review Proposal PKM</p>
+                        </div>
+
+                        <div class="auth-title">Login Mahasiswa</div>
+
+                        <form>
+                            <div class="form-group">
+                                <label class="label">Email <span class="required">*</span></label>
+                                <input type="email" class="input-field" placeholder="nama@student.ac.id">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Password <span class="required">*</span></label>
+                                <input type="password" class="input-field" placeholder="Masukkan password">
+                            </div>
+
+                            <div class="form-group"
+                                style="display: flex; justify-content: space-between; align-items: center;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
+                                    <input type="checkbox"> Ingat saya
+                                </label>
+                                <a href="#" style="color: #1565c0; font-size: 14px;">Lupa password?</a>
+                            </div>
+
+                            <button type="button" class="button button-primary" style="width: 100%; margin: 0;">
+                                🔐 Login
+                            </button>
+                        </form>
+
+                        <div class="auth-footer">
+                            Belum punya akun? <a href="#">Daftar di sini</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2: REGISTER ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 2: Register</div>
+            <div class="page-route">Route: /register</div>
+            <div class="page-content">
+                <!-- Register Content -->
+                <div
+                    style="min-height: 700px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); padding: 40px 0;">
+                    <div class="auth-box" style="width: 550px;">
+                        <div class="auth-logo">
+                            <h1>📐 PKM Review</h1>
+                            <p>Sistem Review Proposal PKM</p>
+                        </div>
+
+                        <div class="auth-title">Registrasi Mahasiswa</div>
+
+                        <form>
+                            <div class="form-group">
+                                <label class="label">NIM <span class="required">*</span></label>
+                                <input type="text" class="input-field" placeholder="Contoh: 123456789012">
+                                <p class="help-text">NIM harus 12 digit angka</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Nama Lengkap <span class="required">*</span></label>
+                                <input type="text" class="input-field" placeholder="Nama lengkap sesuai KTM">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">Email <span class="required">*</span></label>
+                                <input type="email" class="input-field" placeholder="email@student.ac.id">
+                            </div>
+
+                            <div class="grid-2col">
+                                <div class="form-group">
+                                    <label class="label">Jurusan <span class="required">*</span></label>
+                                    <select class="input-field">
+                                        <option>Pilih Jurusan</option>
+                                        <option>Teknik Elektro</option>
+                                        <option>Teknik Sipil</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label">Program Studi <span class="required">*</span></label>
+                                    <select class="input-field">
+                                        <option>Pilih Prodi</option>
+                                        <option>D4 Teknik Informatika</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="label">No HP <span class="required">*</span></label>
+                                <input type="tel" class="input-field" placeholder="08123456789">
+                            </div>
+
+                            <div class="grid-2col">
+                                <div class="form-group">
+                                    <label class="label">Password <span class="required">*</span></label>
+                                    <input type="password" class="input-field" placeholder="Min. 8 karakter">
+                                </div>
+                                <div class="form-group">
+                                    <label class="label">Konfirmasi Password <span class="required">*</span></label>
+                                    <input type="password" class="input-field" placeholder="Ulangi password">
+                                </div>
+                            </div>
+
+                            <button type="button" class="button button-primary" style="width: 100%; margin: 0;">
+                                📝 Daftar Sekarang
+                            </button>
+                        </form>
+
+                        <div class="auth-footer">
+                            Sudah punya akun? <a href="#">Login di sini</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 3A: DASHBOARD - NO TEAM ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 3A: Dashboard (Belum Punya Tim)</div>
+            <div class="page-route">Route: /mahasiswa/dashboard — Kondisi: user.team === null</div>
+            <div class="page-content">
+                <!-- Dashboard No Team -->
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso (123456789012) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item active">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item">🔍 Cari Tim</a>
+                        <a href="#" class="sidebar-item">➕ Buat Tim</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Dashboard</div>
+
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <div class="empty-state-title">Anda Belum Bergabung dalam Tim</div>
+                            <div class="empty-state-text">
+                                Untuk mengajukan proposal PKM, Anda harus tergabung dalam tim.<br>
+                                Buat tim baru atau bergabung dengan tim yang sudah ada.
+                            </div>
+                            <div style="display: flex; gap: 15px; justify-content: center;">
+                                <a href="#" class="button button-primary">➕ Buat Tim Baru</a>
+                                <a href="#" class="button">🔍 Cari Tim untuk Bergabung</a>
+                            </div>
+                        </div>
+
+                        <!-- Tim Tersedia Preview -->
+                        <div class="box">
+                            <div class="box-title">🌐 Tim yang Tersedia (Quick Preview)</div>
+                            <div class="grid-2col">
+                                <div class="team-card">
+                                    <div class="team-card-header">
+                                        <div>
+                                            <div class="team-card-title">Tim Inovasi Digital</div>
+                                            <div class="team-card-subtitle">Aplikasi AR untuk Pembelajaran</div>
+                                        </div>
+                                        <span class="badge badge-blue">PKM-KC</span>
+                                    </div>
+                                    <div class="team-card-info">
+                                        <div><span class="team-card-info-label">Ketua:</span> Ahmad Fauzi</div>
+                                        <div><span class="team-card-info-label">Anggota:</span> 3/5</div>
+                                    </div>
+                                    <a href="#" class="button button-sm">Lihat Detail</a>
+                                </div>
+                                <div class="team-card">
+                                    <div class="team-card-header">
+                                        <div>
+                                            <div class="team-card-title">Tim Green Tech</div>
+                                            <div class="team-card-subtitle">Smart Agriculture IoT</div>
+                                        </div>
+                                        <span class="badge badge-yellow">PKM-GT</span>
+                                    </div>
+                                    <div class="team-card-info">
+                                        <div><span class="team-card-info-label">Ketua:</span> Sarah Wijaya</div>
+                                        <div><span class="team-card-info-label">Anggota:</span> 4/5</div>
+                                    </div>
+                                    <a href="#" class="button button-sm">Lihat Detail</a>
+                                </div>
+                            </div>
+                            <div style="text-align: center; margin-top: 15px;">
+                                <a href="#" class="button">Lihat Semua Tim Tersedia →</a>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 3B: DASHBOARD - HAS TEAM ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 3B: Dashboard (Sudah Punya Tim)</div>
+            <div class="page-route">Route: /mahasiswa/dashboard — Kondisi: user.team !== null</div>
+            <div class="page-content">
+                <!-- Dashboard Has Team -->
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Mahasiswa</h1>
+                    <div class="user-info">Budi Santoso (123456789012) | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Mahasiswa</h3>
+                        <a href="#" class="sidebar-item active">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item">👥 Tim Saya</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Dashboard</div>
+
+                        <!-- Current Phase -->
+                        <div class="alert alert-info"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 14px; color: #666;">Current System Phase</div>
+                                <div style="font-size: 20px; font-weight: bold;">📝 PERIODE SUBMISSION</div>
+                                <div style="font-size: 14px; color: #666;">Anda dapat mengupload proposal PKM</div>
+                            </div>
+                            <span class="badge badge-green">Upload Proposal: AKTIF</span>
+                        </div>
+
+                        <!-- My Team Summary -->
+                        <div class="box">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <div class="box-title" style="margin-bottom: 5px;">👥 Tim Saya</div>
+                                    <h2 style="color: #1565c0;">Tim Inovasi Digital</h2>
+                                    <p style="color: #666;">Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</p>
+                                </div>
+                                <span class="badge badge-blue" style="font-size: 14px;">PKM-KC</span>
+                            </div>
+
+                            <hr class="divider">
+
+                            <div class="grid-4col" style="margin-bottom: 20px;">
+                                <div class="stat-box">
+                                    <div class="number">5</div>
+                                    <div class="stat-label">Anggota</div>
+                                </div>
+                                <div class="stat-box" style="background: #fff3e0;">
+                                    <div class="number" style="color: #f57c00;">DRAFT</div>
+                                    <div class="stat-label">Status Proposal</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="number">✓</div>
+                                    <div class="stat-label">Dosen Pembimbing</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="number">2</div>
+                                    <div class="stat-label">Join Requests</div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px;">
+                                <a href="#" class="button button-primary">👁️ Lihat Detail Tim</a>
+                                <a href="#" class="button button-success">📤 Upload Proposal</a>
+                                <a href="#" class="button">✏️ Edit Data Tim</a>
+                            </div>
+                        </div>
+
+                        <!-- Pending Actions -->
+                        <div class="box" style="background: #fff9c4; border-color: #f9a825;">
+                            <div class="box-title" style="color: #f57f17;">⚠️ Tindakan yang Diperlukan</div>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div
+                                    style="display: flex; align-items: center; gap: 15px; padding: 10px; background: #fff; border: 2px solid #f9a825;">
+                                    <span>📝</span>
+                                    <div style="flex: 1;">
+                                        <strong>Upload Proposal</strong>
+                                        <p style="font-size: 12px; color: #666;">Proposal belum diupload</p>
+                                    </div>
+                                    <a href="#" class="button button-sm button-primary">Upload</a>
+                                </div>
+                                <div
+                                    style="display: flex; align-items: center; gap: 15px; padding: 10px; background: #fff; border: 2px solid #f9a825;">
+                                    <span>👥</span>
+                                    <div style="flex: 1;">
+                                        <strong>2 Permintaan Bergabung</strong>
+                                        <p style="font-size: 12px; color: #666;">Ada mahasiswa yang ingin bergabung</p>
+                                    </div>
+                                    <a href="#" class="button button-sm">Review</a>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="box" style="background: #e8f5e9; border-color: #388e3c;">
+            <div class="box-title" style="color: #388e3c;">✅ Phase 1 Selesai</div>
+            <p>Phase 1 mencakup 3 halaman utama (dengan 1 halaman kondisional yang memiliki 2 layout):</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>Login</strong> - Entry point autentikasi</li>
+                <li><strong>Register</strong> - Form registrasi mahasiswa baru</li>
+                <li><strong>Dashboard</strong> - Landing page kondisional:
+                    <ul style="margin-top: 5px;">
+                        <li>Layout A: Belum punya tim</li>
+                        <li>Layout B: Sudah punya tim</li>
+                    </ul>
+                </li>
+            </ul>
+            <a href="phase-2-team-formation.html" class="button button-primary">Lanjut ke Phase 2: Team Formation →</a>
+        </div>
+
+    </div>
+</body>
+
+</html>

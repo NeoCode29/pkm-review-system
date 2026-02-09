@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Proposal | PKM Review - Reviewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <h1>📐 PKM Review - Reviewer</h1>
+        <div class="user-info">Dr. Ahmad Fauzi, M.Kom (NIDN: 0012345678) | <a href="login.html">Logout</a></div>
+    </nav>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <h3>Menu Reviewer</h3>
+            <a href="dashboard.html" class="sidebar-item">🏠 Dashboard</a>
+            <a href="proposal-list.html" class="sidebar-item active">📋 Daftar Proposal</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a> / Daftar Proposal
+            </div>
+            <div class="page-title">Daftar Proposal yang Ditugaskan</div>
+
+            <!-- Filter Bar -->
+            <div class="box">
+                <div class="filter-bar">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Status Review</label>
+                        <select class="input-field" style="width: 200px; margin-bottom: 0;">
+                            <option>Semua Status</option>
+                            <option>Belum Dimulai</option>
+                            <option>Sedang Direview</option>
+                            <option>Selesai</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="label">Jenis PKM</label>
+                        <select class="input-field" style="width: 200px; margin-bottom: 0;">
+                            <option>Semua Jenis</option>
+                            <option>PKM-KC</option>
+                            <option>PKM-GT</option>
+                            <option>PKM-RE</option>
+                            <option>PKM-AI</option>
+                            <option>PKM-PM</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                        <label class="label">Cari</label>
+                        <input type="text" class="input-field" style="margin-bottom: 0;"
+                            placeholder="Cari nama tim atau judul...">
+                    </div>
+                    <button class="button button-primary" style="margin-top: 0;">🔍 Filter</button>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="grid-4col" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="number">12</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-box" style="background: #f5f5f5;">
+                    <div class="number" style="color: #666;">2</div>
+                    <div class="stat-label">Belum Dimulai</div>
+                </div>
+                <div class="stat-box" style="background: #fff3e0;">
+                    <div class="number" style="color: #f57c00;">3</div>
+                    <div class="stat-label">Sedang Direview</div>
+                </div>
+                <div class="stat-box" style="background: #e8f5e9;">
+                    <div class="number" style="color: #388e3c;">7</div>
+                    <div class="stat-label">Selesai</div>
+                </div>
+            </div>
+
+            <!-- Proposal Table -->
+            <div class="box">
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">No</th>
+                                <th style="width: 180px;">Tim</th>
+                                <th>Judul Proposal</th>
+                                <th style="width: 100px;">Jenis PKM</th>
+                                <th style="width: 120px;">Status</th>
+                                <th style="width: 150px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Status: Selesai -->
+                            <tr>
+                                <td>1</td>
+                                <td><strong>Tim Inovasi Digital</strong></td>
+                                <td>Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-green">✓ Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat Hasil</a></td>
+                            </tr>
+                            <!-- Status: Sedang Direview -->
+                            <tr style="background: #fff3e0;">
+                                <td>2</td>
+                                <td><strong>Tim Green Tech</strong></td>
+                                <td>Smart Agriculture IoT System untuk Petani Modern</td>
+                                <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                <td><span class="badge badge-orange">⏳ Sedang</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">✏️ Lanjutkan</a>
+                                </td>
+                            </tr>
+                            <!-- Status: Belum Dimulai -->
+                            <tr style="background: #f5f5f5;">
+                                <td>3</td>
+                                <td><strong>Tim Eco Solution</strong></td>
+                                <td>Pengolahan Limbah Plastik Menjadi Bahan Bakar Alternatif</td>
+                                <td><span class="badge badge-blue">PKM-RE</span></td>
+                                <td><span class="badge badge-gray">○ Belum</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">▶️ Mulai
+                                        Review</a>
+                                </td>
+                            </tr>
+                            <!-- Status: Selesai -->
+                            <tr>
+                                <td>4</td>
+                                <td><strong>Tim Data Science</strong></td>
+                                <td>Prediksi Cuaca Ekstrem dengan Machine Learning</td>
+                                <td><span class="badge badge-blue">PKM-AI</span></td>
+                                <td><span class="badge badge-green">✓ Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat Hasil</a></td>
+                            </tr>
+                            <!-- Status: Selesai -->
+                            <tr>
+                                <td>5</td>
+                                <td><strong>Tim Kesehatan Digital</strong></td>
+                                <td>Aplikasi Mobile Monitoring Kesehatan Lansia</td>
+                                <td><span class="badge badge-yellow">PKM-PM</span></td>
+                                <td><span class="badge badge-green">✓ Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat Hasil</a></td>
+                            </tr>
+                            <!-- Status: Sedang Direview -->
+                            <tr style="background: #fff3e0;">
+                                <td>6</td>
+                                <td><strong>Tim Robotik UNRI</strong></td>
+                                <td>Robot Penyortir Sampah Otomatis Berbasis AI</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-orange">⏳ Sedang</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">✏️ Lanjutkan</a>
+                                </td>
+                            </tr>
+                            <!-- Status: Selesai -->
+                            <tr>
+                                <td>7</td>
+                                <td><strong>Tim Fintech Campus</strong></td>
+                                <td>E-Wallet Kampus untuk Transaksi Mahasiswa</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-green">✓ Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat Hasil</a></td>
+                            </tr>
+                            <!-- Status: Sedang Direview -->
+                            <tr style="background: #fff3e0;">
+                                <td>8</td>
+                                <td><strong>Tim Edu Games</strong></td>
+                                <td>Game Edukasi Matematika untuk Anak SD</td>
+                                <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                <td><span class="badge badge-orange">⏳ Sedang</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">✏️ Lanjutkan</a>
+                                </td>
+                            </tr>
+                            <!-- Status: Belum Dimulai -->
+                            <tr style="background: #f5f5f5;">
+                                <td>9</td>
+                                <td><strong>Tim Hydroponic</strong></td>
+                                <td>Sistem Hidroponik Otomatis Berbasis IoT</td>
+                                <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                <td><span class="badge badge-gray">○ Belum</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">▶️ Mulai
+                                        Review</a>
+                                </td>
+                            </tr>
+                            <!-- Status: Selesai -->
+                            <tr>
+                                <td>10</td>
+                                <td><strong>Tim Solar Energy</strong></td>
+                                <td>Panel Surya Portable untuk Desa Terpencil</td>
+                                <td><span class="badge badge-blue">PKM-RE</span></td>
+                                <td><span class="badge badge-green">✓ Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat Hasil</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="button button-sm">← Prev</button>
+                    <button class="button button-sm button-primary">1</button>
+                    <button class="button button-sm">2</button>
+                    <button class="button button-sm">Next →</button>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="box" style="background: #fafafa;">
+                <div class="box-title">📖 Keterangan Status</div>
+                <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                    <div><span class="badge badge-gray">○ Belum</span> = Belum dimulai, klik "Mulai Review"</div>
+                    <div><span class="badge badge-orange">⏳ Sedang</span> = Sedang dalam proses, klik "Lanjutkan"
+                    </div>
+                    <div><span class="badge badge-green">✓ Selesai</span> = Review sudah disubmit, klik "Lihat
+                        Hasil"
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Mahasiswa PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Mahasiswa</h1>
+        </div>
+        <div class="user-info">
+            Budi Santoso (123456789012) | <a href="login.html">Logout</a> |
+            <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Mahasiswa</h3>
+            <a href="dashboard.html" class="sidebar-item active">🏠 Dashboard</a>
+            <a href="browse-teams.html" class="sidebar-item">🔍 Cari Tim</a>
+            <a href="create-team.html" class="sidebar-item">➕ Buat Tim</a>
+            <a href="team-detail.html" class="sidebar-item">👥 Tim Saya</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">Dashboard</div>
+
+            <!-- ===== LAYOUT A: NO TEAM (Belum punya tim) ===== -->
+            <div id="layout-no-team" class="box" style="background: #fff3e0; border-color: #f57c00;">
+                <div class="box-title" style="color: #f57c00;">📋 Layout A: Belum Memiliki Tim</div>
+
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <div class="empty-state-title">Anda Belum Bergabung dalam Tim</div>
+                    <div class="empty-state-text">
+                        Untuk mengajukan proposal PKM, Anda harus tergabung dalam tim.<br>
+                        Buat tim baru atau bergabung dengan tim yang sudah ada.
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <a href="create-team.html" class="button button-primary">
+                            ➕ Buat Tim Baru
+                        </a>
+                        <a href="browse-teams.html" class="button">
+                            🔍 Cari Tim untuk Bergabung
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tim yang Tersedia (Preview) -->
+                <div class="box" style="margin-top: 20px; background: #fff;">
+                    <div class="box-title">🌐 Tim yang Tersedia (Quick Preview)</div>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                        Beberapa tim yang sedang mencari anggota:
+                    </p>
+
+                    <div class="grid-2col">
+                        <!-- Team Card 1 -->
+                        <div class="team-card">
+                            <div class="team-card-header">
+                                <div>
+                                    <div class="team-card-title">Tim Inovasi Digital</div>
+                                    <div class="team-card-subtitle">Aplikasi AR untuk Pembelajaran</div>
+                                </div>
+                                <span class="badge badge-blue">PKM-KC</span>
+                            </div>
+                            <div class="team-card-info">
+                                <div><span class="team-card-info-label">Ketua:</span> Ahmad Fauzi</div>
+                                <div><span class="team-card-info-label">Anggota:</span> 3/5</div>
+                                <div><span class="team-card-info-label">Prodi:</span> T. Informatika</div>
+                                <div><span class="team-card-info-label">Status:</span>
+                                    <span class="badge badge-green" style="font-size: 10px;">Terbuka</span>
+                                </div>
+                            </div>
+                            <div class="team-card-actions">
+                                <a href="browse-teams.html" class="button button-sm">Lihat Detail</a>
+                            </div>
+                        </div>
+
+                        <!-- Team Card 2 -->
+                        <div class="team-card">
+                            <div class="team-card-header">
+                                <div>
+                                    <div class="team-card-title">Tim Green Tech</div>
+                                    <div class="team-card-subtitle">Smart Agriculture IoT</div>
+                                </div>
+                                <span class="badge badge-yellow">PKM-GT</span>
+                            </div>
+                            <div class="team-card-info">
+                                <div><span class="team-card-info-label">Ketua:</span> Sarah Wijaya</div>
+                                <div><span class="team-card-info-label">Anggota:</span> 4/5</div>
+                                <div><span class="team-card-info-label">Prodi:</span> T. Elektro</div>
+                                <div><span class="team-card-info-label">Status:</span>
+                                    <span class="badge badge-green" style="font-size: 10px;">Terbuka</span>
+                                </div>
+                            </div>
+                            <div class="team-card-actions">
+                                <a href="browse-teams.html" class="button button-sm">Lihat Detail</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 15px;">
+                        <a href="browse-teams.html" class="button">
+                            Lihat Semua Tim Tersedia →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="divider" style="border-color: #1565c0; border-style: dashed; margin: 40px 0;">
+            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 30px;">
+                ⬇️ <strong>LAYOUT B (dibawah ini)</strong> ditampilkan jika mahasiswa SUDAH memiliki tim ⬇️
+            </p>
+
+            <!-- ===== LAYOUT B: HAS TEAM (Sudah punya tim) ===== -->
+            <div id="layout-has-team" class="box" style="background: #e8f5e9; border-color: #388e3c;">
+                <div class="box-title" style="color: #388e3c;">📋 Layout B: Sudah Memiliki Tim</div>
+
+                <!-- Current Phase Info -->
+                <div class="alert alert-info"
+                    style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 14px; color: #666;">Current System Phase</div>
+                        <div style="font-size: 20px; font-weight: bold;">📝 PERIODE SUBMISSION</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px;">
+                            Anda dapat mengupload proposal PKM saat ini
+                        </div>
+                    </div>
+                    <div>
+                        <span class="badge badge-green">Upload Proposal: AKTIF</span>
+                    </div>
+                </div>
+
+                <!-- My Team Summary -->
+                <div class="box" style="background: #fff;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div class="box-title" style="margin-bottom: 5px;">👥 Tim Saya</div>
+                            <h2 style="color: #1565c0; margin-bottom: 10px;">Tim Inovasi Digital</h2>
+                            <p style="color: #666;">Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</p>
+                        </div>
+                        <span class="badge badge-blue" style="font-size: 14px;">PKM-KC</span>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Quick Stats -->
+                    <div class="grid-4col" style="margin-bottom: 20px;">
+                        <div class="stat-box">
+                            <div class="number">5</div>
+                            <div class="stat-label">Anggota</div>
+                        </div>
+                        <div class="stat-box" style="background: #fff3e0;">
+                            <div class="number" style="color: #f57c00;">DRAFT</div>
+                            <div class="stat-label">Status Proposal</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">✓</div>
+                            <div class="stat-label">Dosen Pembimbing</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">2</div>
+                            <div class="stat-label">Join Requests</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="team-detail.html" class="button button-primary">
+                            👁️ Lihat Detail Tim
+                        </a>
+                        <a href="upload-proposal.html" class="button button-success">
+                            📤 Upload Proposal
+                        </a>
+                        <a href="edit-team.html" class="button">
+                            ✏️ Edit Data Tim
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Pending Actions (if any) -->
+                <div class="box" style="background: #fff9c4; border-color: #f9a825;">
+                    <div class="box-title" style="color: #f57f17;">⚠️ Tindakan yang Diperlukan</div>
+
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div
+                            style="display: flex; align-items: center; gap: 15px; padding: 10px; background: #fff; border: 2px solid #f9a825;">
+                            <span>📝</span>
+                            <div style="flex: 1;">
+                                <strong>Upload Proposal</strong>
+                                <p style="font-size: 12px; color: #666; margin-top: 3px;">
+                                    Proposal belum diupload. Upload sebelum deadline submission.
+                                </p>
+                            </div>
+                            <a href="upload-proposal.html" class="button button-sm button-primary">Upload</a>
+                        </div>
+
+                        <div
+                            style="display: flex; align-items: center; gap: 15px; padding: 10px; background: #fff; border: 2px solid #f9a825;">
+                            <span>👥</span>
+                            <div style="flex: 1;">
+                                <strong>2 Permintaan Bergabung</strong>
+                                <p style="font-size: 12px; color: #666; margin-top: 3px;">
+                                    Ada mahasiswa yang ingin bergabung ke tim Anda.
+                                </p>
+                            </div>
+                            <a href="team-detail.html" class="button button-sm">Review</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Members Preview -->
+                <div class="box" style="background: #fff;">
+                    <div class="box-title">👥 Anggota Tim (5 orang)</div>
+
+                    <div class="grid-2col">
+                        <div class="member-item" style="border-color: #1565c0;">
+                            <div class="member-avatar">BU</div>
+                            <div class="member-info">
+                                <div class="member-name">Budi Santoso <span class="badge badge-blue"
+                                        style="font-size: 10px;">Ketua</span></div>
+                                <div class="member-detail">123456789012 • T. Informatika</div>
+                            </div>
+                        </div>
+                        <div class="member-item">
+                            <div class="member-avatar">AF</div>
+                            <div class="member-info">
+                                <div class="member-name">Ahmad Fauzi</div>
+                                <div class="member-detail">123456789013 • T. Informatika</div>
+                            </div>
+                        </div>
+                        <div class="member-item">
+                            <div class="member-avatar">SW</div>
+                            <div class="member-info">
+                                <div class="member-name">Sarah Wijaya</div>
+                                <div class="member-detail">123456789014 • T. Elektro</div>
+                            </div>
+                        </div>
+                        <div class="member-item">
+                            <div class="member-avatar">RP</div>
+                            <div class="member-info">
+                                <div class="member-name">Rini Putri</div>
+                                <div class="member-detail">123456789015 • T. Informatika</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="team-detail.html" class="button" style="margin-top: 10px;">
+                        Lihat Semua Anggota →
+                    </a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

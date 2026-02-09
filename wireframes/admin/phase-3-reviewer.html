@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Phase 3 - Reviewer Management | PKM Review Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Navigation Bar */
+        .phase-nav {
+            background: #fff;
+            border-bottom: 3px solid #333;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .phase-nav h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .phase-nav .phase-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .phase-nav .phase-links a {
+            padding: 8px 16px;
+            background: #eee;
+            border: 2px solid #333;
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .phase-nav .phase-links a.active {
+            background: #333;
+            color: #fff;
+        }
+
+        .phase-nav .page-tabs {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .phase-nav .page-tabs button {
+            padding: 8px 16px;
+            background: #fff;
+            border: 2px solid #333;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .phase-nav .page-tabs button:hover {
+            background: #f0f0f0;
+        }
+
+        .phase-nav .page-tabs button.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Main Layout */
+        .page {
+            display: none;
+            min-height: calc(100vh - 120px);
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: #f5f5f5;
+            border-right: 2px solid #333;
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .sidebar-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .sidebar-item:hover {
+            background: #eee;
+        }
+
+        .sidebar-item.active {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            background: #fff;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+
+        /* Components */
+        .box {
+            border: 2px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .box-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .button:hover {
+            background: #f0f0f0;
+        }
+
+        .button-primary {
+            background: #333;
+            color: #fff;
+        }
+
+        .button-primary:hover {
+            background: #555;
+        }
+
+        .button-danger {
+            background: #fff;
+            border-color: #d32f2f;
+            color: #d32f2f;
+        }
+
+        .button-danger:hover {
+            background: #ffebee;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th,
+        .table td {
+            border: 2px solid #333;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .table th {
+            background: #ddd;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 2px solid #333;
+            background: #fff;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .badge-green {
+            background: #e8f5e9;
+        }
+
+        .badge-blue {
+            background: #e3f2fd;
+        }
+
+        .badge-yellow {
+            background: #fff9c4;
+        }
+
+        .badge-red {
+            background: #ffebee;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #333;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .required {
+            color: #d32f2f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-4col {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border: 3px solid #333;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-warning {
+            background: #fff3e0;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+        }
+
+        .alert-success {
+            background: #e8f5e9;
+        }
+
+        .stat-box {
+            border: 2px solid #333;
+            padding: 15px;
+            text-align: center;
+            background: #fff;
+        }
+
+        .stat-box .number {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .timeline {
+            border-left: 3px solid #333;
+            padding-left: 20px;
+            margin-top: 15px;
+        }
+
+        .timeline-item {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "•";
+            position: absolute;
+            left: -25px;
+            font-size: 20px;
+        }
+
+        .timeline-date {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <h1>📐 PKM Review - Admin Wireframes (Low-Fidelity)</h1>
+
+        <div class="phase-links">
+            <a href="phase-1-core.html">Phase 1: Core</a>
+            <a href="phase-2-management.html">Phase 2: Management</a>
+            <a href="phase-3-reviewer.html" class="active">Phase 3: Reviewer</a>
+            <a href="phase-4-master.html">Phase 4: Master Data</a>
+        </div>
+
+        <div class="page-tabs">
+            <button onclick="showPage('reviewer-list')" class="active">1. Reviewer List</button>
+            <button onclick="showPage('reviewer-detail')">2. Detail Reviewer</button>
+            <button onclick="showPage('reviewer-assignments')">3. Assignments</button>
+            <button onclick="showPage('assign-form')">4. Assign Form (Proposal)</button>
+            <button onclick="showPage('assign-from-reviewer')">5. Assign Form (Reviewer)</button>
+            <button onclick="showPage('review-detail')">6. Review Detail</button>
+        </div>
+    </div>
+
+    <!-- PAGE 1: REVIEWER LIST -->
+    <div id="reviewer-list" class="page active">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item active">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0; border: none;">Manajemen Reviewer</div>
+                <button class="button button-primary">+ Tambah Reviewer</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid-4col" style="margin-top: 20px;">
+                <div class="stat-box">
+                    <div class="number">12</div>
+                    <div class="label">Total Reviewers</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">10</div>
+                    <div class="label">Active</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">45</div>
+                    <div class="label">Total Assignments</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">28</div>
+                    <div class="label">Completed Reviews</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="box" style="margin-top: 20px;">
+                <div class="box-title">Filters</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px;">
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>All</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Program Studi</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>All</option>
+                            <option>Teknik Informatika</option>
+                            <option>Sistem Informasi</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari nama atau NIDN..." style="margin: 0;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviewer Table -->
+            <div class="box">
+                <div class="box-title">Reviewer List (12 reviewers)</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>NIDN</th>
+                            <th>Email</th>
+                            <th>No HP</th>
+                            <th>Prodi</th>
+                            <th>Assigned</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dr. Siti Nurhaliza, M.T.</td>
+                            <td>0123456789</td>
+                            <td>siti@staff.ac.id</td>
+                            <td>08123456789</td>
+                            <td>Teknik Informatika</td>
+                            <td><span class="badge badge-blue">5</span></td>
+                            <td><span class="badge badge-green">ACTIVE</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Penugasan</button>
+                                <button class="button button-primary" style="margin: 0; padding: 6px 12px;">+
+                                    Assign</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Prof. Ahmad Fauzi, M.Kom</td>
+                            <td>0987654321</td>
+                            <td>ahmad@staff.ac.id</td>
+                            <td>08198765432</td>
+                            <td>Sistem Informasi</td>
+                            <td><span class="badge badge-blue">3</span></td>
+                            <td><span class="badge badge-green">ACTIVE</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Penugasan</button>
+                                <button class="button button-primary" style="margin: 0; padding: 6px 12px;">+
+                                    Assign</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dr. Bambang Sutopo, M.Si</td>
+                            <td>0112233445</td>
+                            <td>bambang@staff.ac.id</td>
+                            <td>-</td>
+                            <td>Teknik Elektro</td>
+                            <td><span class="badge">0</span></td>
+                            <td><span class="badge badge-green">ACTIVE</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Penugasan</button>
+                                <button class="button button-primary" style="margin: 0; padding: 6px 12px;">+
+                                    Assign</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dr. Maya Indah, M.Eng</td>
+                            <td>0556677889</td>
+                            <td>maya@staff.ac.id</td>
+                            <td>08177788899</td>
+                            <td>Teknik Informatika</td>
+                            <td><span class="badge badge-blue">4</span></td>
+                            <td><span class="badge">INACTIVE</span></td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Detail</button>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Penugasan</button>
+                                <button class="button button-primary" style="margin: 0; padding: 6px 12px;">+
+                                    Assign</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="button">← Previous</button>
+                    <span style="margin: 0 15px;">Page 1 of 2</span>
+                    <button class="button">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: DETAIL REVIEWER -->
+    <div id="reviewer-detail" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item active">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0; border: none;">Detail Reviewer</div>
+                <div>
+                    <button class="button">← Kembali</button>
+                    <button class="button">Edit Profile</button>
+                </div>
+            </div>
+
+            <div class="grid-2col" style="margin-top: 20px;">
+                <!-- Left Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">👤 Profile Information</div>
+                        <div
+                            style="text-align: center; padding: 20px; background: #eee; border: 2px solid #333; margin-bottom: 15px;">
+                            [Profile Picture Placeholder]
+                        </div>
+                        <div style="line-height: 2;">
+                            <strong style="font-size: 18px;">Dr. Siti Nurhaliza, M.T.</strong><br>
+                            <strong>NIDN:</strong> 0123456789<br>
+                            <strong>Email:</strong> siti@staff.ac.id<br>
+                            <strong>No HP:</strong> 08123456789<br>
+                            <strong>Program Studi:</strong> Teknik Informatika<br>
+                            <strong>Status:</strong> <span class="badge badge-green">ACTIVE</span><br>
+                            <strong>Bergabung:</strong> 2025-01-15
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">⚙️ Account Actions</div>
+                        <button class="button" style="width: 100%; margin: 0 0 10px 0;">✏️ Edit Profile</button>
+                        <button class="button" style="width: 100%; margin: 0 0 10px 0;">🔑 Reset Password</button>
+                        <button class="button button-danger" style="width: 100%; margin: 0;">🚫 Deactivate
+                            Account</button>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📊 Statistics</div>
+                        <div class="grid-2col">
+                            <div class="stat-box">
+                                <div class="number">12</div>
+                                <div class="label">Total Assigned</div>
+                            </div>
+                            <div class="stat-box" style="background: #e8f5e9;">
+                                <div class="number">8</div>
+                                <div class="label">Completed</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff9c4;">
+                                <div class="number">3</div>
+                                <div class="label">In Progress</div>
+                            </div>
+                            <div class="stat-box" style="background: #e3f2fd;">
+                                <div class="number">1</div>
+                                <div class="label">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">📋 Current Assignments (Preview)</div>
+
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px; background: #fff;">
+                            <strong>Tim Inovasi Digital</strong><br>
+                            <span style="font-size: 13px; color: #666;">Aplikasi AR untuk Pembelajaran</span><br>
+                            <span class="badge badge-yellow">IN PROGRESS</span>
+                            <button class="button" style="margin: 5px 0 0 0; padding: 4px 8px; font-size: 12px;">Lihat
+                                Detail</button>
+                        </div>
+
+                        <div style="border: 2px solid #333; padding: 10px; margin-bottom: 10px; background: #fff;">
+                            <strong>Tim AI Research</strong><br>
+                            <span style="font-size: 13px; color: #666;">Chatbot NLP Bahasa Indonesia</span><br>
+                            <span class="badge badge-green">COMPLETED</span>
+                            <button class="button" style="margin: 5px 0 0 0; padding: 4px 8px; font-size: 12px;">Lihat
+                                Detail</button>
+                        </div>
+
+                        <div style="border: 2px solid #333; padding: 10px; background: #fff;">
+                            <strong>Tim Green Tech</strong><br>
+                            <span style="font-size: 13px; color: #666;">IoT Monitoring Pertanian</span><br>
+                            <span class="badge">PENDING</span>
+                            <button class="button" style="margin: 5px 0 0 0; padding: 4px 8px; font-size: 12px;">Lihat
+                                Detail</button>
+                        </div>
+
+                        <button class="button button-primary" style="width: 100%; margin-top: 15px;">Lihat Semua
+                            Penugasan →</button>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">📅 Recent Activity</div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-02-05</div>
+                                Completed review for Tim Inovasi
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-02-03</div>
+                                Started review for Tim AI Research
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-02-01</div>
+                                Assigned to 2 new proposals
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">2026-01-30</div>
+                                Submitted substantif for Tim X
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: REVIEWER ASSIGNMENTS -->
+    <div id="reviewer-assignments" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item active">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0; border: none;">Penugasan - Dr. Siti Nurhaliza</div>
+                <button class="button">← Kembali ke Reviewers</button>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="box" style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Total Assigned:</strong> 5 proposals
+                    </div>
+                    <div style="display: flex; gap: 20px;">
+                        <span><span class="badge badge-green">Completed:</span> 2</span>
+                        <span><span class="badge badge-yellow">In Progress:</span> 2</span>
+                        <span><span class="badge">Pending:</span> 1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Table -->
+            <div class="box">
+                <div class="box-title">Assignment List</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Judul Proposal</th>
+                            <th>Jenis PKM</th>
+                            <th>Reviewer #</th>
+                            <th>Status</th>
+                            <th>Assigned Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tim Inovasi Digital</td>
+                            <td>Aplikasi AR untuk Pembelajaran</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td>#1</td>
+                            <td><span class="badge badge-green">COMPLETED</span></td>
+                            <td>2026-01-15</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Lihat Detail</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim AI Research</td>
+                            <td>Chatbot NLP Bahasa Indonesia</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td>#2</td>
+                            <td><span class="badge badge-green">COMPLETED</span></td>
+                            <td>2026-01-18</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Lihat Detail</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim Green Tech</td>
+                            <td>IoT Monitoring Pertanian</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td>#1</td>
+                            <td><span class="badge badge-yellow">IN PROGRESS</span></td>
+                            <td>2026-02-01</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Lihat Detail</button>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Batalkan</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim Edutech</td>
+                            <td>Platform E-Learning</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td>#1</td>
+                            <td><span class="badge badge-yellow">IN PROGRESS</span></td>
+                            <td>2026-02-03</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Lihat Detail</button>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Batalkan</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tim Fintech</td>
+                            <td>Aplikasi Keuangan UMKM</td>
+                            <td><span class="badge">PKM-K</span></td>
+                            <td>#2</td>
+                            <td><span class="badge">PENDING</span></td>
+                            <td>2026-02-05</td>
+                            <td>
+                                <button class="button" style="margin: 0; padding: 6px 12px;">Lihat Detail</button>
+                                <button class="button button-danger"
+                                    style="margin: 0; padding: 6px 12px;">Batalkan</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Note:</strong> Penugasan yang sudah COMPLETED tidak dapat dibatalkan.
+                Untuk PENDING dan IN PROGRESS, admin dapat membatalkan penugasan jika perlu.
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: ASSIGN REVIEWERS FORM -->
+    <div id="assign-form" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item active">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0; border: none;">Assign Reviewers</div>
+                <button class="button">← Kembali</button>
+            </div>
+
+            <!-- Proposal Info -->
+            <div class="box" style="margin-top: 20px; background: #e3f2fd;">
+                <div class="box-title">📄 Proposal Information</div>
+                <div style="line-height: 1.8;">
+                    <strong>Team:</strong> Tim Inovasi Digital<br>
+                    <strong>Judul:</strong> Aplikasi Pembelajaran dengan Augmented Reality<br>
+                    <strong>Jenis PKM:</strong> <span class="badge badge-blue">PKM-KC</span><br>
+                    <strong>Status Proposal:</strong> <span class="badge badge-green">SUBMITTED</span><br>
+                    <strong>Ketua:</strong> Budi Santoso (NIM: 123456)
+                </div>
+            </div>
+
+            <!-- Assignment Form -->
+            <div class="box">
+                <div class="box-title">📝 Assign Reviewers</div>
+
+                <div class="form-group">
+                    <label class="label">Reviewer 1 <span class="required">*</span></label>
+                    <select class="input-field">
+                        <option>-- Pilih Reviewer --</option>
+                        <option selected>Dr. Siti Nurhaliza, M.T. (5 assignments)</option>
+                        <option>Prof. Ahmad Fauzi, M.Kom (3 assignments)</option>
+                        <option>Dr. Bambang Sutopo, M.Si (0 assignments)</option>
+                        <option>Dr. Maya Indah, M.Eng (4 assignments)</option>
+                    </select>
+                    <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                        Currently assigned: <strong>Dr. Siti Nurhaliza, M.T.</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label">Reviewer 2</label>
+                    <select class="input-field">
+                        <option selected>-- Pilih Reviewer --</option>
+                        <option disabled>Dr. Siti Nurhaliza, M.T. (already selected)</option>
+                        <option>Prof. Ahmad Fauzi, M.Kom (3 assignments)</option>
+                        <option>Dr. Bambang Sutopo, M.Si (0 assignments)</option>
+                        <option>Dr. Maya Indah, M.Eng (4 assignments)</option>
+                    </select>
+                    <div style="font-size: 12px; color: #666; margin-top: -10px;">
+                        Currently: <strong>Not assigned</strong>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>⚠️ Validation Rules:</strong>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li>Cannot assign the same reviewer to both slots</li>
+                        <li>At least 1 reviewer must be assigned</li>
+                        <li>Assignment can only be done before or during Review phase</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #ddd;">
+                    <button class="button">Batal</button>
+                    <button class="button button-primary">✓ Simpan Assignment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: ASSIGN PROPOSAL TO REVIEWER (FROM REVIEWER PERSPECTIVE) -->
+    <div id="assign-from-reviewer" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item">Manajemen Penilaian</div>
+            <div class="sidebar-item active">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0; border: none;">Assign Proposal ke Reviewer</div>
+                <button class="button">← Kembali ke Reviewers</button>
+            </div>
+
+            <!-- Reviewer Info -->
+            <div class="box" style="margin-top: 20px; background: #e8f5e9;">
+                <div class="box-title">👤 Reviewer Information</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="line-height: 1.8;">
+                        <strong style="font-size: 18px;">Dr. Siti Nurhaliza, M.T.</strong><br>
+                        <strong>NIDN:</strong> 0123456789<br>
+                        <strong>Prodi:</strong> Teknik Informatika<br>
+                        <strong>Status:</strong> <span class="badge badge-green">ACTIVE</span>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #fff; border: 2px solid #333;">
+                        <div style="font-size: 24px; font-weight: bold;">5</div>
+                        <div style="font-size: 12px; color: #666;">Current Assignments</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Proposals -->
+            <div class="box">
+                <div class="box-title">📋 Pilih Proposal untuk Di-assign</div>
+
+                <!-- Filters -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label class="label">Jenis PKM</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>All</option>
+                            <option>PKM-KC</option>
+                            <option>PKM-GT</option>
+                            <option>PKM-K</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Status</label>
+                        <select class="input-field" style="margin: 0;">
+                            <option>Butuh Reviewer</option>
+                            <option>Sudah 1 Reviewer</option>
+                            <option>Semua</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label">Search</label>
+                        <input type="text" class="input-field" placeholder="Cari judul atau nama team..."
+                            style="margin: 0;">
+                    </div>
+                </div>
+
+                <!-- Proposal List -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">
+                                <input type="checkbox" title="Select All">
+                            </th>
+                            <th>Team</th>
+                            <th>Judul Proposal</th>
+                            <th>Jenis PKM</th>
+                            <th>Slot</th>
+                            <th>Current Reviewers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e3f2fd;">
+                            <td><input type="checkbox" checked></td>
+                            <td>Tim HealthTech</td>
+                            <td>Aplikasi Monitoring Kesehatan</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge badge-yellow">R2</span></td>
+                            <td>R1: Prof. Ahmad Fauzi</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>Tim EcoSmart</td>
+                            <td>Sistem Pengelolaan Sampah Cerdas</td>
+                            <td><span class="badge badge-yellow">PKM-GT</span></td>
+                            <td><span class="badge badge-red">R1 & R2</span></td>
+                            <td><em style="color: #999;">Belum ada</em></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td>Tim AgriTech</td>
+                            <td>Drone Pertanian Otomatis</td>
+                            <td><span class="badge badge-blue">PKM-KC</span></td>
+                            <td><span class="badge badge-red">R1 & R2</span></td>
+                            <td><em style="color: #999;">Belum ada</em></td>
+                        </tr>
+                        <tr style="background: #eee; color: #999;">
+                            <td><input type="checkbox" disabled></td>
+                            <td>Tim Inovasi Digital</td>
+                            <td>Aplikasi AR Pembelajaran</td>
+                            <td><span class="badge">PKM-KC</span></td>
+                            <td><span class="badge badge-green">Full</span></td>
+                            <td>R1: Dr. Siti (You), R2: Dr. Maya</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info" style="margin-top: 15px;">
+                    <strong>Keterangan Slot:</strong><br>
+                    • <span class="badge badge-red">R1 & R2</span> = Belum ada reviewer sama sekali<br>
+                    • <span class="badge badge-yellow">R2</span> = Sudah ada Reviewer 1, butuh Reviewer 2<br>
+                    • <span class="badge badge-green">Full</span> = Sudah lengkap 2 reviewer (tidak bisa di-assign lagi)
+                </div>
+
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Selected:</strong> 1 proposal
+                    </div>
+                    <div>
+                        <button class="button">Batal</button>
+                        <button class="button button-primary">✓ Assign 1 Proposal ke Dr. Siti</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Notes:</strong>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Reviewer tidak bisa di-assign ke proposal yang sudah memiliki 2 reviewer</li>
+                    <li>Reviewer yang sama tidak bisa menjadi R1 dan R2 untuk proposal yang sama</li>
+                    <li>Anda bisa memilih beberapa proposal sekaligus untuk di-assign ke reviewer ini</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: REVIEW DETAIL (VIEW ONLY) -->
+    <div id="review-detail" class="page">
+        <div class="sidebar">
+            <h3>Menu Admin</h3>
+            <div class="sidebar-item">Dashboard</div>
+            <div class="sidebar-item">Manajemen User</div>
+            <div class="sidebar-item">Manajemen Team</div>
+            <div class="sidebar-item active">Manajemen Penilaian</div>
+            <div class="sidebar-item">Manajemen Reviewer</div>
+            <div class="sidebar-item">Master Data</div>
+            <div class="sidebar-item">Settings</div>
+        </div>
+
+        <div class="main-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="page-title" style="margin: 0; border: none;">Detail Penilaian</div>
+                <div>
+                    <button class="button">← Kembali</button>
+                    <button class="button">📄 Export PDF</button>
+                </div>
+            </div>
+
+            <!-- Review Info -->
+            <div class="box" style="margin-top: 20px; background: #e3f2fd;">
+                <div style="display: flex; justify-content: space-between;">
+                    <div>
+                        <strong>Team:</strong> Tim Inovasi Digital<br>
+                        <strong>Proposal:</strong> Aplikasi AR untuk Pembelajaran<br>
+                        <strong>PKM Type:</strong> <span class="badge badge-blue">PKM-KC</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong>Reviewer:</strong> Dr. Siti Nurhaliza, M.T.<br>
+                        <strong>Reviewer Number:</strong> #1<br>
+                        <strong>Status:</strong> <span class="badge badge-green">COMPLETED</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2col" style="margin-top: 20px;">
+                <!-- Left Column - PDF Placeholder -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📄 Proposal PDF (Read Only)</div>
+                        <div
+                            style="height: 400px; background: #eee; border: 2px dashed #999; display: flex; align-items: center; justify-content: center;">
+                            <div style="text-align: center; color: #666;">
+                                [PDF Viewer Placeholder]<br><br>
+                                📄 PKM_KC_Tim_Inovasi_v1.pdf<br>
+                                15 pages | 2.4 MB
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <button class="button">📥 Download PDF</button>
+                            <button class="button">🔍 Fullscreen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Review Results -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">📋 Penilaian Administratif</div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kriteria</th>
+                                    <th style="width: 80px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Cover lengkap dengan format standar</td>
+                                    <td style="text-align: center;">✅</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Halaman pengesahan dengan tanda tangan</td>
+                                    <td style="text-align: center;">✅</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Daftar isi lengkap</td>
+                                    <td style="text-align: center;">✅</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Abstrak maksimal 200 kata</td>
+                                    <td style="text-align: center; color: #d32f2f;">❌</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Format penulisan sesuai panduan</td>
+                                    <td style="text-align: center;">✅</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 15px; padding: 10px; background: #ffebee; border: 2px solid #d32f2f;">
+                            <strong>Total Kesalahan Administratif:</strong> 1
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">⭐ Penilaian Substantif</div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Kriteria</th>
+                                    <th style="width: 70px;">Bobot</th>
+                                    <th style="width: 70px;">Skor</th>
+                                    <th style="width: 70px;">Nilai</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Kreativitas dan Inovasi</td>
+                                    <td>30</td>
+                                    <td>6</td>
+                                    <td><strong>180</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Kelayakan Teknis</td>
+                                    <td>25</td>
+                                    <td>7</td>
+                                    <td><strong>175</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Manfaat dan Dampak</td>
+                                    <td>25</td>
+                                    <td>5</td>
+                                    <td><strong>125</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Kualitas Proposal</td>
+                                    <td>20</td>
+                                    <td>6</td>
+                                    <td><strong>120</strong></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #e8f5e9;">
+                                    <td><strong>TOTAL</strong></td>
+                                    <td><strong>100</strong></td>
+                                    <td>-</td>
+                                    <td><strong style="font-size: 16px;">600</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="box">
+                        <div class="box-title">📝 Catatan Reviewer</div>
+                        <div style="padding: 15px; background: #fff; border: 2px solid #333; font-style: italic;">
+                            "Proposal sudah cukup baik secara keseluruhan. Perlu diperbaiki bagian abstrak yang masih
+                            melebihi batas kata.
+                            Ide inovatif dan potensi implementasi sangat bagus. Disarankan untuk memperjelas timeline
+                            dan anggaran."
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compare Section -->
+            <div class="box" style="margin-top: 20px;">
+                <div class="box-title">🔄 Compare with Other Reviewer</div>
+                <div style="text-align: center; padding: 20px;">
+                    <button class="button button-primary">Show Reviewer #2 Results</button>
+                    <p style="margin-top: 10px; color: #666; font-size: 13px;">
+                        Click to see side-by-side comparison of both reviewers' assessments
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            document.querySelectorAll('.page-tabs button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

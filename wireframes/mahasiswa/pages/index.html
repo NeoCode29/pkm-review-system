@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframes Mahasiswa | PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <h1>📐 PKM Review - Wireframe Navigation</h1>
+        <div class="user-info">
+            <a href="../../admin/pages/index.html">Admin Wireframes</a> |
+            <a href="../../wireframe-lowfi.html">Overview</a>
+        </div>
+    </nav>
+
+    <div style="max-width: 1000px; margin: 40px auto; padding: 20px;">
+        <div class="page-title">Mahasiswa Wireframes Index</div>
+
+        <div class="alert alert-info">
+            <strong>📋 Role: Mahasiswa</strong><br>
+            Halaman-halaman ini untuk role mahasiswa yang melakukan submission proposal PKM.
+        </div>
+
+        <!-- Phase 1: Auth & Dashboard -->
+        <div class="box">
+            <div class="box-title">🔵 Phase 1: Authentication & Dashboard ✅</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Halaman</th>
+                        <th>Route</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Login</td>
+                        <td><code>/login</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="login.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Register</td>
+                        <td><code>/register</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="register.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Dashboard (Kondisional)</td>
+                        <td><code>/mahasiswa/dashboard</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="dashboard.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phase 2: Team Formation -->
+        <div class="box">
+            <div class="box-title">🟡 Phase 2: Team Formation ✅</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Halaman</th>
+                        <th>Route</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4</td>
+                        <td>Browse Teams</td>
+                        <td><code>/mahasiswa/teams/browse</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="browse-teams.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Create Team</td>
+                        <td><code>/mahasiswa/teams/create</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="create-team.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Team Detail</td>
+                        <td><code>/mahasiswa/teams/:teamId</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="team-detail.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phase 3: Team Management -->
+        <div class="box">
+            <div class="box-title">🟠 Phase 3: Team Management ✅</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Halaman</th>
+                        <th>Route</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>7</td>
+                        <td>Edit Team</td>
+                        <td><code>/mahasiswa/teams/:teamId/edit</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="edit-team.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Upload Proposal (+ Revisi)</td>
+                        <td><code>/mahasiswa/teams/:teamId/upload</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="upload-proposal.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phase 4: Review Results -->
+        <div class="box">
+            <div class="box-title">🟢 Phase 4: Review Results ✅</div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Halaman</th>
+                        <th>Route</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>9</td>
+                        <td>Hasil Penilaian</td>
+                        <td><code>/mahasiswa/teams/:teamId/results</code></td>
+                        <td><span class="badge badge-green">✓ Done</span></td>
+                        <td><a href="review-results.html" class="button button-sm button-primary">Open</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- All-in-One Files -->
+        <div class="box" style="background: #f5f5f5;">
+            <div class="box-title">📦 All-in-One Phase Files</div>
+            <p style="margin-bottom: 15px; color: #666;">
+                File-file berikut berisi semua wireframe dalam satu halaman per phase (untuk review cepat):
+            </p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="../phase-1-auth-dashboard.html" class="button button-primary">Phase 1</a>
+                <a href="../phase-2-team-formation.html" class="button button-primary">Phase 2</a>
+                <a href="../phase-3-team-management.html" class="button button-primary">Phase 3</a>
+                <a href="../phase-4-review-results.html" class="button button-primary">Phase 4</a>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div style="margin-top: 20px; padding: 15px; border: 2px solid #ddd; background: #fafafa;">
+            <strong>📋 Status Legend:</strong>
+            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                <span><span class="badge badge-green">✓ Done</span> = Selesai</span>
+                <span><span class="badge badge-yellow">In Progress</span> = Sedang dikerjakan</span>
+                <span><span class="badge badge-gray">Pending</span> = Belum mulai</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

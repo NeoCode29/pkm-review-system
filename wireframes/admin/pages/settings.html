@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Admin PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <h1>📐 PKM Review - Admin</h1>
+        </div>
+        <div class="user-info">Admin: administrator@pkm.ac.id | <a href="index.html" style="color: #fff;">← Index</a>
+        </div>
+    </nav>
+
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <h3>Menu Admin</h3>
+            <a href="dashboard.html" class="sidebar-item">Dashboard</a>
+            <a href="user-list.html" class="sidebar-item">Manajemen User</a>
+            <a href="team-list.html" class="sidebar-item">Manajemen Team</a>
+            <a href="kriteria-substantif.html" class="sidebar-item">Manajemen Penilaian</a>
+            <a href="reviewer-list.html" class="sidebar-item">Manajemen Reviewer</a>
+            <a href="master-prodi.html" class="sidebar-item">Master Data</a>
+            <a href="settings.html" class="sidebar-item active">Settings</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">System Workflow Control</div>
+
+            <!-- Current Phase Display -->
+            <div class="box" style="background: #e8f5e9;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 14px; color: #666;">Current Active Phase</div>
+                        <div style="font-size: 24px; font-weight: bold;">📝 REVIEW PERIOD</div>
+                    </div>
+                    <span class="badge badge-green" style="font-size: 16px; padding: 10px 20px;">ACTIVE</span>
+                </div>
+            </div>
+
+            <!-- Phase Selection -->
+            <div class="box">
+                <div class="box-title">Select Active Phase</div>
+
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="phase" id="phase-submission">
+                        <label for="phase-submission" style="cursor: pointer;">
+                            <strong>📤 Upload Proposal (Submission Phase)</strong><br>
+                            <span style="font-size: 13px; color: #666;">
+                                Mahasiswa can submit new proposals. Affected: 12 teams in draft
+                            </span>
+                        </label>
+                    </div>
+                    <div class="radio-item selected">
+                        <input type="radio" name="phase" id="phase-review" checked>
+                        <label for="phase-review" style="cursor: pointer;">
+                            <strong>📝 Review Period (CURRENT)</strong><br>
+                            <span style="font-size: 13px; color: #666;">
+                                Reviewers can evaluate proposals. Auto: submitted → under_review. Affected: 18 proposals
+                            </span>
+                        </label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="phase" id="phase-revision">
+                        <label for="phase-revision" style="cursor: pointer;">
+                            <strong>🔄 Upload Revision Phase</strong><br>
+                            <span style="font-size: 13px; color: #666;">
+                                Mahasiswa upload revised proposals. Auto: reviewed → needs_revision. Affected: 3
+                                proposals
+                            </span>
+                        </label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="phase" id="phase-closed">
+                        <label for="phase-closed" style="cursor: pointer;">
+                            <strong>🔒 System Closed</strong><br>
+                            <span style="font-size: 13px; color: #666;">
+                                All activities paused. Maintenance mode.
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="button button-primary">Update Phase</button>
+            </div>
+
+            <!-- Phase Change History -->
+            <div class="box">
+                <div class="box-title">📅 Phase Change History</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-02-01 10:30</div>
+                        Changed from SUBMISSION → REVIEW by admin@pkm.ac.id
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-01-15 09:00</div>
+                        Changed from CLOSED → SUBMISSION by admin@pkm.ac.id
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2026-01-01 00:00</div>
+                        System initialized with CLOSED phase
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Warning:</strong> Changing system phase will affect all users.
+                Status transitions will be applied automatically to affected proposals.
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobileOverlay').classList.toggle('show');
+        }
+    </script>
+</body>
+
+</html>

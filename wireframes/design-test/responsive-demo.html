@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Demo - Design Test | PKM Review</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Demo Section */
+        .demo-section {
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-200);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .demo-section-header {
+            padding: var(--spacing-4) var(--spacing-5);
+            border-bottom: 1px solid var(--color-gray-200);
+            background: var(--color-gray-50);
+        }
+
+        .demo-section-title {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-gray-800);
+        }
+
+        .demo-section-body {
+            padding: var(--spacing-5);
+        }
+
+        .breakpoint-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+            padding: var(--spacing-4);
+            background: var(--color-gray-50);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .breakpoint-badge {
+            padding: var(--spacing-2) var(--spacing-4);
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .breakpoint-text {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-600);
+        }
+
+        /* Current Breakpoint Indicator */
+        .current-breakpoint {
+            position: fixed;
+            bottom: var(--spacing-4);
+            right: var(--spacing-4);
+            padding: var(--spacing-3) var(--spacing-4);
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+        }
+
+        .current-breakpoint::before {
+            content: 'Current: ';
+            opacity: 0.7;
+        }
+
+        /* Show different text at different breakpoints */
+        .bp-2xl,
+        .bp-xl,
+        .bp-lg,
+        .bp-md,
+        .bp-sm,
+        .bp-xs {
+            display: none;
+        }
+
+        @media (min-width: 1536px) {
+            .bp-2xl {
+                display: inline;
+            }
+        }
+
+        @media (min-width: 1280px) and (max-width: 1535px) {
+            .bp-xl {
+                display: inline;
+            }
+        }
+
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            .bp-lg {
+                display: inline;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .bp-md {
+                display: inline;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 767px) {
+            .bp-sm {
+                display: inline;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bp-xs {
+                display: inline;
+            }
+        }
+
+        /* Grid Demo */
+        .grid-demo {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-4);
+        }
+
+        @media (max-width: 1024px) {
+            .grid-demo {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-demo {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grid-item {
+            padding: var(--spacing-4);
+            background: var(--color-accent-light);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-accent-hover);
+        }
+
+        /* Flex Demo */
+        .flex-demo {
+            display: flex;
+            gap: var(--spacing-4);
+        }
+
+        @media (max-width: 768px) {
+            .flex-demo {
+                flex-direction: column;
+            }
+        }
+
+        .flex-item {
+            flex: 1;
+            padding: var(--spacing-4);
+            background: var(--color-info-light);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: var(--font-weight-medium);
+            color: var(--color-info);
+        }
+
+        /* Visibility Demo */
+        .visibility-box {
+            padding: var(--spacing-4);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .visibility-box.desktop-only {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .visibility-box.tablet-only {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+
+        .visibility-box.mobile-only {
+            background: var(--color-error-light);
+            color: var(--color-error);
+        }
+
+        /* Responsive Text Demo */
+        .responsive-text {
+            padding: var(--spacing-4);
+            background: var(--color-gray-100);
+            border-radius: var(--radius-md);
+        }
+
+        .responsive-text h3 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        @media (max-width: 768px) {
+            .responsive-text h3 {
+                font-size: var(--font-size-xl);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .responsive-text h3 {
+                font-size: var(--font-size-lg);
+            }
+        }
+
+        /* Responsive Button Group */
+        .btn-group-demo {
+            display: flex;
+            gap: var(--spacing-3);
+        }
+
+        @media (max-width: 768px) {
+            .btn-group-demo {
+                flex-direction: column;
+            }
+
+            .btn-group-demo .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Demo Label */
+        .demo-label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-gray-600);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .demo-row {
+            margin-bottom: var(--spacing-6);
+        }
+
+        .demo-row:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <p class="sidebar-section-title">Menu</p>
+                <nav class="sidebar-menu">
+                    <a href="dashboard.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="form-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <path d="M12 11h4"></path>
+                            <path d="M12 16h4"></path>
+                            <path d="M8 11h.01"></path>
+                            <path d="M8 16h.01"></path>
+                        </svg>
+                        Forms
+                    </a>
+                    <a href="table-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="3" y1="15" x2="21" y2="15"></line>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                            <line x1="15" y1="3" x2="15" y2="21"></line>
+                        </svg>
+                        Tables
+                    </a>
+                    <a href="detail-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                        Detail
+                    </a>
+                    <a href="modal-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <rect x="7" y="7" width="10" height="10" rx="1" ry="1"></rect>
+                        </svg>
+                        Modals
+                    </a>
+                    <a href="states-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4"></path>
+                            <path d="M12 18v4"></path>
+                            <path d="M4.93 4.93l2.83 2.83"></path>
+                            <path d="M16.24 16.24l2.83 2.83"></path>
+                            <path d="M2 12h4"></path>
+                            <path d="M18 12h4"></path>
+                            <path d="M4.93 19.07l2.83-2.83"></path>
+                            <path d="M16.24 7.76l2.83-2.83"></path>
+                        </svg>
+                        States
+                    </a>
+                    <a href="navigation-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg>
+                        Navigation
+                    </a>
+                    <a href="toast-demo.html" class="sidebar-item">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        Toasts
+                    </a>
+                    <a href="responsive-demo.html" class="sidebar-item active">
+                        <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                        Responsive
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mobile Menu Toggle -->
+            <div style="display: flex; align-items: center; gap: var(--spacing-4); margin-bottom: var(--spacing-4);">
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                    <svg class="icon icon-md" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <h2 class="section-title" style="margin: 0;">Responsive Design Demo</h2>
+            </div>
+
+            <!-- Breakpoint Info -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Breakpoints</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div class="breakpoint-info">
+                        <span class="breakpoint-badge">2xl</span>
+                        <span class="breakpoint-text">≥1536px - Large desktops</span>
+                    </div>
+                    <div class="breakpoint-info">
+                        <span class="breakpoint-badge">xl</span>
+                        <span class="breakpoint-text">≥1280px - Desktops</span>
+                    </div>
+                    <div class="breakpoint-info">
+                        <span class="breakpoint-badge">lg</span>
+                        <span class="breakpoint-text">≥1024px - Small laptops, tablets landscape</span>
+                    </div>
+                    <div class="breakpoint-info">
+                        <span class="breakpoint-badge">md</span>
+                        <span class="breakpoint-text">≥768px - Tablets</span>
+                    </div>
+                    <div class="breakpoint-info">
+                        <span class="breakpoint-badge">sm</span>
+                        <span class="breakpoint-text">≥481px - Mobile landscape, small tablets</span>
+                    </div>
+                    <div class="breakpoint-info">
+                        <span class="breakpoint-badge">xs</span>
+                        <span class="breakpoint-text">≤480px - Mobile portrait</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Demo -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Responsive Grid</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div class="demo-label">4 columns → 2 columns → 1 column</div>
+                    <div class="grid-demo">
+                        <div class="grid-item">1</div>
+                        <div class="grid-item">2</div>
+                        <div class="grid-item">3</div>
+                        <div class="grid-item">4</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flex Demo -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Responsive Flex</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div class="demo-label">Row → Column on mobile</div>
+                    <div class="flex-demo">
+                        <div class="flex-item">Flex Item 1</div>
+                        <div class="flex-item">Flex Item 2</div>
+                        <div class="flex-item">Flex Item 3</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visibility Demo -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Conditional Visibility</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div class="demo-row">
+                        <div class="demo-label">Desktop Only (hide on tablet & mobile)</div>
+                        <div class="visibility-box desktop-only hide-tablet">
+                            👋 I'm visible only on desktop!
+                        </div>
+                    </div>
+
+                    <div class="demo-row">
+                        <div class="demo-label">Tablet & Up (hide on mobile)</div>
+                        <div class="visibility-box tablet-only hide-mobile">
+                            📱 I'm visible on tablet and desktop!
+                        </div>
+                    </div>
+
+                    <div class="demo-row">
+                        <div class="demo-label">Mobile Only</div>
+                        <div class="visibility-box mobile-only show-mobile" style="display: none;">
+                            📲 I'm visible only on mobile!
+                        </div>
+                        <div class="visibility-box hide-mobile"
+                            style="background: var(--color-gray-100); color: var(--color-gray-500);">
+                            (Resize to mobile to see mobile-only content)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsive Text -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Responsive Typography</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div class="responsive-text">
+                        <h3>This heading changes size</h3>
+                        <p style="color: var(--color-gray-600);">Desktop: 24px → Tablet: 20px → Mobile: 18px</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsive Button Group -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Responsive Button Group</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div class="demo-label">Row → Stack on mobile</div>
+                    <div class="btn-group-demo">
+                        <button class="btn btn-primary">
+                            <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Save
+                        </button>
+                        <button class="btn btn-secondary">
+                            <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            Cancel
+                        </button>
+                        <button class="btn btn-ghost">
+                            <svg class="icon icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1"></circle>
+                                <circle cx="19" cy="12" r="1"></circle>
+                                <circle cx="5" cy="12" r="1"></circle>
+                            </svg>
+                            More
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Utility Classes -->
+            <div class="demo-section">
+                <div class="demo-section-header">
+                    <h3 class="demo-section-title">Responsive Utility Classes</h3>
+                </div>
+                <div class="demo-section-body">
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>.hide-mobile</code></td>
+                                    <td>Hidden on screens ≤768px</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.show-mobile</code></td>
+                                    <td>Visible only on screens ≤768px</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.hide-tablet</code></td>
+                                    <td>Hidden on screens ≤1024px</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.show-tablet</code></td>
+                                    <td>Visible only on screens ≤1024px</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.flex-col-mobile</code></td>
+                                    <td>Changes flex direction to column on mobile</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.w-full-mobile</code></td>
+                                    <td>Full width on mobile</td>
+                                </tr>
+                                <tr>
+                                    <td><code>.text-center-mobile</code></td>
+                                    <td>Center text on mobile</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Current Breakpoint Indicator -->
+    <div class="current-breakpoint">
+        <span class="bp-2xl">2XL (≥1536px)</span>
+        <span class="bp-xl">XL (1280-1535px)</span>
+        <span class="bp-lg">LG (1024-1279px)</span>
+        <span class="bp-md">MD (768-1023px)</span>
+        <span class="bp-sm">SM (481-767px)</span>
+        <span class="bp-xs">XS (≤480px)</span>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+
+</html>

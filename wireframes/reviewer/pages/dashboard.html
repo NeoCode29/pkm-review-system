@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | PKM Review - Reviewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <h1>📐 PKM Review - Reviewer</h1>
+        <div class="user-info">Dr. Ahmad Fauzi, M.Kom (NIDN: 0012345678) | <a href="login.html">Logout</a></div>
+    </nav>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <h3>Menu Reviewer</h3>
+            <a href="dashboard.html" class="sidebar-item active">🏠 Dashboard</a>
+            <a href="proposal-list.html" class="sidebar-item">📋 Daftar Proposal</a>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-title">Dashboard Reviewer</div>
+
+            <!-- Phase Status Alert -->
+            <div class="alert alert-success"
+                style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 14px; color: #666;">Status Fase Review</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #388e3c;">📝 PERIODE REVIEW AKTIF</div>
+                    <div style="font-size: 14px; color: #666;">Anda dapat melakukan penilaian proposal</div>
+                </div>
+                <span class="badge badge-green" style="font-size: 14px;">Review: DIBUKA</span>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid-4col" style="margin-bottom: 25px;">
+                <div class="stat-box">
+                    <div class="number">12</div>
+                    <div class="stat-label">Total Ditugaskan</div>
+                </div>
+                <div class="stat-box" style="background: #e8f5e9;">
+                    <div class="number" style="color: #388e3c;">7</div>
+                    <div class="stat-label">Review Selesai</div>
+                </div>
+                <div class="stat-box" style="background: #fff3e0;">
+                    <div class="number" style="color: #f57c00;">3</div>
+                    <div class="stat-label">Sedang Direview</div>
+                </div>
+                <div class="stat-box" style="background: #ffebee;">
+                    <div class="number" style="color: #d32f2f;">2</div>
+                    <div class="stat-label">Belum Dimulai</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="box">
+                <div class="box-title">📊 Progress Review</div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 58%;">7/12 (58%)</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
+                    <span>Selesai: 7 proposal</span>
+                    <span>Tersisa: 5 proposal</span>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="margin-bottom: 25px;">
+                <a href="proposal-list.html" class="button button-primary" style="font-size: 16px; padding: 15px 30px;">
+                    📋 Lihat Semua Proposal
+                </a>
+            </div>
+
+            <!-- Proposal Preview Table -->
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <div class="box-title" style="margin-bottom: 0;">📑 Proposal yang Ditugaskan</div>
+                    <a href="proposal-list.html" style="color: #f57c00; font-size: 14px;">Lihat Semua →</a>
+                </div>
+
+                <div class="table-scroll-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tim</th>
+                                <th>Judul Proposal</th>
+                                <th>Jenis PKM</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Tim Inovasi Digital</td>
+                                <td>Aplikasi AR untuk Pembelajaran Sains</td>
+                                <td><span class="badge badge-blue">PKM-KC</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat</a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Tim Green Tech</td>
+                                <td>Smart Agriculture IoT System</td>
+                                <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                <td><span class="badge badge-orange">Sedang</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">✏️ Lanjutkan</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Tim Eco Solution</td>
+                                <td>Pengolahan Limbah Plastik Menjadi BBM</td>
+                                <td><span class="badge badge-blue">PKM-RE</span></td>
+                                <td><span class="badge badge-gray">Belum</span></td>
+                                <td><a href="review-page.html" class="button button-sm button-primary">▶️ Mulai</a></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Tim Data Science</td>
+                                <td>Prediksi Cuaca dengan Machine Learning</td>
+                                <td><span class="badge badge-blue">PKM-AI</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat</a></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Tim Kesehatan Digital</td>
+                                <td>Aplikasi Monitoring Kesehatan Lansia</td>
+                                <td><span class="badge badge-yellow">PKM-PM</span></td>
+                                <td><span class="badge badge-green">Selesai</span></td>
+                                <td><a href="review-summary.html" class="button button-sm">👁️ Lihat</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="box" style="background: #fff3e0; border-color: #f57c00;">
+                <div class="box-title" style="color: #f57c00;">ℹ️ Informasi Penting</div>
+                <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li>Review bersifat <strong>independen</strong> - Anda tidak bisa melihat review dari reviewer
+                        lain
+                    </li>
+                    <li>Hasil review dapat diedit selama fase review masih <strong>DIBUKA</strong></li>
+                    <li>Setelah fase ditutup admin, review menjadi <strong>FINAL</strong> dan tidak bisa diubah</li>
+                    <li>Jika ada kendala teknis, hubungi Administrator</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

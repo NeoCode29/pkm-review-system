@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2: Review Workflow | Reviewer Wireframes</title>
+    <link rel="stylesheet" href="pages/styles.css">
+    <style>
+        .page-section {
+            border: 4px solid #f57c00;
+            margin-bottom: 60px;
+            background: #fff;
+        }
+
+        .page-header {
+            background: #f57c00;
+            color: #fff;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-route {
+            background: #fff3e0;
+            padding: 10px 20px;
+            font-family: monospace;
+            border-bottom: 2px solid #f57c00;
+        }
+
+        .page-content {
+            padding: 0;
+        }
+
+        .phase-nav {
+            background: #333;
+            padding: 15px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .phase-nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 2px solid #fff;
+        }
+
+        .phase-nav a:hover {
+            background: #fff;
+            color: #333;
+        }
+
+        .phase-nav a.active {
+            background: #f57c00;
+            border-color: #f57c00;
+        }
+
+        .phase-title {
+            color: #fff;
+            font-size: 18px;
+            flex: 1;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #f57c00;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: 2px solid #f57c00;
+            border-bottom: none;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: -2px;
+        }
+
+        .tab:hover {
+            background: #fff3e0;
+        }
+
+        .tab.active {
+            background: #f57c00;
+            color: #fff;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            border: 2px solid #ddd;
+            margin-bottom: 8px;
+            background: #fff;
+        }
+
+        .checklist-item.checked {
+            background: #ffebee;
+            border-color: #d32f2f;
+        }
+
+        .score-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #f57c00;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body style="background: #f0f0f0;">
+    <!-- Phase Navigation -->
+    <div class="phase-nav">
+        <div class="phase-title">📐 Reviewer Wireframes - Phase 2: Review Workflow</div>
+        <a href="pages/index.html">Index</a>
+        <a href="phase-1-core.html">Phase 1</a>
+        <a href="phase-2-review.html" class="active">Phase 2</a>
+    </div>
+
+    <div style="max-width: 1400px; margin: 40px auto; padding: 20px;">
+
+        <div class="alert alert-warning" style="margin-bottom: 40px;">
+            <strong>Phase 2: Review Workflow</strong><br>
+            Alur kerja review proposal PKM termasuk daftar proposal, halaman review, dan ringkasan hasil.
+        </div>
+
+        <!-- ==================== PAGE 1: PROPOSAL LIST ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 1: Daftar Proposal</div>
+            <div class="page-route">Route: /reviewer/proposals</div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Reviewer</h1>
+                    <div class="user-info">Dr. Ahmad Fauzi, M.Kom | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Reviewer</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">📋 Daftar Proposal</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div class="page-title">Daftar Proposal yang Ditugaskan</div>
+
+                        <!-- Filter Bar -->
+                        <div class="box">
+                            <div class="filter-bar">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="label">Status Review</label>
+                                    <select class="input-field" style="width: 180px; margin-bottom: 0;">
+                                        <option>Semua Status</option>
+                                        <option>Belum Dimulai</option>
+                                        <option>Sedang Direview</option>
+                                        <option>Selesai</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="label">Jenis PKM</label>
+                                    <select class="input-field" style="width: 150px; margin-bottom: 0;">
+                                        <option>Semua</option>
+                                        <option>PKM-KC</option>
+                                        <option>PKM-GT</option>
+                                    </select>
+                                </div>
+                                <button class="button button-primary" style="margin-top: 0;">🔍 Filter</button>
+                            </div>
+                        </div>
+
+                        <!-- Summary Stats -->
+                        <div class="grid-4col" style="margin-bottom: 20px;">
+                            <div class="stat-box">
+                                <div class="number">12</div>
+                                <div class="stat-label">Total</div>
+                            </div>
+                            <div class="stat-box" style="background: #f5f5f5;">
+                                <div class="number" style="color: #666;">2</div>
+                                <div class="stat-label">Belum</div>
+                            </div>
+                            <div class="stat-box" style="background: #fff3e0;">
+                                <div class="number" style="color: #f57c00;">3</div>
+                                <div class="stat-label">Sedang</div>
+                            </div>
+                            <div class="stat-box" style="background: #e8f5e9;">
+                                <div class="number" style="color: #388e3c;">7</div>
+                                <div class="stat-label">Selesai</div>
+                            </div>
+                        </div>
+
+                        <!-- Proposal Table -->
+                        <div class="box">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tim</th>
+                                        <th>Judul Proposal</th>
+                                        <th>Jenis PKM</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><strong>Tim Inovasi Digital</strong></td>
+                                        <td>Aplikasi AR untuk Pembelajaran Sains</td>
+                                        <td><span class="badge badge-blue">PKM-KC</span></td>
+                                        <td><span class="badge badge-green">✓ Selesai</span></td>
+                                        <td><a href="#" class="button button-sm">👁️ Lihat</a></td>
+                                    </tr>
+                                    <tr style="background: #fff3e0;">
+                                        <td>2</td>
+                                        <td><strong>Tim Green Tech</strong></td>
+                                        <td>Smart Agriculture IoT System</td>
+                                        <td><span class="badge badge-yellow">PKM-GT</span></td>
+                                        <td><span class="badge badge-orange">⏳ Sedang</span></td>
+                                        <td><a href="#" class="button button-sm button-primary">✏️ Lanjutkan</a></td>
+                                    </tr>
+                                    <tr style="background: #f5f5f5;">
+                                        <td>3</td>
+                                        <td><strong>Tim Eco Solution</strong></td>
+                                        <td>Pengolahan Limbah Plastik</td>
+                                        <td><span class="badge badge-blue">PKM-RE</span></td>
+                                        <td><span class="badge badge-gray">○ Belum</span></td>
+                                        <td><a href="#" class="button button-sm button-primary">▶️ Mulai</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Legend -->
+                            <div style="margin-top: 15px; font-size: 12px; color: #666;">
+                                <strong>Keterangan:</strong>
+                                <span class="badge badge-gray">○ Belum</span> Belum dimulai |
+                                <span class="badge badge-orange">⏳ Sedang</span> Dalam proses |
+                                <span class="badge badge-green">✓ Selesai</span> Sudah disubmit
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2: REVIEW PAGE ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 2: Review Proposal</div>
+            <div class="page-route">Route: /reviewer/proposals/:id/review</div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Reviewer</h1>
+                    <div class="user-info">Dr. Ahmad Fauzi, M.Kom | <a href="#">Logout</a></div>
+                </nav>
+
+                <div style="padding: 20px;">
+                    <div class="breadcrumb">
+                        Dashboard / Daftar Proposal / Review Proposal
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div class="page-title" style="margin-bottom: 0; border-bottom: none;">Review Proposal</div>
+                        <span class="badge badge-orange" style="font-size: 14px;">⏳ Status: Sedang Direview</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 55% 45%; gap: 20px;">
+                        <!-- Left Column -->
+                        <div>
+                            <!-- Proposal Info -->
+                            <div class="box" style="margin-bottom: 15px;">
+                                <div class="box-title">📄 Informasi Proposal</div>
+                                <p><strong>Tim:</strong> Tim Green Tech</p>
+                                <p><strong>Judul:</strong> Smart Agriculture IoT System</p>
+                                <p><strong>Jenis PKM:</strong> <span class="badge badge-yellow">PKM-GT</span></p>
+                                <hr class="divider">
+                                <a href="#" class="button button-sm">⬇️ Download PDF</a>
+                            </div>
+
+                            <!-- PDF Placeholder -->
+                            <div class="box">
+                                <div class="box-title">📑 Preview Dokumen</div>
+                                <div class="pdf-placeholder" style="min-height: 350px;">
+                                    <div style="font-size: 48px;">📄</div>
+                                    <div style="font-size: 18px; font-weight: bold; color: #f57c00;">[PDF VIEWER]</div>
+                                    <div style="color: #666; font-size: 14px;">Placeholder PDF Viewer</div>
+                                    <div style="margin-top: 15px;">
+                                        <button class="button button-sm">← Prev</button>
+                                        <span style="margin: 0 10px;">Page 1 of 15</span>
+                                        <button class="button button-sm">Next →</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div>
+                            <!-- Tabs -->
+                            <div class="tabs">
+                                <div class="tab active">📋 Administratif</div>
+                                <div class="tab">📊 Substantif</div>
+                            </div>
+
+                            <!-- Tab Content: Administratif -->
+                            <div class="box">
+                                <div class="box-title">📋 Penilaian Administratif</div>
+                                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                                    Centang item yang <strong>BERMASALAH</strong>
+                                </p>
+
+                                <div class="checklist-item">
+                                    <input type="checkbox" style="margin-right: 12px; width: 18px; height: 18px;">
+                                    <div>
+                                        <strong>Margin tidak sesuai</strong><br>
+                                        <span style="font-size: 12px; color: #666;">Top 3cm, Left 4cm, Right 3cm, Bottom
+                                            3cm</span>
+                                    </div>
+                                </div>
+                                <div class="checklist-item checked">
+                                    <input type="checkbox" checked
+                                        style="margin-right: 12px; width: 18px; height: 18px;">
+                                    <div>
+                                        <strong>Jumlah halaman tidak sesuai</strong><br>
+                                        <span style="font-size: 12px; color: #666;">Max 15 halaman</span>
+                                    </div>
+                                </div>
+                                <div class="checklist-item">
+                                    <input type="checkbox" style="margin-right: 12px; width: 18px; height: 18px;">
+                                    <div>
+                                        <strong>Font tidak standar</strong><br>
+                                        <span style="font-size: 12px; color: #666;">Times New Roman 12pt</span>
+                                    </div>
+                                </div>
+
+                                <div class="stat-box" style="margin-top: 15px; background: #ffebee;">
+                                    <div class="number" style="color: #d32f2f;">1</div>
+                                    <div class="stat-label">Total Kesalahan</div>
+                                </div>
+
+                                <div class="form-group" style="margin-top: 15px;">
+                                    <label class="label">Catatan (Opsional)</label>
+                                    <textarea class="input-field" rows="2" placeholder="Catatan..."></textarea>
+                                </div>
+
+                                <button class="button">💾 Simpan Draft</button>
+                            </div>
+
+                            <!-- Submit Box -->
+                            <div class="box" style="background: #e8f5e9; border-color: #388e3c; margin-top: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: #388e3c;"><strong>✅ Siap Submit</strong></span>
+                                    <button class="button button-primary"
+                                        style="background: #388e3c; border-color: #388e3c;">✓ Submit Final</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 2B: REVIEW PAGE - TAB SUBSTANTIF ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 2B: Review Proposal (Tab Substantif)</div>
+            <div class="page-route">Route: /reviewer/proposals/:id/review — Tab: Substantif</div>
+            <div class="page-content">
+                <div style="padding: 20px;">
+                    <div style="display: grid; grid-template-columns: 55% 45%; gap: 20px;">
+                        <!-- Left Column -->
+                        <div>
+                            <div class="pdf-placeholder" style="min-height: 400px;">
+                                <div style="font-size: 48px;">📄</div>
+                                <div style="font-size: 18px; font-weight: bold; color: #f57c00;">[PDF VIEWER]</div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Tab Substantif -->
+                        <div>
+                            <div class="tabs">
+                                <div class="tab">📋 Administratif</div>
+                                <div class="tab active">📊 Substantif</div>
+                            </div>
+
+                            <div class="box">
+                                <div class="box-title">📊 Penilaian Substantif</div>
+                                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">
+                                    Nilai = Bobot × Skor
+                                </p>
+
+                                <table class="table" style="font-size: 12px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Kriteria</th>
+                                            <th style="width: 45px;">Bobot</th>
+                                            <th style="width: 55px;">Skor</th>
+                                            <th style="width: 55px;">Nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Gagasan - Orisinalitas</td>
+                                            <td>15</td>
+                                            <td><input type="number" class="score-input" value="6" style="width: 45px;">
+                                            </td>
+                                            <td><strong>90</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gagasan - Penyajian</td>
+                                            <td>15</td>
+                                            <td><input type="number" class="score-input" value="7" style="width: 45px;">
+                                            </td>
+                                            <td><strong>105</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Kesesuaian Metode</td>
+                                            <td>15</td>
+                                            <td><input type="number" class="score-input" value="7" style="width: 45px;">
+                                            </td>
+                                            <td><strong>105</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Potensi Program</td>
+                                            <td>15</td>
+                                            <td><input type="number" class="score-input" value="6" style="width: 45px;">
+                                            </td>
+                                            <td><strong>90</strong></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr style="background: #fff3e0;">
+                                            <td><strong>TOTAL</strong></td>
+                                            <td><strong>60</strong></td>
+                                            <td>-</td>
+                                            <td><strong style="color: #f57c00;">390</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <div style="background: #f5f5f5; padding: 8px; margin-top: 10px; font-size: 11px;">
+                                    Skala: 1=Buruk, 3=Kurang, 5=Cukup, 6=Baik, 7=Sangat Baik
+                                </div>
+
+                                <div class="form-group" style="margin-top: 15px;">
+                                    <label class="label">Catatan</label>
+                                    <textarea class="input-field" rows="2"></textarea>
+                                </div>
+
+                                <button class="button">💾 Simpan Draft</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE 3: REVIEW SUMMARY ==================== -->
+        <div class="page-section">
+            <div class="page-header">📄 Page 3: Hasil Review</div>
+            <div class="page-route">Route: /reviewer/proposals/:id/summary</div>
+            <div class="page-content">
+                <nav class="top-nav">
+                    <h1>📐 PKM Review - Reviewer</h1>
+                    <div class="user-info">Dr. Ahmad Fauzi, M.Kom | <a href="#">Logout</a></div>
+                </nav>
+
+                <div class="layout">
+                    <aside class="sidebar">
+                        <h3>Menu Reviewer</h3>
+                        <a href="#" class="sidebar-item">🏠 Dashboard</a>
+                        <a href="#" class="sidebar-item active">📋 Daftar Proposal</a>
+                    </aside>
+
+                    <main class="main-content">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <div class="page-title" style="margin-bottom: 0; border-bottom: none;">Hasil Review</div>
+                            <span class="badge badge-green" style="font-size: 14px;">✓ Review Tersubmit</span>
+                        </div>
+
+                        <div class="alert alert-success">
+                            <strong>✅ Review berhasil disubmit!</strong> Hasil dapat diedit selama fase review masih
+                            dibuka.
+                        </div>
+
+                        <div class="box">
+                            <div class="box-title">📄 Informasi Proposal</div>
+                            <p><strong>Tim:</strong> Tim Inovasi Digital | <strong>Jenis PKM:</strong> <span
+                                    class="badge badge-blue">PKM-KC</span></p>
+                            <p><strong>Judul:</strong> Aplikasi AR untuk Pembelajaran Sains di Sekolah Dasar</p>
+                        </div>
+
+                        <div class="grid-2col">
+                            <!-- Administratif -->
+                            <div class="box">
+                                <div class="box-title">📋 Penilaian Administratif</div>
+                                <div class="stat-box" style="background: #ffebee; margin-bottom: 15px;">
+                                    <div class="number" style="color: #d32f2f;">2</div>
+                                    <div class="stat-label">Total Kesalahan</div>
+                                </div>
+                                <p><strong>Kesalahan:</strong></p>
+                                <ul style="padding-left: 20px; margin: 10px 0;">
+                                    <li>Jumlah halaman tidak sesuai</li>
+                                    <li>Struktur proposal tidak lengkap</li>
+                                </ul>
+                            </div>
+
+                            <!-- Substantif -->
+                            <div class="box">
+                                <div class="box-title">📊 Penilaian Substantif</div>
+                                <div class="stat-box" style="background: #fff3e0; margin-bottom: 15px;">
+                                    <div class="number" style="color: #f57c00;">625</div>
+                                    <div class="stat-label">Total Nilai</div>
+                                </div>
+                                <p><strong>Breakdown:</strong></p>
+                                <div style="font-size: 13px;">
+                                    Orisinalitas: 90 | Penyajian: 105 | Metode: 105 | Potensi: 150 | Jadwal: 25 |
+                                    Anggaran: 30
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box" style="background: #fff3e0; border-color: #f57c00;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>⚠️ Review dapat diedit selama fase masih dibuka</span>
+                                <div>
+                                    <a href="#" class="button button-primary">✏️ Edit Review</a>
+                                    <a href="#" class="button">← Kembali</a>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="box" style="background: #e8f5e9; border-color: #388e3c;">
+            <div class="box-title" style="color: #388e3c;">✅ Phase 2 Selesai</div>
+            <p>Phase 2 mencakup 3 halaman utama (dengan variasi tab):</p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li><strong>Daftar Proposal</strong> - List semua proposal yang ditugaskan dengan filter</li>
+                <li><strong>Review Proposal</strong> - 2-column layout dengan PDF viewer dan form penilaian (Tab
+                    Administratif & Substantif)</li>
+                <li><strong>Hasil Review</strong> - Ringkasan read-only setelah submit dengan opsi edit</li>
+            </ul>
+            <a href="phase-1-core.html" class="button">← Kembali ke Phase 1</a>
+            <a href="pages/index.html" class="button button-primary">📋 Lihat Index</a>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+# compiled output
+/dist
+
+# dependencies
+/node_modules
+
+# env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# IDE
+.vscode/
+!.vscode/settings.json
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+
+# testing
+/coverage
+
+# typescript
+*.tsbuildinfo
+
+# prisma
+prisma/*.db
+prisma/*.db-journal
