@@ -5,10 +5,14 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class ProposalsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storageService: StorageService,
+  ) {}
 
   async findOne(id: bigint) {
     const proposal = await this.prisma.proposal.findUnique({
@@ -95,7 +99,7 @@ export class ProposalsService {
 
   async uploadFile(
     proposalId: bigint,
-    file: { path: string; filename: string; size: number; mimetype: string },
+    file: Express.Multer.File,
     userId: string,
   ) {
     const proposal = await this.findOne(proposalId);
@@ -115,11 +119,23 @@ export class ProposalsService {
       throw new BadRequestException(`Tidak bisa upload file pada status "${proposal.status}"`);
     }
 
+    // Upload to Supabase Storage
+    const storagePath = this.storageService.buildPath(
+      proposal.type as 'original' | 'revised',
+      proposal.teamId,
+      file.originalname,
+    );
+    const uploadedPath = await this.storageService.upload(
+      storagePath,
+      file.buffer,
+      file.mimetype,
+    );
+
     return this.prisma.proposalFile.create({
       data: {
         proposalId,
-        filePath: file.path,
-        fileName: file.filename,
+        filePath: uploadedPath,
+        fileName: file.originalname,
         fileSize: BigInt(file.size),
         mimeType: file.mimetype,
         uploadedBy: userId,
@@ -137,5 +153,17 @@ export class ProposalsService {
       throw new NotFoundException('File proposal tidak ditemukan');
     }
     return files[0];
+  }
+
+  async getFileDownloadUrl(proposalId: bigint) {
+    const file = await this.getFile(proposalId);
+    const signedUrl = await this.storageService.getSignedUrl(file.filePath);
+    return { ...file, downloadUrl: signedUrl };
+  }
+
+  async downloadFile(proposalId: bigint) {
+    const file = await this.getFile(proposalId);
+    const buffer = await this.storageService.download(file.filePath);
+    return { buffer, fileName: file.fileName, mimeType: file.mimeType };
   }
 }

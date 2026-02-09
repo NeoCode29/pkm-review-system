@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ProposalsService } from './proposals.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { StorageService } from '../storage/storage.service';
 
 const mockPrisma = {
   proposal: {
@@ -21,6 +22,28 @@ const mockPrisma = {
   systemConfig: { findUnique: jest.fn() },
 };
 
+const mockStorage = {
+  upload: jest.fn(),
+  getSignedUrl: jest.fn(),
+  download: jest.fn(),
+  remove: jest.fn(),
+  buildPath: jest.fn(),
+};
+
+const createMockFile = (overrides: Partial<Express.Multer.File> = {}): Express.Multer.File => ({
+  fieldname: 'file',
+  originalname: 'proposal.pdf',
+  encoding: '7bit',
+  mimetype: 'application/pdf',
+  size: 1024,
+  buffer: Buffer.from('test'),
+  stream: null as any,
+  destination: '',
+  filename: '',
+  path: '',
+  ...overrides,
+});
+
 describe('ProposalsService', () => {
   let service: ProposalsService;
 
@@ -29,6 +52,7 @@ describe('ProposalsService', () => {
       providers: [
         ProposalsService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: StorageService, useValue: mockStorage },
       ],
     }).compile();
 
@@ -138,40 +162,47 @@ describe('ProposalsService', () => {
   });
 
   describe('uploadFile', () => {
+    const draftProposal = {
+      id: 1n,
+      status: 'draft',
+      type: 'original',
+      teamId: 1n,
+      team: { teamMembers: [], _count: { teamMembers: 0 } },
+      proposalFiles: [],
+    };
+
     it('should throw if not PDF', async () => {
-      mockPrisma.proposal.findUnique.mockResolvedValueOnce({
-        id: 1n,
-        status: 'draft',
-        team: { teamMembers: [], _count: { teamMembers: 0 } },
-        proposalFiles: [],
-      });
-      await expect(
-        service.uploadFile(1n, { path: '/f', filename: 'f.doc', size: 100, mimetype: 'application/msword' }, 'u1'),
-      ).rejects.toThrow(BadRequestException);
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce(draftProposal);
+      const file = createMockFile({ mimetype: 'application/msword', originalname: 'f.doc' });
+      await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
     });
 
     it('should throw if file > 10MB', async () => {
-      mockPrisma.proposal.findUnique.mockResolvedValueOnce({
-        id: 1n,
-        status: 'draft',
-        team: { teamMembers: [], _count: { teamMembers: 0 } },
-        proposalFiles: [],
-      });
-      await expect(
-        service.uploadFile(1n, { path: '/f', filename: 'f.pdf', size: 11 * 1024 * 1024, mimetype: 'application/pdf' }, 'u1'),
-      ).rejects.toThrow(BadRequestException);
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce(draftProposal);
+      const file = createMockFile({ size: 11 * 1024 * 1024 });
+      await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
     });
 
     it('should throw if status does not allow upload', async () => {
-      mockPrisma.proposal.findUnique.mockResolvedValueOnce({
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce({ ...draftProposal, status: 'submitted' });
+      const file = createMockFile();
+      await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
+    });
+
+    it('should upload file to storage and save record', async () => {
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce(draftProposal);
+      mockStorage.buildPath.mockReturnValueOnce('original/1/123_proposal.pdf');
+      mockStorage.upload.mockResolvedValueOnce('original/1/123_proposal.pdf');
+      mockPrisma.proposalFile.create.mockResolvedValueOnce({
         id: 1n,
-        status: 'submitted',
-        team: { teamMembers: [], _count: { teamMembers: 0 } },
-        proposalFiles: [],
+        fileName: 'proposal.pdf',
+        filePath: 'original/1/123_proposal.pdf',
       });
-      await expect(
-        service.uploadFile(1n, { path: '/f', filename: 'f.pdf', size: 100, mimetype: 'application/pdf' }, 'u1'),
-      ).rejects.toThrow(BadRequestException);
+
+      const file = createMockFile();
+      const result = await service.uploadFile(1n, file, 'u1');
+      expect(mockStorage.upload).toHaveBeenCalled();
+      expect(result.filePath).toBe('original/1/123_proposal.pdf');
     });
   });
 
@@ -185,6 +216,31 @@ describe('ProposalsService', () => {
     it('should throw if no files', async () => {
       mockPrisma.proposalFile.findMany.mockResolvedValueOnce([]);
       await expect(service.getFile(1n)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('getFileDownloadUrl', () => {
+    it('should return file info with signed URL', async () => {
+      mockPrisma.proposalFile.findMany.mockResolvedValueOnce([
+        { id: 1n, fileName: 'test.pdf', filePath: 'original/1/test.pdf' },
+      ]);
+      mockStorage.getSignedUrl.mockResolvedValueOnce('https://storage.example.com/signed-url');
+
+      const result = await service.getFileDownloadUrl(1n);
+      expect(result.downloadUrl).toBe('https://storage.example.com/signed-url');
+    });
+  });
+
+  describe('downloadFile', () => {
+    it('should return buffer and file metadata', async () => {
+      mockPrisma.proposalFile.findMany.mockResolvedValueOnce([
+        { id: 1n, fileName: 'test.pdf', filePath: 'original/1/test.pdf', mimeType: 'application/pdf' },
+      ]);
+      mockStorage.download.mockResolvedValueOnce(Buffer.from('pdf-content'));
+
+      const result = await service.downloadFile(1n);
+      expect(result.fileName).toBe('test.pdf');
+      expect(result.buffer).toBeInstanceOf(Buffer);
     });
   });
 });
