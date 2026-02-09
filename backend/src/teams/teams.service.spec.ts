@@ -108,7 +108,7 @@ describe('TeamsService', () => {
         { namaTeam: 'T', judulProposal: 'J', jenisPkmId: '1' },
         'u1',
       );
-      expect(result.namaTeam).toBe('T');
+      expect(result!.namaTeam).toBe('T');
       expect(mockPrisma.$transaction).toHaveBeenCalled();
     });
   });
