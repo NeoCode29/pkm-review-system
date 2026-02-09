@@ -9,6 +9,11 @@ import { MahasiswaModule } from './mahasiswa/mahasiswa.module';
 import { TeamsModule } from './teams/teams.module';
 import { DosenPembimbingModule } from './dosen-pembimbing/dosen-pembimbing.module';
 import { ProposalsModule } from './proposals/proposals.module';
+import { ReviewersModule } from './reviewers/reviewers.module';
+import { AssignmentsModule } from './reviewer-assignments/assignments.module';
+import { PenilaianAdministrasiModule } from './penilaian-administrasi/penilaian-administrasi.module';
+import { PenilaianSubstansiModule } from './penilaian-substansi/penilaian-substansi.module';
+import { PdfAnnotationsModule } from './pdf-annotations/pdf-annotations.module';
 
 @Module({
   imports: [
@@ -23,6 +28,11 @@ import { ProposalsModule } from './proposals/proposals.module';
     TeamsModule,
     DosenPembimbingModule,
     ProposalsModule,
+    ReviewersModule,
+    AssignmentsModule,
+    PenilaianAdministrasiModule,
+    PenilaianSubstansiModule,
+    PdfAnnotationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
