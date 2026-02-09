@@ -44,6 +44,12 @@ enum AnnotationType {
   comment
 }
 
+enum JoinRequestStatus {
+  pending
+  approved
+  rejected
+}
+
 // ============================================
 // MASTER DATA TABLES
 // ============================================
@@ -156,6 +162,7 @@ model Mahasiswa {
   jurusan         Jurusan       @relation(fields: [jurusanId], references: [id], onDelete: Cascade)
   programStudi    ProgramStudi  @relation(fields: [programStudiId], references: [id], onDelete: Cascade)
   teamMembers     TeamMember[]
+  joinRequests    JoinRequest[]
 
   @@index([userId])
   @@index([nim])
@@ -221,6 +228,7 @@ model Team {
   jenisPkm            JenisPkm          @relation(fields: [jenisPkmId], references: [id], onDelete: Cascade)
   dosenPembimbing     DosenPembimbing?  @relation(fields: [dosenPembimbingId], references: [id], onDelete: SetNull)
   teamMembers         TeamMember[]
+  joinRequests        JoinRequest[]
   proposals           Proposal[]
 
   @@index([jenisPkmId])
@@ -246,6 +254,27 @@ model TeamMember {
   @@index([teamId])
   @@index([mahasiswaId])
   @@map("team_member")
+}
+
+model JoinRequest {
+  id          BigInt            @id @default(autoincrement())
+  teamId      BigInt            @map("team_id")
+  mahasiswaId BigInt            @map("mahasiswa_id")
+  status      JoinRequestStatus @default(pending)
+  message     String?           @db.Text
+  respondedBy String?           @map("responded_by") @db.Uuid
+  respondedAt DateTime?         @map("responded_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  mahasiswa   Mahasiswa         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, mahasiswaId])
+  @@index([teamId])
+  @@index([mahasiswaId])
+  @@index([status])
+  @@map("join_request")
 }
 
 model Proposal {
