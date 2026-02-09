@@ -35,10 +35,18 @@ export class TeamsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all teams (paginated)' })
+  @ApiOperation({ summary: 'Get all teams (paginated, filterable)' })
   @ApiResponse({ status: 200, description: 'Paginated list of teams' })
-  async findAll(@Query() query: PaginationQueryDto) {
-    return this.teamsService.findAll({ page: query.page, limit: query.limit });
+  async findAll(
+    @Query() query: PaginationQueryDto,
+    @Query('search') search?: string,
+    @Query('jenisPkmId') jenisPkmId?: string,
+    @Query('proposalStatus') proposalStatus?: string,
+  ) {
+    return this.teamsService.findAll(
+      { page: query.page, limit: query.limit },
+      { search, jenisPkmId, proposalStatus },
+    );
   }
 
   @Get('browse')

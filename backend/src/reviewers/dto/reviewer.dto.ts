@@ -29,6 +29,11 @@ export class CreateReviewerDto {
   @IsString()
   @MaxLength(20)
   noHp?: string;
+
+  @ApiPropertyOptional({ example: '1', description: 'Program Studi ID' })
+  @IsOptional()
+  @IsString()
+  programStudiId?: string;
 }
 
 export class UpdateReviewerDto extends PartialType(CreateReviewerDto) {}

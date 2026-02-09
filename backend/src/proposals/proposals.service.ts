@@ -189,6 +189,19 @@ export class ProposalsService {
     return files[0];
   }
 
+  async adminOverrideStatus(proposalId: bigint, newStatus: string, adminUserId: string) {
+    const validStatuses = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision', 'revised'];
+    if (!validStatuses.includes(newStatus)) {
+      throw new BadRequestException(`Status "${newStatus}" tidak valid. Valid: ${validStatuses.join(', ')}`);
+    }
+
+    const proposal = await this.findOne(proposalId);
+    return this.prisma.proposal.update({
+      where: { id: proposalId },
+      data: { status: newStatus as any, updatedBy: adminUserId },
+    });
+  }
+
   async getFileDownloadUrl(proposalId: bigint) {
     const file = await this.getFile(proposalId);
     const signedUrl = await this.storageService.getSignedUrl(file.filePath);

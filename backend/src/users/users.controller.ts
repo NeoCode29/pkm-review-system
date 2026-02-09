@@ -15,10 +15,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'List all users (admin only, paginated, optional role filter)' })
+  @ApiOperation({ summary: 'List all users (admin only, paginated, optional role/search filter)' })
   @ApiResponse({ status: 200, description: 'List of users' })
-  async findAll(@Query() query: PaginationQueryDto, @Query('role') role?: string) {
-    return this.usersService.findAll({ page: query.page, limit: query.limit }, role);
+  async findAll(
+    @Query() query: PaginationQueryDto,
+    @Query('role') role?: string,
+    @Query('search') search?: string,
+  ) {
+    return this.usersService.findAll({ page: query.page, limit: query.limit }, role, search);
   }
 
   @Put(':userId/activate')

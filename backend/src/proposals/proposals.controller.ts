@@ -1,8 +1,10 @@
 import {
-  Controller, Get, Post, Param, Res, UseGuards, UseInterceptors, UploadedFile,
+  Controller, Get, Post, Put, Param, Body, Res, UseGuards, UseInterceptors, UploadedFile,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { Response } from 'express';
 import { ProposalsService } from './proposals.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -59,6 +61,19 @@ export class ProposalsController {
   @ApiResponse({ status: 200, description: 'File info with signed download URL' })
   async getFile(@Param('id') id: string) {
     return this.proposalsService.getFileDownloadUrl(BigInt(id));
+  }
+
+  @Put(':id/override-status')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  @ApiOperation({ summary: 'Admin override proposal status (admin only)' })
+  @ApiResponse({ status: 200, description: 'Status overridden' })
+  async overrideStatus(
+    @Param('id') id: string,
+    @Body() body: { status: string },
+    @CurrentUser() user: any,
+  ) {
+    return this.proposalsService.adminOverrideStatus(BigInt(id), body.status, user.id);
   }
 
   @Get(':id/download')

@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { SystemConfigService } from './system-config.service';
 import { UpdateToggleDto } from './dto/system-config.dto';
@@ -19,6 +19,15 @@ export class SystemConfigController {
   @ApiResponse({ status: 200, description: 'Toggle states' })
   async getAll() {
     return this.configService.getAllToggles();
+  }
+
+  @Get('audit-log')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  @ApiOperation({ summary: 'Get toggle change audit log (admin only)' })
+  @ApiResponse({ status: 200, description: 'Audit log entries' })
+  async getAuditLog(@Query('limit') limit?: string) {
+    return this.configService.getAuditLog(limit ? parseInt(limit, 10) : 50);
   }
 
   @Get(':key')

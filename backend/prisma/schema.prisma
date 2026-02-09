@@ -77,8 +77,9 @@ model ProgramStudi {
   createdBy     String?     @map("created_by") @db.Uuid
   updatedBy     String?     @map("updated_by") @db.Uuid
 
-  jurusan       Jurusan     @relation(fields: [jurusanId], references: [id], onDelete: Cascade)
+  jurusan       Jurusan       @relation(fields: [jurusanId], references: [id], onDelete: Cascade)
   mahasiswa     Mahasiswa[]
+  reviewerUsers ReviewerUser[]
 
   @@unique([jurusanId, nama])
   @@index([jurusanId])
@@ -179,11 +180,13 @@ model ReviewerUser {
   nidn                String?               @db.VarChar(20)
   email               String                @unique @db.VarChar(255)
   noHp                String?               @map("no_hp") @db.VarChar(20)
+  programStudiId      BigInt?               @map("program_studi_id")
   createdAt           DateTime              @default(now()) @map("created_at")
   updatedAt           DateTime              @updatedAt @map("updated_at")
   createdBy           String?               @map("created_by") @db.Uuid
   updatedBy           String?               @map("updated_by") @db.Uuid
 
+  programStudi        ProgramStudi?         @relation(fields: [programStudiId], references: [id])
   reviewerAssignments ReviewerAssignment[]
 
   @@index([userId])

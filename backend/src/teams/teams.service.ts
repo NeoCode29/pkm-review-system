@@ -96,8 +96,25 @@ export class TeamsService {
     });
   }
 
-  async findAll(params: PaginationParams = { page: 1, limit: 20 }) {
-    const where = { status: 'active' as const };
+  async findAll(
+    params: PaginationParams = { page: 1, limit: 20 },
+    filters?: { search?: string; jenisPkmId?: string; proposalStatus?: string },
+  ) {
+    const where: any = { status: 'active' };
+
+    if (filters?.search) {
+      where.OR = [
+        { namaTeam: { contains: filters.search, mode: 'insensitive' } },
+        { judulProposal: { contains: filters.search, mode: 'insensitive' } },
+      ];
+    }
+    if (filters?.jenisPkmId) {
+      where.jenisPkmId = BigInt(filters.jenisPkmId);
+    }
+    if (filters?.proposalStatus) {
+      where.proposals = { some: { status: filters.proposalStatus } };
+    }
+
     const [data, total] = await Promise.all([
       this.prisma.team.findMany({
         where,
@@ -107,6 +124,16 @@ export class TeamsService {
         include: {
           jenisPkm: { select: { id: true, nama: true } },
           dosenPembimbing: { select: { id: true, nama: true } },
+          teamMembers: {
+            where: { role: 'ketua' },
+            include: { mahasiswa: { select: { nama: true } } },
+            take: 1,
+          },
+          proposals: {
+            where: { type: 'original' },
+            select: { status: true },
+            take: 1,
+          },
           _count: { select: { teamMembers: true } },
         },
       }),

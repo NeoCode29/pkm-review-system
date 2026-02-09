@@ -51,6 +51,7 @@ export class ReviewersService {
           email: dto.email,
           nidn: dto.nidn,
           noHp: dto.noHp,
+          programStudiId: dto.programStudiId ? BigInt(dto.programStudiId) : undefined,
           createdBy: adminUserId,
         },
       });
@@ -112,6 +113,7 @@ export class ReviewersService {
     if (dto.nidn !== undefined) data.nidn = dto.nidn;
     if (dto.noHp !== undefined) data.noHp = dto.noHp;
     if (dto.email) data.email = dto.email;
+    if (dto.programStudiId !== undefined) data.programStudiId = dto.programStudiId ? BigInt(dto.programStudiId) : null;
 
     return this.prisma.reviewerUser.update({ where: { id }, data });
   }

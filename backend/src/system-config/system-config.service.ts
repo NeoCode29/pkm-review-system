@@ -154,4 +154,11 @@ export class SystemConfigService {
       return result;
     });
   }
+
+  async getAuditLog(limit = 50) {
+    return this.prisma.auditLog.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+    });
+  }
 }
