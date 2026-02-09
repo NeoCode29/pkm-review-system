@@ -15,6 +15,9 @@ export class PenilaianSubstansiService {
   async submit(assignmentId: bigint, dto: SubmitPenilaianSubstansiDto, userId: string) {
     const assignment = await this.validateAssignment(assignmentId, userId);
 
+    // Check review toggle
+    await this.checkReviewToggle();
+
     // Check not already submitted
     const existing = await this.prisma.penilaianSubstansi.findUnique({
       where: { reviewerAssignmentId: assignmentId },

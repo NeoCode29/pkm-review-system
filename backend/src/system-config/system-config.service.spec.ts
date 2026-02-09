@@ -85,28 +85,36 @@ describe('SystemConfigService', () => {
       expect(mockTx.systemConfig.upsert).toHaveBeenCalledTimes(3);
     });
 
-    it('should trigger submitted→under_review when reviewEnabled ON', async () => {
+    it('should trigger submitted+revised→under_review when reviewEnabled ON', async () => {
       mockTx.systemConfig.upsert.mockResolvedValue({});
       mockTx.proposal.updateMany.mockResolvedValue({ count: 5 });
       mockTx.systemConfig.findMany.mockResolvedValueOnce([]);
 
       await service.updateToggle('reviewEnabled', true, 'admin');
+      // submitted → under_review
       expect(mockTx.proposal.updateMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { status: 'submitted' },
           data: { status: 'under_review' },
         }),
       );
+      // revised → under_review (unlimited revision cycles)
+      expect(mockTx.proposal.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { status: 'revised' },
+          data: { status: 'under_review' },
+        }),
+      );
     });
 
-    it('should finalize reviews when reviewEnabled OFF', async () => {
+    it('should finalize reviews: ≥1 complete = reviewed, 0 = not_reviewed', async () => {
       mockTx.systemConfig.upsert.mockResolvedValue({});
       mockTx.proposal.findMany.mockResolvedValueOnce([
         {
           id: 1n,
           reviewerAssignments: [
             { penilaianAdministrasi: { isComplete: true }, penilaianSubstansi: { isComplete: true } },
-            { penilaianAdministrasi: { isComplete: true }, penilaianSubstansi: { isComplete: true } },
+            { penilaianAdministrasi: { isComplete: false }, penilaianSubstansi: null },
           ],
         },
         {
@@ -120,8 +128,20 @@ describe('SystemConfigService', () => {
       mockTx.systemConfig.findMany.mockResolvedValueOnce([]);
 
       await service.updateToggle('reviewEnabled', false, 'admin');
-      // Proposal 1 → reviewed, Proposal 2 → not_reviewed
-      expect(mockTx.proposal.update).toHaveBeenCalledTimes(2);
+      // Proposal 1: 1 complete review → reviewed
+      expect(mockTx.proposal.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 1n },
+          data: { status: 'reviewed' },
+        }),
+      );
+      // Proposal 2: 0 complete reviews → not_reviewed
+      expect(mockTx.proposal.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 2n },
+          data: { status: 'not_reviewed' },
+        }),
+      );
     });
 
     it('should trigger reviewed→needs_revision when uploadRevisionEnabled ON', async () => {

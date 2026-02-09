@@ -59,12 +59,27 @@ describe('PenilaianSubstansiService', () => {
       ).rejects.toThrow(ForbiddenException);
     });
 
+    it('should throw if review toggle is off', async () => {
+      mockPrisma.reviewerAssignment.findUnique.mockResolvedValueOnce({
+        id: 1n,
+        reviewerUser: { userId: 'u1' },
+      });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce({
+        configKey: 'reviewEnabled',
+        configValue: { enabled: false },
+      });
+      await expect(
+        service.submit(1n, { scores: [] }, 'u1'),
+      ).rejects.toThrow(BadRequestException);
+    });
+
     it('should throw if already submitted', async () => {
       mockPrisma.reviewerAssignment.findUnique.mockResolvedValueOnce({
         id: 1n,
         proposalId: 1n,
         reviewerUser: { userId: 'u1' },
       });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce(null);
       mockPrisma.penilaianSubstansi.findUnique.mockResolvedValueOnce({ id: 1n });
       await expect(
         service.submit(1n, { scores: [] }, 'u1'),
@@ -77,6 +92,7 @@ describe('PenilaianSubstansiService', () => {
         proposalId: 1n,
         reviewerUser: { userId: 'u1' },
       });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce(null);
       mockPrisma.penilaianSubstansi.findUnique.mockResolvedValueOnce(null);
       mockPrisma.proposal.findUnique.mockResolvedValueOnce({
         id: 1n,
@@ -99,6 +115,7 @@ describe('PenilaianSubstansiService', () => {
         proposalId: 1n,
         reviewerUser: { userId: 'u1' },
       });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce(null);
       mockPrisma.penilaianSubstansi.findUnique.mockResolvedValueOnce(null);
       mockPrisma.proposal.findUnique.mockResolvedValueOnce({
         id: 1n,
@@ -121,6 +138,7 @@ describe('PenilaianSubstansiService', () => {
         proposalId: 1n,
         reviewerUser: { userId: 'u1' },
       });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce(null);
       mockPrisma.penilaianSubstansi.findUnique
         .mockResolvedValueOnce(null) // not yet submitted
         .mockResolvedValueOnce({ id: 1n, totalSkor: 120 }); // getByAssignment

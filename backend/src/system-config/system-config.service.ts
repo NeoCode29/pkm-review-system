@@ -62,10 +62,15 @@ export class SystemConfigService {
           where: { status: 'submitted' },
           data: { status: 'under_review' },
         });
+        // revised → under_review (unlimited revision cycles)
+        await tx.proposal.updateMany({
+          where: { status: 'revised' },
+          data: { status: 'under_review' },
+        });
       }
 
       if (key === 'reviewEnabled' && !enabled) {
-        // under_review → reviewed or not_reviewed based on review completion
+        // under_review → reviewed (≥1 complete review) or not_reviewed (0 reviews)
         const underReviewProposals = await tx.proposal.findMany({
           where: { status: 'under_review' },
           include: {
@@ -79,14 +84,13 @@ export class SystemConfigService {
         });
 
         for (const proposal of underReviewProposals) {
-          const allComplete = proposal.reviewerAssignments.length === 2 &&
-            proposal.reviewerAssignments.every(
-              (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
-            );
+          const completedReviews = proposal.reviewerAssignments.filter(
+            (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
+          ).length;
 
           await tx.proposal.update({
             where: { id: proposal.id },
-            data: { status: allComplete ? 'reviewed' : 'not_reviewed' },
+            data: { status: completedReviews >= 1 ? 'reviewed' : 'not_reviewed' },
           });
         }
       }

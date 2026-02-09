@@ -189,8 +189,32 @@ describe('ProposalsService', () => {
       await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
     });
 
+    it('should throw if upload toggle is off (draft)', async () => {
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce(draftProposal);
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce({
+        configKey: 'uploadProposalEnabled',
+        configValue: { enabled: false },
+      });
+      const file = createMockFile();
+      await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw if revision toggle is off (needs_revision)', async () => {
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce({
+        ...draftProposal,
+        status: 'needs_revision',
+      });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce({
+        configKey: 'uploadRevisionEnabled',
+        configValue: { enabled: false },
+      });
+      const file = createMockFile();
+      await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
+    });
+
     it('should upload file to storage and save record', async () => {
       mockPrisma.proposal.findUnique.mockResolvedValueOnce(draftProposal);
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce(null); // no toggle = allowed
       mockStorage.buildPath.mockReturnValueOnce('original/1/123_proposal.pdf');
       mockStorage.upload.mockResolvedValueOnce('original/1/123_proposal.pdf');
       mockPrisma.proposalFile.create.mockResolvedValueOnce({
@@ -203,6 +227,26 @@ describe('ProposalsService', () => {
       const result = await service.uploadFile(1n, file, 'u1');
       expect(mockStorage.upload).toHaveBeenCalled();
       expect(result.filePath).toBe('original/1/123_proposal.pdf');
+    });
+
+    it('should transition needs_revision → revised on upload', async () => {
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce({
+        ...draftProposal,
+        status: 'needs_revision',
+      });
+      mockPrisma.systemConfig.findUnique.mockResolvedValueOnce(null); // toggle allowed
+      mockStorage.buildPath.mockReturnValueOnce('revised/1/123_proposal.pdf');
+      mockStorage.upload.mockResolvedValueOnce('revised/1/123_proposal.pdf');
+      mockPrisma.proposalFile.create.mockResolvedValueOnce({ id: 2n });
+      mockPrisma.proposal.update.mockResolvedValueOnce({ id: 1n, status: 'revised' });
+
+      const file = createMockFile();
+      await service.uploadFile(1n, file, 'u1');
+      expect(mockPrisma.proposal.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ status: 'revised' }),
+        }),
+      );
     });
   });
 

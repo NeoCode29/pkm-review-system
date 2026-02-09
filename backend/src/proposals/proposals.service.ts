@@ -119,6 +119,25 @@ export class ProposalsService {
       throw new BadRequestException(`Tidak bisa upload file pada status "${proposal.status}"`);
     }
 
+    // Check toggle based on status
+    if (proposal.status === 'draft') {
+      const uploadToggle = await this.prisma.systemConfig.findUnique({
+        where: { configKey: 'uploadProposalEnabled' },
+      });
+      if (uploadToggle && !(uploadToggle.configValue as any)?.enabled) {
+        throw new BadRequestException('Pengumpulan proposal sedang ditutup');
+      }
+    }
+
+    if (proposal.status === 'needs_revision') {
+      const revisionToggle = await this.prisma.systemConfig.findUnique({
+        where: { configKey: 'uploadRevisionEnabled' },
+      });
+      if (revisionToggle && !(revisionToggle.configValue as any)?.enabled) {
+        throw new BadRequestException('Upload revisi sedang ditutup');
+      }
+    }
+
     // Upload to Supabase Storage
     const storagePath = this.storageService.buildPath(
       proposal.type as 'original' | 'revised',
@@ -131,7 +150,7 @@ export class ProposalsService {
       file.mimetype,
     );
 
-    return this.prisma.proposalFile.create({
+    const proposalFile = await this.prisma.proposalFile.create({
       data: {
         proposalId,
         filePath: uploadedPath,
@@ -141,6 +160,16 @@ export class ProposalsService {
         uploadedBy: userId,
       },
     });
+
+    // Auto-transition: needs_revision → revised after uploading revision file
+    if (proposal.status === 'needs_revision') {
+      await this.prisma.proposal.update({
+        where: { id: proposalId },
+        data: { status: 'revised', updatedBy: userId },
+      });
+    }
+
+    return proposalFile;
   }
 
   async getFile(proposalId: bigint) {
