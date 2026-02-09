@@ -156,7 +156,7 @@ export class SystemConfigService {
   }
 
   async getAuditLog(limit = 50) {
-    return this.prisma.auditLog.findMany({
+    return (this.prisma as any).auditLog.findMany({
       orderBy: { createdAt: 'desc' },
       take: limit,
     });
