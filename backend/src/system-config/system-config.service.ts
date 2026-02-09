@@ -35,7 +35,7 @@ export class SystemConfigService {
       throw new BadRequestException(`Toggle "${key}" tidak valid`);
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.prisma.$transaction(async (tx: any) => {
       // 1. Auto-exclusive: turn OFF others if turning ON
       if (enabled) {
         const otherKeys = TOGGLE_KEYS.filter((k) => k !== key);
