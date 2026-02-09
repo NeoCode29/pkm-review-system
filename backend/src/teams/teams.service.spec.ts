@@ -33,6 +33,7 @@ const mockPrisma = {
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    count: jest.fn(),
   },
   joinRequest: {
     findFirst: jest.fn(),
@@ -41,6 +42,7 @@ const mockPrisma = {
     create: jest.fn(),
     update: jest.fn(),
   },
+  reviewerAssignment: { count: jest.fn() },
   $transaction: jest.fn((cb) => cb(mockTx)),
 };
 
@@ -112,10 +114,12 @@ describe('TeamsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return active teams', async () => {
+    it('should return paginated active teams', async () => {
       mockPrisma.team.findMany.mockResolvedValueOnce([{ id: 1n }]);
+      mockPrisma.team.count.mockResolvedValueOnce(1);
       const result = await service.findAll();
-      expect(result).toHaveLength(1);
+      expect(result.data).toHaveLength(1);
+      expect(result.meta.total).toBe(1);
     });
   });
 
@@ -137,10 +141,30 @@ describe('TeamsService', () => {
   });
 
   describe('browse', () => {
-    it('should return open teams', async () => {
+    it('should return paginated open teams', async () => {
       mockPrisma.team.findMany.mockResolvedValueOnce([{ id: 1n, openToJoin: true }]);
+      mockPrisma.team.count.mockResolvedValueOnce(1);
       const result = await service.browse();
-      expect(result).toHaveLength(1);
+      expect(result.data).toHaveLength(1);
+      expect(result.meta.total).toBe(1);
+    });
+  });
+
+  describe('getCascadeImpact', () => {
+    it('should return impact counts without deleting', async () => {
+      mockPrisma.team.findUnique.mockResolvedValueOnce({
+        id: 1n,
+        namaTeam: 'Team A',
+        teamMembers: [{ id: 1n }, { id: 2n }],
+        proposals: [{ id: 1n }, { id: 2n }],
+      });
+      mockPrisma.reviewerAssignment.count.mockResolvedValueOnce(3);
+
+      const result = await service.getCascadeImpact(1n);
+      expect(result.impact.members).toBe(2);
+      expect(result.impact.proposals).toBe(2);
+      expect(result.impact.reviews).toBe(3);
+      expect(mockPrisma.team.delete).not.toHaveBeenCalled();
     });
   });
 

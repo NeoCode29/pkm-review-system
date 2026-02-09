@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SupabaseService } from '../auth/supabase.service';
+import { PaginationParams, paginate, getPaginationSkip } from '../common/utils/pagination.util';
 
 @Injectable()
 export class UsersService {
@@ -9,10 +10,41 @@ export class UsersService {
     private readonly supabaseService: SupabaseService,
   ) {}
 
-  async findAll() {
+  async findAll(params: PaginationParams = { page: 1, limit: 20 }, role?: string) {
+    const skip = getPaginationSkip(params.page, params.limit);
+
+    if (role === 'reviewer') {
+      const [data, total] = await Promise.all([
+        this.prisma.reviewerUser.findMany({
+          orderBy: { nama: 'asc' },
+          skip,
+          take: params.limit,
+          select: { id: true, userId: true, nama: true, email: true, nidn: true, createdAt: true },
+        }),
+        this.prisma.reviewerUser.count(),
+      ]);
+      return paginate(data.map((r) => ({ ...r, role: 'reviewer' })), total, params);
+    }
+
+    if (role === 'mahasiswa') {
+      const [data, total] = await Promise.all([
+        this.prisma.mahasiswa.findMany({
+          orderBy: { nama: 'asc' },
+          skip,
+          take: params.limit,
+          select: { id: true, userId: true, nama: true, nim: true, email: true, createdAt: true },
+        }),
+        this.prisma.mahasiswa.count(),
+      ]);
+      return paginate(data.map((m) => ({ ...m, role: 'mahasiswa' })), total, params);
+    }
+
+    // Default: return both (no pagination, grouped)
     const [mahasiswaList, reviewerList] = await Promise.all([
       this.prisma.mahasiswa.findMany({
         orderBy: { nama: 'asc' },
+        skip,
+        take: params.limit,
         select: { id: true, userId: true, nama: true, nim: true, email: true, createdAt: true },
       }),
       this.prisma.reviewerUser.findMany({

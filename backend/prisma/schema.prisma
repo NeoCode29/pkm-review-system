@@ -460,6 +460,22 @@ model SystemConfig {
   @@map("system_config")
 }
 
+model AuditLog {
+  id          BigInt    @id @default(autoincrement())
+  action      String    @db.VarChar(100)
+  entityType  String    @map("entity_type") @db.VarChar(100)
+  entityId    String    @map("entity_id") @db.VarChar(255)
+  oldValue    String?   @map("old_value") @db.Text
+  newValue    String?   @map("new_value") @db.Text
+  userId      String    @map("user_id") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_log")
+}
+
 model ProposalTemplate {
   id            BigInt    @id @default(autoincrement())
   jenisPkmId    BigInt    @map("jenis_pkm_id")

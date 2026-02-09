@@ -4,8 +4,9 @@ import { SystemConfigService } from './system-config.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 const mockTx = {
-  systemConfig: { upsert: jest.fn(), findMany: jest.fn() },
+  systemConfig: { upsert: jest.fn(), findMany: jest.fn(), findUnique: jest.fn() },
   proposal: { updateMany: jest.fn(), findMany: jest.fn(), update: jest.fn() },
+  auditLog: { create: jest.fn() },
 };
 
 const mockPrisma = {

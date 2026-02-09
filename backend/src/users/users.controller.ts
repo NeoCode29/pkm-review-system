@@ -1,9 +1,10 @@
-import { Controller, Get, Put, Delete, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('users')
 @Controller('admin/users')
@@ -14,10 +15,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'List all users (admin only)' })
-  @ApiResponse({ status: 200, description: 'List of all users' })
-  async findAll() {
-    return this.usersService.findAll();
+  @ApiOperation({ summary: 'List all users (admin only, paginated, optional role filter)' })
+  @ApiResponse({ status: 200, description: 'List of users' })
+  async findAll(@Query() query: PaginationQueryDto, @Query('role') role?: string) {
+    return this.usersService.findAll({ page: query.page, limit: query.limit }, role);
   }
 
   @Put(':userId/activate')

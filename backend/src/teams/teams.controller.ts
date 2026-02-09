@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @ApiTags('teams')
 @Controller('teams')
@@ -33,17 +35,17 @@ export class TeamsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all teams' })
-  @ApiResponse({ status: 200, description: 'List of teams' })
-  async findAll() {
-    return this.teamsService.findAll();
+  @ApiOperation({ summary: 'Get all teams (paginated)' })
+  @ApiResponse({ status: 200, description: 'Paginated list of teams' })
+  async findAll(@Query() query: PaginationQueryDto) {
+    return this.teamsService.findAll({ page: query.page, limit: query.limit });
   }
 
   @Get('browse')
-  @ApiOperation({ summary: 'Browse open teams (for joining)' })
-  @ApiResponse({ status: 200, description: 'List of open teams' })
-  async browse() {
-    return this.teamsService.browse();
+  @ApiOperation({ summary: 'Browse open teams (paginated)' })
+  @ApiResponse({ status: 200, description: 'Paginated list of open teams' })
+  async browse(@Query() query: PaginationQueryDto) {
+    return this.teamsService.browse({ page: query.page, limit: query.limit });
   }
 
   @Get(':id')
@@ -62,6 +64,15 @@ export class TeamsController {
     @CurrentUser() user: any,
   ) {
     return this.teamsService.update(BigInt(id), dto, user.id);
+  }
+
+  @Get(':id/cascade-impact')
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  @ApiOperation({ summary: 'Preview cascade impact before deleting team (admin only)' })
+  @ApiResponse({ status: 200, description: 'Cascade impact preview' })
+  async getCascadeImpact(@Param('id') id: string) {
+    return this.teamsService.getCascadeImpact(BigInt(id));
   }
 
   @Delete(':id')

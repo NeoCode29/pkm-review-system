@@ -48,14 +48,30 @@ export class SystemConfigService {
         }
       }
 
-      // 2. Update target toggle
+      // 2. Get old value for audit log
+      const oldConfig = await tx.systemConfig.findUnique({ where: { configKey: key } });
+      const oldValue = oldConfig ? (oldConfig.configValue as any)?.enabled ?? false : false;
+
+      // 3. Update target toggle
       await tx.systemConfig.upsert({
         where: { configKey: key },
         update: { configValue: { enabled }, updatedBy: adminUserId },
         create: { configKey: key, configValue: { enabled }, updatedBy: adminUserId },
       });
 
-      // 3. Execute side effects
+      // 4. Audit log
+      await tx.auditLog.create({
+        data: {
+          action: 'TOGGLE_UPDATE',
+          entityType: 'system_config',
+          entityId: key,
+          oldValue: JSON.stringify({ enabled: oldValue }),
+          newValue: JSON.stringify({ enabled }),
+          userId: adminUserId,
+        },
+      });
+
+      // 5. Execute side effects
       if (key === 'reviewEnabled' && enabled) {
         // submitted → under_review
         await tx.proposal.updateMany({

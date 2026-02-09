@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateTeamDto, UpdateTeamDto, AddMemberDto } from './dto/team.dto';
+import { PaginationParams, paginate, getPaginationSkip } from '../common/utils/pagination.util';
 
 @Injectable()
 export class TeamsService {
@@ -95,16 +96,23 @@ export class TeamsService {
     });
   }
 
-  async findAll() {
-    return this.prisma.team.findMany({
-      where: { status: 'active' },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        jenisPkm: { select: { id: true, nama: true } },
-        dosenPembimbing: { select: { id: true, nama: true } },
-        _count: { select: { teamMembers: true } },
-      },
-    });
+  async findAll(params: PaginationParams = { page: 1, limit: 20 }) {
+    const where = { status: 'active' as const };
+    const [data, total] = await Promise.all([
+      this.prisma.team.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: getPaginationSkip(params.page, params.limit),
+        take: params.limit,
+        include: {
+          jenisPkm: { select: { id: true, nama: true } },
+          dosenPembimbing: { select: { id: true, nama: true } },
+          _count: { select: { teamMembers: true } },
+        },
+      }),
+      this.prisma.team.count({ where }),
+    ]);
+    return paginate(data, total, params);
   }
 
   async findOne(id: bigint) {
@@ -190,25 +198,49 @@ export class TeamsService {
     return { message: 'Tim berhasil dihapus', cascadeImpact: counts };
   }
 
-  // Browse open teams (for mahasiswa without team)
-  async browse() {
-    return this.prisma.team.findMany({
-      where: {
-        status: 'active',
-        openToJoin: true,
-        teamMembers: { some: {} }, // has at least 1 member
-      },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        jenisPkm: { select: { id: true, nama: true } },
-        teamMembers: {
-          include: {
-            mahasiswa: { select: { id: true, nama: true, nim: true } },
-          },
-        },
-        _count: { select: { teamMembers: true } },
-      },
+  async getCascadeImpact(id: bigint) {
+    const team = await this.findOne(id);
+    const reviewCount = await this.prisma.reviewerAssignment.count({
+      where: { proposal: { teamId: id } },
     });
+
+    return {
+      teamId: id,
+      namaTeam: team.namaTeam,
+      impact: {
+        members: team.teamMembers.length,
+        proposals: team.proposals.length,
+        reviews: reviewCount,
+      },
+    };
+  }
+
+  // Browse open teams (for mahasiswa without team)
+  async browse(params: PaginationParams = { page: 1, limit: 20 }) {
+    const where = {
+      status: 'active' as const,
+      openToJoin: true,
+      teamMembers: { some: {} },
+    };
+    const [data, total] = await Promise.all([
+      this.prisma.team.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: getPaginationSkip(params.page, params.limit),
+        take: params.limit,
+        include: {
+          jenisPkm: { select: { id: true, nama: true } },
+          teamMembers: {
+            include: {
+              mahasiswa: { select: { id: true, nama: true, nim: true } },
+            },
+          },
+          _count: { select: { teamMembers: true } },
+        },
+      }),
+      this.prisma.team.count({ where }),
+    ]);
+    return paginate(data, total, params);
   }
 
   // Member management
