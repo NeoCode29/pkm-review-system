@@ -167,9 +167,18 @@ describe('ProposalsService', () => {
       status: 'draft',
       type: 'original',
       teamId: 1n,
-      team: { teamMembers: [], _count: { teamMembers: 0 } },
+      team: { dosenPembimbingId: 1n, teamMembers: [], _count: { teamMembers: 0 } },
       proposalFiles: [],
     };
+
+    it('should throw if no dosen pembimbing', async () => {
+      mockPrisma.proposal.findUnique.mockResolvedValueOnce({
+        ...draftProposal,
+        team: { ...draftProposal.team, dosenPembimbingId: null },
+      });
+      const file = createMockFile();
+      await expect(service.uploadFile(1n, file, 'u1')).rejects.toThrow(BadRequestException);
+    });
 
     it('should throw if not PDF', async () => {
       mockPrisma.proposal.findUnique.mockResolvedValueOnce(draftProposal);

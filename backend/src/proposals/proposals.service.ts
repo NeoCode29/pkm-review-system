@@ -119,6 +119,11 @@ export class ProposalsService {
       throw new BadRequestException(`Tidak bisa upload file pada status "${proposal.status}"`);
     }
 
+    // Dosen pembimbing required for upload
+    if (!proposal.team.dosenPembimbingId) {
+      throw new BadRequestException('Tim harus memiliki dosen pembimbing sebelum upload file');
+    }
+
     // Check toggle based on status
     if (proposal.status === 'draft') {
       const uploadToggle = await this.prisma.systemConfig.findUnique({

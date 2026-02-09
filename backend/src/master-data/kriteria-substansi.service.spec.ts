@@ -38,6 +38,7 @@ describe('KriteriaSubstansiService', () => {
   describe('create', () => {
     it('should create kriteria substansi', async () => {
       mockPrisma.jenisPkm.findUnique.mockResolvedValueOnce({ id: 1n });
+      mockPrisma.kriteriaSubstansi.findMany.mockResolvedValueOnce([]); // bobot validation
       mockPrisma.kriteriaSubstansi.create.mockResolvedValueOnce({
         id: 1n,
         nama: 'Kualitas Penulisan',
@@ -65,6 +66,44 @@ describe('KriteriaSubstansiService', () => {
           bobot: 20,
         }),
       ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw if bobot total exceeds 100', async () => {
+      mockPrisma.jenisPkm.findUnique.mockResolvedValueOnce({ id: 1n });
+      mockPrisma.kriteriaSubstansi.findMany.mockResolvedValueOnce([
+        { id: 1n, bobot: 50 },
+        { id: 2n, bobot: 40 },
+      ]);
+
+      await expect(
+        service.create({
+          jenisPkmId: '1',
+          nama: 'Terlalu besar',
+          skorMax: 7,
+          bobot: 20,
+        }),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should allow create if bobot total <= 100', async () => {
+      mockPrisma.jenisPkm.findUnique.mockResolvedValueOnce({ id: 1n });
+      mockPrisma.kriteriaSubstansi.findMany.mockResolvedValueOnce([
+        { id: 1n, bobot: 50 },
+        { id: 2n, bobot: 30 },
+      ]);
+      mockPrisma.kriteriaSubstansi.create.mockResolvedValueOnce({
+        id: 3n,
+        nama: 'Pas',
+        bobot: 20,
+      });
+
+      const result = await service.create({
+        jenisPkmId: '1',
+        nama: 'Pas',
+        skorMax: 7,
+        bobot: 20,
+      });
+      expect(result.bobot).toBe(20);
     });
   });
 

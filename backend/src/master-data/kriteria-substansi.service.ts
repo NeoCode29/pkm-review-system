@@ -21,6 +21,9 @@ export class KriteriaSubstansiService {
       throw new BadRequestException('Jenis PKM tidak ditemukan');
     }
 
+    // Validate bobot total <= 100
+    await this.validateBobotTotal(BigInt(dto.jenisPkmId), dto.bobot);
+
     return this.prisma.kriteriaSubstansi.create({
       data: {
         jenisPkmId: BigInt(dto.jenisPkmId),
@@ -73,7 +76,36 @@ export class KriteriaSubstansiService {
       data.jenisPkmId = BigInt(dto.jenisPkmId);
     }
 
+    // Validate bobot total if bobot is being changed
+    if (dto.bobot !== undefined) {
+      const existing = await this.prisma.kriteriaSubstansi.findUnique({ where: { id } });
+      if (existing) {
+        await this.validateBobotTotal(
+          dto.jenisPkmId ? BigInt(dto.jenisPkmId) : existing.jenisPkmId,
+          dto.bobot,
+          id,
+        );
+      }
+    }
+
     return this.prisma.kriteriaSubstansi.update({ where: { id }, data });
+  }
+
+  private async validateBobotTotal(jenisPkmId: bigint, newBobot: number, excludeId?: bigint) {
+    const existing = await this.prisma.kriteriaSubstansi.findMany({
+      where: {
+        jenisPkmId,
+        ...(excludeId ? { id: { not: excludeId } } : {}),
+      },
+    });
+    const currentTotal = existing.reduce((sum, k) => sum + (k.bobot ?? 0), 0);
+    const projectedTotal = currentTotal + newBobot;
+
+    if (projectedTotal > 100) {
+      throw new BadRequestException(
+        `Total bobot melebihi 100. Saat ini: ${currentTotal}, ditambah ${newBobot} = ${projectedTotal}`,
+      );
+    }
   }
 
   async remove(id: bigint) {
