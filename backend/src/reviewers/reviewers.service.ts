@@ -76,6 +76,7 @@ export class ReviewersService {
     const reviewer = await this.prisma.reviewerUser.findUnique({
       where: { id },
       include: {
+        programStudi: { select: { id: true, nama: true, jurusan: { select: { id: true, nama: true } } } },
         reviewerAssignments: {
           include: {
             proposal: {

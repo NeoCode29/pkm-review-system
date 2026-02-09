@@ -249,24 +249,26 @@ export class TeamsService {
       openToJoin: true,
       teamMembers: { some: {} },
     };
-    const [data, total] = await Promise.all([
-      this.prisma.team.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: getPaginationSkip(params.page, params.limit),
-        take: params.limit,
-        include: {
-          jenisPkm: { select: { id: true, nama: true } },
-          teamMembers: {
-            include: {
-              mahasiswa: { select: { id: true, nama: true, nim: true } },
-            },
+    const allTeams = await this.prisma.team.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        jenisPkm: { select: { id: true, nama: true } },
+        teamMembers: {
+          include: {
+            mahasiswa: { select: { id: true, nama: true, nim: true } },
           },
-          _count: { select: { teamMembers: true } },
         },
-      }),
-      this.prisma.team.count({ where }),
-    ]);
+        _count: { select: { teamMembers: true } },
+      },
+    });
+
+    // Filter out full teams (>= 5 members)
+    const filtered = allTeams.filter((t) => t._count.teamMembers < 5);
+    const total = filtered.length;
+    const skip = getPaginationSkip(params.page, params.limit);
+    const data = filtered.slice(skip, skip + params.limit);
+
     return paginate(data, total, params);
   }
 

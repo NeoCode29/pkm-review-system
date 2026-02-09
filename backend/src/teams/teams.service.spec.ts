@@ -142,8 +142,7 @@ describe('TeamsService', () => {
 
   describe('browse', () => {
     it('should return paginated open teams', async () => {
-      mockPrisma.team.findMany.mockResolvedValueOnce([{ id: 1n, openToJoin: true }]);
-      mockPrisma.team.count.mockResolvedValueOnce(1);
+      mockPrisma.team.findMany.mockResolvedValueOnce([{ id: 1n, openToJoin: true, _count: { teamMembers: 3 } }]);
       const result = await service.browse();
       expect(result.data).toHaveLength(1);
       expect(result.meta.total).toBe(1);
