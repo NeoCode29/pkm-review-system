@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { toast } from 'sonner';
+import { UserPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,14 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { api } from '@/lib/api';
 import type { Jurusan, ProgramStudi } from '@/types';
 
@@ -103,45 +96,49 @@ export default function RegisterPage() {
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader className="text-center">
-        <div className="mb-2 text-3xl font-bold tracking-tight">
-          PKM Review
+    <div className="w-full space-y-6">
+      {/* Icon */}
+      <div className="flex justify-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-foreground text-background">
+          <UserPlus size={20} />
         </div>
-        <CardDescription>Sistem Review Proposal PKM</CardDescription>
-        <CardTitle className="mt-4 text-xl">Registrasi Mahasiswa</CardTitle>
-      </CardHeader>
+      </div>
 
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* NIM */}
+      {/* Header */}
+      <div className="text-center space-y-1.5">
+        <h1 className="text-2xl font-semibold tracking-tight">Registrasi</h1>
+        <p className="text-sm text-muted-foreground">
+          Buat akun mahasiswa untuk mulai menggunakan sistem.
+        </p>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* NIM & Nama */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="nim">
               NIM <span className="text-destructive">*</span>
             </Label>
             <Input
               id="nim"
-              placeholder="Contoh: 123456789012"
+              placeholder="123456789012"
               maxLength={12}
               {...register('nim')}
               disabled={isLoading}
             />
-            <p className="text-xs text-muted-foreground">
-              NIM harus 12 digit angka
-            </p>
             {errors.nim && (
               <p className="text-sm text-destructive">{errors.nim.message}</p>
             )}
           </div>
 
-          {/* Nama */}
           <div className="space-y-2">
             <Label htmlFor="nama">
               Nama Lengkap <span className="text-destructive">*</span>
             </Label>
             <Input
               id="nama"
-              placeholder="Nama lengkap sesuai KTM"
+              placeholder="Nama sesuai KTM"
               {...register('nama')}
               disabled={isLoading}
             />
@@ -149,159 +146,156 @@ export default function RegisterPage() {
               <p className="text-sm text-destructive">{errors.nama.message}</p>
             )}
           </div>
+        </div>
 
-          {/* Email */}
+        {/* Email */}
+        <div className="space-y-2">
+          <Label htmlFor="email">
+            Email <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="mail@student.ac.id"
+            {...register('email')}
+            disabled={isLoading}
+          />
+          {errors.email && (
+            <p className="text-sm text-destructive">{errors.email.message}</p>
+          )}
+        </div>
+
+        {/* Jurusan & Prodi */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="email">
-              Email <span className="text-destructive">*</span>
+            <Label>
+              Jurusan <span className="text-destructive">*</span>
             </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="email@student.ac.id"
-              {...register('email')}
+            <Select
+              onValueChange={(val) => {
+                setSelectedJurusan(val);
+                setValue('jurusanId', val);
+                setValue('programStudiId', '');
+              }}
               disabled={isLoading}
-            />
-            <p className="text-xs text-muted-foreground">
-              Email akan digunakan untuk login
-            </p>
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih Jurusan" />
+              </SelectTrigger>
+              <SelectContent>
+                {jurusanList.map((j) => (
+                  <SelectItem key={j.id} value={j.id}>
+                    {j.nama}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" {...register('jurusanId')} />
+            {errors.jurusanId && (
+              <p className="text-sm text-destructive">
+                {errors.jurusanId.message}
+              </p>
             )}
           </div>
 
-          {/* Jurusan & Prodi */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>
-                Jurusan <span className="text-destructive">*</span>
-              </Label>
-              <Select
-                onValueChange={(val) => {
-                  setSelectedJurusan(val);
-                  setValue('jurusanId', val);
-                  setValue('programStudiId', '');
-                }}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih Jurusan" />
-                </SelectTrigger>
-                <SelectContent>
-                  {jurusanList.map((j) => (
-                    <SelectItem key={j.id} value={j.id}>
-                      {j.nama}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <input type="hidden" {...register('jurusanId')} />
-              {errors.jurusanId && (
-                <p className="text-sm text-destructive">
-                  {errors.jurusanId.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label>
-                Program Studi <span className="text-destructive">*</span>
-              </Label>
-              <Select
-                onValueChange={(val) => setValue('programStudiId', val)}
-                disabled={isLoading || !selectedJurusan}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih Prodi" />
-                </SelectTrigger>
-                <SelectContent>
-                  {prodiList.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      {p.nama}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <input type="hidden" {...register('programStudiId')} />
-              <p className="text-xs text-muted-foreground">
-                Prodi berdasarkan jurusan terpilih
-              </p>
-              {errors.programStudiId && (
-                <p className="text-sm text-destructive">
-                  {errors.programStudiId.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* No HP */}
           <div className="space-y-2">
-            <Label htmlFor="noHp">No HP</Label>
+            <Label>
+              Program Studi <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              onValueChange={(val) => setValue('programStudiId', val)}
+              disabled={isLoading || !selectedJurusan}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih Prodi" />
+              </SelectTrigger>
+              <SelectContent>
+                {prodiList.map((p) => (
+                  <SelectItem key={p.id} value={p.id}>
+                    {p.nama}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" {...register('programStudiId')} />
+            {errors.programStudiId && (
+              <p className="text-sm text-destructive">
+                {errors.programStudiId.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* No HP */}
+        <div className="space-y-2">
+          <Label htmlFor="noHp">No HP</Label>
+          <Input
+            id="noHp"
+            type="tel"
+            placeholder="08123456789"
+            {...register('noHp')}
+            disabled={isLoading}
+          />
+        </div>
+
+        {/* Password */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="password">
+              Password <span className="text-destructive">*</span>
+            </Label>
             <Input
-              id="noHp"
-              type="tel"
-              placeholder="08123456789"
-              {...register('noHp')}
+              id="password"
+              type="password"
+              placeholder="Min. 8 karakter"
+              {...register('password')}
               disabled={isLoading}
             />
+            {errors.password && (
+              <p className="text-sm text-destructive">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
-          {/* Password */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="password">
-                Password <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Min. 8 karakter"
-                {...register('password')}
-                disabled={isLoading}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">
-                Konfirmasi Password <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="Ulangi password"
-                {...register('confirmPassword')}
-                disabled={isLoading}
-              />
-              {errors.confirmPassword && (
-                <p className="text-sm text-destructive">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">
+              Konfirmasi <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              placeholder="Ulangi password"
+              {...register('confirmPassword')}
+              disabled={isLoading}
+            />
+            {errors.confirmPassword && (
+              <p className="text-sm text-destructive">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
+        </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Memproses...' : 'Daftar Sekarang'}
-          </Button>
-        </form>
-      </CardContent>
+        <Button
+          type="submit"
+          className="w-full bg-foreground text-background hover:bg-foreground/90"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Memproses...' : 'Daftar Sekarang'}
+        </Button>
+      </form>
 
-      <CardFooter className="justify-center">
-        <p className="text-sm text-muted-foreground">
-          Sudah punya akun?{' '}
-          <Link
-            href="/login"
-            className="font-medium text-primary hover:underline"
-          >
-            Login di sini
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+      {/* Footer */}
+      <p className="text-center text-sm text-muted-foreground">
+        Sudah punya akun?{' '}
+        <Link
+          href="/login"
+          className="font-medium text-foreground hover:underline"
+        >
+          Login di sini
+        </Link>
+      </p>
+    </div>
   );
 }

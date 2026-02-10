@@ -22,6 +22,11 @@ export class CreateTeamDto {
   @IsOptional()
   @IsString()
   dosenPembimbingId?: string;
+
+  @ApiPropertyOptional({ example: true, description: 'Whether team is open for join requests' })
+  @IsOptional()
+  @IsBoolean()
+  openToJoin?: boolean;
 }
 
 export class UpdateTeamDto extends PartialType(CreateTeamDto) {

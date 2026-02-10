@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useSyncExternalStore } from 'react';
 import type { UserRole, MahasiswaProfile, ReviewerProfile } from '@/types';
 
 interface AuthUser {
@@ -79,3 +80,12 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
+
+// Hook to wait for Zustand persist hydration (synchronous read)
+export function useAuthHydrated() {
+  return useSyncExternalStore(
+    (callback) => useAuthStore.persist.onFinishHydration(callback),
+    () => useAuthStore.persist.hasHydrated(),
+    () => false, // server snapshot
+  );
+}

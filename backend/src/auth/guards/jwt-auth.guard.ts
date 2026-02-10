@@ -7,8 +7,9 @@ export class JwtAuthGuard extends AuthGuard('supabase') {
     return super.canActivate(context);
   }
 
-  handleRequest(err: any, user: any) {
+  handleRequest(err: any, user: any, info: any) {
     if (err || !user) {
+      console.error('[JwtAuthGuard] err:', err?.message, 'info:', info?.message || info);
       throw err || new UnauthorizedException('Authentication required');
     }
     return user;

@@ -49,8 +49,8 @@ class ApiClient {
         };
       }
 
-      // Handle 401 - clear auth state
-      if (response.status === 401) {
+      // Handle 401 - clear auth state (skip for auth endpoints)
+      if (response.status === 401 && !response.url.includes('/auth/')) {
         useAuthStore.getState().logout();
       }
 

@@ -1,0 +1,118 @@
+# Development Journal
+
+## 2026-02-10: JWT Authentication Fix
+
+### Masalah 1: Login → Dashboard redirect loop
+
+**Gejala:** Setelah login berhasil, user di-redirect ke dashboard lalu langsung kembali ke halaman login (loop).
+
+**Root Cause (berlapis):**
+
+1. **JWT Algorithm Mismatch** — Supabase local menandatangani JWT dengan algoritma **ES256** (ECDSA asymmetric key), tetapi backend `passport-jwt` strategy menggunakan `secretOrKey` yang hanya bisa memverifikasi **HS256** (HMAC symmetric). Akibatnya, **semua protected API call return 401**.
+
+2. **Auto-logout pada 401** — `frontend/src/lib/api.ts` memanggil `useAuthStore.getState().logout()` setiap kali menerima response 401. Karena semua API call gagal (poin 1), auth state langsung di-clear → redirect ke login.
+
+3. **Admin role detection salah** — Setelah JWT verification diperbaiki, ditemukan bug lain: `payload.role` di Supabase JWT selalu bernilai `"authenticated"` (default Supabase), bukan `"admin"`. Role aplikasi sebenarnya ada di `payload.user_metadata.role`. Strategy `validate()` gagal mendeteksi admin → throw `UnauthorizedException('User profile not found')`.
+
+**Solusi:**
+
+1. **Backend `supabase.strategy.ts`** — Ganti `secretOrKey: jwtSecret` dengan `secretOrKeyProvider` dari `jwks-rsa` library. Ini fetch public key dari Supabase JWKS endpoint (`/auth/v1/.well-known/jwks.json`) untuk verifikasi ES256 token.
+
+   ```typescript
+   // SEBELUM (hanya support HS256)
+   super({
+     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+     secretOrKey: jwtSecret,
+   });
+
+   // SESUDAH (support ES256 via JWKS)
+   super({
+     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+     algorithms: ['ES256', 'HS256'],
+     secretOrKeyProvider: passportJwtSecret({
+       jwksUri: `${supabaseUrl}/auth/v1/.well-known/jwks.json`,
+       cache: true,
+       rateLimit: true,
+     }),
+   });
+   ```
+
+2. **Backend `supabase.strategy.ts`** — Fix admin role detection:
+
+   ```typescript
+   // SEBELUM (payload.role = "authenticated", bukan "admin")
+   const userRole = payload.role || 'admin';
+
+   // SESUDAH (cek user_metadata.role)
+   const userRole = payload.user_metadata?.role || 'admin';
+   ```
+
+3. **Frontend `api.ts`** — Skip auto-logout untuk auth endpoints:
+
+   ```typescript
+   // SEBELUM
+   if (response.status === 401) {
+     useAuthStore.getState().logout();
+   }
+
+   // SESUDAH
+   if (response.status === 401 && !response.url.includes('/auth/')) {
+     useAuthStore.getState().logout();
+   }
+   ```
+
+4. **Frontend `layout.tsx`** — Simplified Zustand persist hydration check di dashboard layout.
+
+5. **Frontend `login/page.tsx`** — Tambah auth guard agar user yang sudah authenticated langsung redirect ke dashboard.
+
+**Dependency baru:** `jwks-rsa` (backend)
+
+**File yang diubah:**
+- `backend/src/auth/strategies/supabase.strategy.ts`
+- `backend/src/auth/guards/jwt-auth.guard.ts`
+- `backend/src/auth/guards/jwt-auth.guard.spec.ts`
+- `frontend/src/lib/api.ts`
+- `frontend/src/app/(dashboard)/layout.tsx`
+- `frontend/src/app/(auth)/login/page.tsx`
+- `frontend/src/stores/authStore.ts`
+
+---
+
+## 2026-02-10: Zustand Persist Hydration Issue
+
+### Masalah: Page refresh di dashboard redirect ke login
+
+**Gejala:** Saat user refresh halaman dashboard, sempat redirect ke login sebelum kembali ke dashboard.
+
+**Root Cause:** Zustand persist middleware rehydrate state dari localStorage secara **async**. Pada first render setelah page refresh, `isAuthenticated` masih `false` (default). Dashboard layout langsung redirect ke `/login` sebelum hydration selesai.
+
+**Solusi:** Gunakan `useAuthStore.persist.hasHydrated()` dan `onFinishHydration()` untuk menunggu hydration selesai sebelum membuat keputusan redirect. Layout return `null` sampai hydration complete.
+
+```typescript
+useEffect(() => {
+  if (useAuthStore.persist.hasHydrated()) {
+    setReady(true);
+    return;
+  }
+  const unsub = useAuthStore.persist.onFinishHydration(() => setReady(true));
+  return unsub;
+}, []);
+
+if (!ready || !isAuthenticated || !user) {
+  return null;
+}
+```
+
+---
+
+## 2026-02-10: Phase 2 — Mahasiswa Features
+
+### Halaman yang dibuat:
+
+| Route | Deskripsi |
+|---|---|
+| `/mahasiswa/dashboard` | Dashboard 2 layout: NO_TEAM dan TEAM_DASHBOARD |
+| `/mahasiswa/teams/browse` | Browse open teams, search, join request |
+| `/mahasiswa/teams/create` | Form buat tim baru |
+| `/mahasiswa/teams/[id]` | Detail tim, members, join requests, kick, leave |
+| `/mahasiswa/teams` | Redirect ke team detail atau browse |

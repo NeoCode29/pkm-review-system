@@ -1,22 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
 import { toast } from 'sonner';
+import { Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { api } from '@/lib/api';
 import { useAuthStore } from '@/stores/authStore';
 import type { LoginResponse } from '@/types';
@@ -31,7 +24,22 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const router = useRouter();
   const setAuth = useAuthStore((s) => s.setAuth);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const path =
+        user.role === 'mahasiswa'
+          ? '/mahasiswa/dashboard'
+          : user.role === 'reviewer'
+            ? '/reviewer/dashboard'
+            : '/admin/dashboard';
+      router.replace(path);
+    }
+  }, [isAuthenticated, user, router]);
 
   const {
     register,
@@ -84,68 +92,77 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader className="text-center">
-        <div className="mb-2 text-3xl font-bold tracking-tight">
-          PKM Review
+    <div className="w-full space-y-6">
+      {/* Icon */}
+      <div className="flex justify-center">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-foreground text-background">
+          <Lock size={20} />
         </div>
-        <CardDescription>Sistem Review Proposal PKM</CardDescription>
-        <CardTitle className="mt-4 text-xl">Login</CardTitle>
-      </CardHeader>
+      </div>
 
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">
-              Email <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="nama@student.ac.id"
-              {...register('email')}
-              disabled={isLoading}
-            />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">
-              Password <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Masukkan password"
-              {...register('password')}
-              disabled={isLoading}
-            />
-            {errors.password && (
-              <p className="text-sm text-destructive">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Memproses...' : 'Login'}
-          </Button>
-        </form>
-      </CardContent>
-
-      <CardFooter className="justify-center">
+      {/* Header */}
+      <div className="text-center space-y-1.5">
+        <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
         <p className="text-sm text-muted-foreground">
-          Belum punya akun?{' '}
-          <Link
-            href="/register"
-            className="font-medium text-primary hover:underline"
-          >
-            Daftar di sini
-          </Link>
+          Masukkan email dan password untuk masuk.
         </p>
-      </CardFooter>
-    </Card>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">
+            Email <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="mail@domain.com"
+            {...register('email')}
+            disabled={isLoading}
+          />
+          {errors.email && (
+            <p className="text-sm text-destructive">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="password">
+            Password <span className="text-destructive">*</span>
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="Enter password"
+            {...register('password')}
+            disabled={isLoading}
+          />
+          {errors.password && (
+            <p className="text-sm text-destructive">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-foreground text-background hover:bg-foreground/90"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Memproses...' : 'Sign in'}
+        </Button>
+      </form>
+
+      {/* Footer */}
+      <p className="text-center text-sm text-muted-foreground">
+        Belum punya akun?{' '}
+        <Link
+          href="/register"
+          className="font-medium text-foreground hover:underline"
+        >
+          Daftar di sini
+        </Link>
+      </p>
+    </div>
   );
 }

@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
 import {
   Home,
   Search,
@@ -21,7 +23,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useAuthStore } from '@/stores/authStore';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
@@ -33,11 +36,15 @@ interface NavItem {
   icon: React.ReactNode;
 }
 
-const NAV_ITEMS: Record<UserRole, NavItem[]> = {
+const NAV_ITEMS: Record<string, NavItem[]> = {
   mahasiswa: [
     { label: 'Dashboard', href: '/mahasiswa/dashboard', icon: <Home size={18} /> },
+  ],
+  mahasiswa_no_team: [
     { label: 'Cari Tim', href: '/mahasiswa/teams/browse', icon: <Search size={18} /> },
     { label: 'Buat Tim', href: '/mahasiswa/teams/create', icon: <PlusCircle size={18} /> },
+  ],
+  mahasiswa_has_team: [
     { label: 'Tim Saya', href: '/mahasiswa/teams', icon: <Users size={18} /> },
   ],
   reviewer: [
@@ -66,7 +73,25 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const router = useRouter();
   const { user, profile, logout } = useAuthStore();
   const role = user?.role || 'mahasiswa';
-  const items = NAV_ITEMS[role] || [];
+
+  const { data: dashboardData } = useQuery<{ layout: string }>({
+    queryKey: ['mahasiswa-dashboard'],
+    queryFn: () => api.get('/dashboard/mahasiswa'),
+    enabled: role === 'mahasiswa',
+    staleTime: 30_000,
+  });
+
+  const items = (() => {
+    const base = NAV_ITEMS[role] || [];
+    if (role !== 'mahasiswa') return base;
+    const hasTeam = dashboardData?.layout === 'TEAM_DASHBOARD';
+    return [
+      ...base,
+      ...(hasTeam
+        ? NAV_ITEMS.mahasiswa_has_team
+        : NAV_ITEMS.mahasiswa_no_team),
+    ];
+  })();
 
   const handleLogout = () => {
     logout();
@@ -149,16 +174,28 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuthStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
   const { mobileSidebarOpen, setMobileSidebarOpen } = useUIStore();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
+    // Check if already hydrated (client-side nav) or wait for hydration (page refresh)
+    if (useAuthStore.persist.hasHydrated()) {
+      setReady(true);
+      return;
     }
-  }, [isAuthenticated, router]);
+    const unsub = useAuthStore.persist.onFinishHydration(() => setReady(true));
+    return unsub;
+  }, []);
 
-  if (!isAuthenticated || !user) {
+  useEffect(() => {
+    if (ready && !isAuthenticated) {
+      router.replace('/login');
+    }
+  }, [ready, isAuthenticated, router]);
+
+  if (!ready || !isAuthenticated || !user) {
     return null;
   }
 
@@ -172,6 +209,9 @@ export default function DashboardLayout({
       {/* Mobile Sidebar */}
       <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
         <SheetContent side="left" className="w-64 p-0">
+          <VisuallyHidden>
+            <SheetTitle>Navigation Menu</SheetTitle>
+          </VisuallyHidden>
           <SidebarContent onNavigate={() => setMobileSidebarOpen(false)} />
         </SheetContent>
       </Sheet>

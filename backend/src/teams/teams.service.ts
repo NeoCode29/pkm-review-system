@@ -58,6 +58,7 @@ export class TeamsService {
           dosenPembimbingId: dto.dosenPembimbingId
             ? BigInt(dto.dosenPembimbingId)
             : null,
+          openToJoin: dto.openToJoin ?? true,
           createdBy: userId,
         },
       });

@@ -26,7 +26,9 @@ async function seedAdmin() {
 
   // Check if admin already exists by listing users
   const { data: existingUsers } = await supabase.auth.admin.listUsers();
-  const adminExists = existingUsers?.users?.find((u) => u.email === ADMIN_EMAIL);
+  const adminExists = existingUsers?.users?.find(
+    (u: { email?: string }) => u.email === ADMIN_EMAIL,
+  );
 
   if (adminExists) {
     console.log(`  ✅ Admin already exists: ${ADMIN_EMAIL}`);
@@ -125,6 +127,32 @@ async function main() {
       });
       console.log(`     - ${prodiNama}`);
     }
+  }
+
+  console.log('\n🏷️  Seeding Jenis PKM...');
+
+  const jenisPkmData = [
+    { nama: 'PKM Riset Eksakta', kode: 'PKM-RE', deskripsi: 'PKM bidang riset eksakta' },
+    { nama: 'PKM Riset Sosial Humaniora', kode: 'PKM-RSH', deskripsi: 'PKM bidang riset sosial humaniora' },
+    { nama: 'PKM Kewirausahaan', kode: 'PKM-K', deskripsi: 'PKM bidang kewirausahaan' },
+    { nama: 'PKM Pengabdian kepada Masyarakat', kode: 'PKM-PM', deskripsi: 'PKM bidang pengabdian kepada masyarakat' },
+    { nama: 'PKM Penerapan Iptek', kode: 'PKM-PI', deskripsi: 'PKM bidang penerapan ilmu pengetahuan dan teknologi' },
+    { nama: 'PKM Karsa Cipta', kode: 'PKM-KC', deskripsi: 'PKM bidang karsa cipta / inovasi' },
+    { nama: 'PKM Artikel Ilmiah', kode: 'PKM-AI', deskripsi: 'PKM penulisan artikel ilmiah' },
+    { nama: 'PKM Gagasan Futuristik Tertulis', kode: 'PKM-GFT', deskripsi: 'PKM penulisan gagasan futuristik' },
+  ];
+
+  for (const jpkm of jenisPkmData) {
+    await prisma.jenisPkm.upsert({
+      where: { nama: jpkm.nama },
+      update: {},
+      create: {
+        nama: jpkm.nama,
+        kode: jpkm.kode,
+        deskripsi: jpkm.deskripsi,
+      },
+    });
+    console.log(`  ✅ Jenis PKM: ${jpkm.nama} (${jpkm.kode})`);
   }
 
   console.log('\n🎉 Seed completed!');

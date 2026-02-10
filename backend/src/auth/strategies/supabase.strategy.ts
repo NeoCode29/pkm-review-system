@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
+import { passportJwtSecret } from 'jwks-rsa';
 import { PrismaService } from '../../prisma/prisma.service';
 
 export interface JwtPayload {
@@ -10,6 +11,10 @@ export interface JwtPayload {
   role?: string;
   aud?: string;
   iss?: string;
+  user_metadata?: {
+    role?: string;
+    nama?: string;
+  };
 }
 
 export interface AuthenticatedUser {
@@ -28,15 +33,21 @@ export class SupabaseStrategy extends PassportStrategy(Strategy, 'supabase') {
     private configService: ConfigService,
     private prisma: PrismaService,
   ) {
-    const jwtSecret = configService.get<string>('JWT_SECRET');
-    if (!jwtSecret) {
-      throw new Error('JWT_SECRET must be defined');
+    const supabaseUrl = configService.get<string>('SUPABASE_URL');
+    if (!supabaseUrl) {
+      throw new Error('SUPABASE_URL must be defined');
     }
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: jwtSecret,
+      algorithms: ['ES256', 'HS256'],
+      secretOrKeyProvider: passportJwtSecret({
+        jwksUri: `${supabaseUrl}/auth/v1/.well-known/jwks.json`,
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 10,
+      }),
     });
   }
 
@@ -76,10 +87,7 @@ export class SupabaseStrategy extends PassportStrategy(Strategy, 'supabase') {
     }
 
     // Check user metadata from Supabase for admin role
-    // If no profile found, check if it's an admin (admin has no profile table)
-    // For now, treat users without profiles as potential admins
-    // This will be refined when we implement admin seeding
-    const userRole = payload.role || 'admin';
+    const userRole = payload.user_metadata?.role || 'admin';
 
     if (userRole === 'admin') {
       return {
