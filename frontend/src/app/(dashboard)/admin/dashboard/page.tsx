@@ -10,6 +10,7 @@ import {
   ClipboardList,
   ArrowRight,
   Eye,
+  BarChart3,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,20 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { api } from '@/lib/api';
+
+interface ReviewerProgress {
+  id: string;
+  nama: string;
+  total: number;
+  completed: number;
+  pending: number;
+}
+
+interface JenisPkmCount {
+  id: string;
+  nama: string;
+  count: number;
+}
 
 interface AdminDashboard {
   currentPhase: string;
@@ -30,6 +45,8 @@ interface AdminDashboard {
     totalProposals: number;
   };
   proposalsByStatus: Record<string, { count: number; percentage: number }>;
+  reviewerProgress: ReviewerProgress[];
+  proposalsByJenisPkm: JenisPkmCount[];
 }
 
 interface RecentTeam {
@@ -128,10 +145,10 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Review Progress */}
+        {/* Proposal by Status */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base">Review Progress</CardTitle>
+            <CardTitle className="text-base">Proposal by Status</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {Object.entries(data.proposalsByStatus).map(([status, info]) => (
@@ -151,6 +168,97 @@ export default function AdminDashboardPage() {
           </CardContent>
         </Card>
 
+        {/* Proposal by Jenis PKM */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" /> Proposal per Jenis PKM
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {data.proposalsByJenisPkm.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-4">Belum ada data jenis PKM</p>
+            ) : (
+              <div className="space-y-3">
+                {data.proposalsByJenisPkm.map((jp) => {
+                  const pct = data.stats.totalProposals > 0 ? Math.round((jp.count / data.stats.totalProposals) * 100) : 0;
+                  return (
+                    <div key={jp.id} className="flex items-center gap-3">
+                      <div className="w-24 text-sm font-medium truncate">{jp.nama}</div>
+                      <div className="flex-1 h-4 rounded-full bg-muted overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-purple-300 dark:bg-purple-700 transition-all"
+                          style={{ width: `${Math.max(pct, 2)}%` }}
+                        />
+                      </div>
+                      <div className="w-12 text-right text-sm font-medium">{jp.count}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Reviewer Progress */}
+      <Card>
+        <CardHeader className="pb-3 flex flex-row items-center justify-between">
+          <CardTitle className="text-base flex items-center gap-2">
+            <UserCheck className="h-4 w-4" /> Progress Reviewer
+          </CardTitle>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/admin/reviewers">
+              View All <ArrowRight className="ml-1 h-3 w-3" />
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {data.reviewerProgress.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">Belum ada reviewer</p>
+          ) : (
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Reviewer</TableHead>
+                    <TableHead className="text-center">Assigned</TableHead>
+                    <TableHead className="text-center">Completed</TableHead>
+                    <TableHead className="text-center">Pending</TableHead>
+                    <TableHead>Progress</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.reviewerProgress.map((r) => {
+                    const pct = r.total > 0 ? Math.round((r.completed / r.total) * 100) : 0;
+                    return (
+                      <TableRow key={r.id}>
+                        <TableCell className="font-medium">{r.nama}</TableCell>
+                        <TableCell className="text-center">{r.total}</TableCell>
+                        <TableCell className="text-center text-green-600 dark:text-green-400 font-medium">{r.completed}</TableCell>
+                        <TableCell className="text-center text-orange-600 dark:text-orange-400 font-medium">{r.pending}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div className="flex-1 h-3 rounded-full bg-muted overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-green-400 dark:bg-green-600 transition-all"
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                            <span className="text-xs font-medium w-10 text-right">{pct}%</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Quick Actions */}
         <Card>
           <CardHeader className="pb-3">

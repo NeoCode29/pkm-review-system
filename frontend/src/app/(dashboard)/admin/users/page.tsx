@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, UserCog, Users, UserCheck, Shield } from 'lucide-react';
+import { Search, UserCog, Users, UserCheck, Shield, Ban, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -83,6 +83,24 @@ export default function AdminUsersPage() {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     },
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menghapus user'),
+  });
+
+  const activateMutation = useMutation({
+    mutationFn: (userId: string) => api.put(`/admin/users/${userId}/activate`),
+    onSuccess: () => {
+      toast.success('User berhasil diaktifkan');
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+    },
+    onError: (err: { message?: string }) => toast.error(err.message || 'Gagal mengaktifkan user'),
+  });
+
+  const deactivateMutation = useMutation({
+    mutationFn: (userId: string) => api.put(`/admin/users/${userId}/deactivate`),
+    onSuccess: () => {
+      toast.success('User berhasil dinonaktifkan');
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+    },
+    onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menonaktifkan user'),
   });
 
   const handleSearch = () => {
@@ -220,25 +238,56 @@ export default function AdminUsersPage() {
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-1">
                               {user.role !== 'admin' && (
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <Button size="sm" variant="destructive">Delete</Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>Hapus User?</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                        User {getName(user)} ({user.email}) akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel>Batal</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => deleteMutation.mutate(user.userId)}>
-                                        Hapus
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
+                                <>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button size="sm" variant="outline" title="Nonaktifkan">
+                                        <Ban className="h-3 w-3" />
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Nonaktifkan User?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          User {getName(user)} ({user.email}) tidak akan bisa login. Anda bisa mengaktifkan kembali nanti.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => deactivateMutation.mutate(user.userId)}>
+                                          Nonaktifkan
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    title="Aktifkan"
+                                    onClick={() => activateMutation.mutate(user.userId)}
+                                  >
+                                    <CheckCircle className="h-3 w-3" />
+                                  </Button>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button size="sm" variant="destructive">Delete</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Hapus User?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          User {getName(user)} ({user.email}) akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => deleteMutation.mutate(user.userId)}>
+                                          Hapus
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </>
                               )}
                             </div>
                           </TableCell>

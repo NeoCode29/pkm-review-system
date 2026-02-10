@@ -43,6 +43,47 @@ export class DashboardService {
       };
     }
 
+    // Reviewer progress
+    const reviewers = await this.prisma.reviewerUser.findMany({
+      select: {
+        id: true,
+        nama: true,
+        reviewerAssignments: {
+          select: {
+            penilaianAdministrasi: { select: { isComplete: true } },
+            penilaianSubstansi: { select: { isComplete: true } },
+          },
+        },
+      },
+      orderBy: { nama: 'asc' },
+    });
+
+    const reviewerProgress = reviewers.map((r) => {
+      const total = r.reviewerAssignments.length;
+      const completed = r.reviewerAssignments.filter(
+        (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
+      ).length;
+      return { id: r.id.toString(), nama: r.nama, total, completed, pending: total - completed };
+    });
+
+    // Proposals by jenis PKM
+    const jenisPkmList = await this.prisma.jenisPkm.findMany({
+      select: {
+        id: true,
+        nama: true,
+        _count: { select: { teams: true } },
+      },
+      orderBy: { nama: 'asc' },
+    });
+
+    const proposalsByJenisPkm: { id: string; nama: string; count: number }[] = [];
+    for (const jp of jenisPkmList) {
+      const count = await this.prisma.proposal.count({
+        where: { team: { jenisPkmId: jp.id } },
+      });
+      proposalsByJenisPkm.push({ id: jp.id.toString(), nama: jp.nama, count });
+    }
+
     return {
       currentPhase,
       toggleStates,
@@ -53,6 +94,8 @@ export class DashboardService {
         totalProposals,
       },
       proposalsByStatus,
+      reviewerProgress,
+      proposalsByJenisPkm,
     };
   }
 
