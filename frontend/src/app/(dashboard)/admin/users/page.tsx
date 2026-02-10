@@ -183,7 +183,7 @@ export default function AdminUsersPage() {
                     {data?.data.map((user) => {
                       const roleBadge = ROLE_BADGE[user.role] || { variant: 'outline' as const, label: user.role };
                       return (
-                        <TableRow key={user.id}>
+                        <TableRow key={`${user.role}-${user.id}`}>
                           <TableCell className="font-medium">{getName(user)}</TableCell>
                           <TableCell className="text-sm">{user.email}</TableCell>
                           <TableCell>
@@ -206,7 +206,7 @@ export default function AdminUsersPage() {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                       <AlertDialogCancel>Batal</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => deleteMutation.mutate(user.id)}>
+                                      <AlertDialogAction onClick={() => deleteMutation.mutate(user.userId)}>
                                         Hapus
                                       </AlertDialogAction>
                                     </AlertDialogFooter>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Eye, Trash2 } from 'lucide-react';
+import { Search, Eye, Trash2, Pencil, Users as UsersIcon, FileCheck, FileEdit, FileSearch } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -45,6 +45,7 @@ interface Team {
   status: string;
   openToJoin: boolean;
   jenisPkm?: { id: string; nama: string };
+  teamMembers?: { role: string; mahasiswa: { nama: string } }[];
   _count: { teamMembers: number };
   proposals?: { status: string }[];
 }
@@ -115,6 +116,46 @@ export default function AdminTeamsPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Manajemen Team</h1>
 
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <UsersIcon className="h-5 w-5 text-blue-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.meta?.total ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Total Teams</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <FileCheck className="h-5 w-5 text-green-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.data?.filter((t) => getProposalStatus(t) === 'submitted').length ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Submitted</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <FileEdit className="h-5 w-5 text-yellow-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.data?.filter((t) => getProposalStatus(t) === 'draft').length ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Draft</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <FileSearch className="h-5 w-5 text-purple-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.data?.filter((t) => getProposalStatus(t) === 'under_review').length ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Under Review</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Filters */}
       <Card>
         <CardHeader className="pb-3">
@@ -183,8 +224,8 @@ export default function AdminTeamsPage() {
                       <TableHead>Nama Tim</TableHead>
                       <TableHead>Judul Proposal</TableHead>
                       <TableHead>Jenis PKM</TableHead>
-                      <TableHead className="text-center">Anggota</TableHead>
-                      <TableHead>Status Proposal</TableHead>
+                      <TableHead>Ketua</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -207,7 +248,9 @@ export default function AdminTeamsPage() {
                           <TableCell>
                             <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
                           </TableCell>
-                          <TableCell className="text-center">{team._count.teamMembers}/5</TableCell>
+                          <TableCell className="text-sm">
+                            {team.teamMembers?.find((m) => m.role === 'ketua')?.mahasiswa.nama || '-'}
+                          </TableCell>
                           <TableCell>
                             <Badge variant={STATUS_BADGE[pStatus] || 'outline'} className="capitalize">
                               {pStatus.replace(/_/g, ' ')}
@@ -218,6 +261,11 @@ export default function AdminTeamsPage() {
                               <Button size="sm" variant="outline" asChild>
                                 <Link href={`/admin/teams/${team.id}`}>
                                   <Eye className="mr-1 h-3 w-3" /> Detail
+                                </Link>
+                              </Button>
+                              <Button size="sm" variant="outline" asChild>
+                                <Link href={`/admin/teams/${team.id}/edit`}>
+                                  <Pencil className="h-3 w-3" />
                                 </Link>
                               </Button>
                               <AlertDialog>

@@ -122,11 +122,21 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <ScrollArea className="flex-1 px-3 py-4">
         <nav className="flex flex-col gap-1">
           {items.map((item, idx) => {
-            // For dynamic team links, check if current path matches this item
-            // but not a more specific sibling (e.g. Tim Saya shouldn't match /proposal)
+            // Determine active state
             let isActive = pathname === item.href;
-            if (!isActive && pathname.startsWith(item.href + '/')) {
-              // Check no other sibling item is a better (longer) match
+
+            // For parent menu items that have sub-routes (Master Data, Penilaian)
+            const parentPrefixes: Record<string, string> = {
+              '/admin/master-data/prodi': '/admin/master-data',
+              '/admin/penilaian/administratif': '/admin/penilaian',
+            };
+            const prefix = parentPrefixes[item.href];
+            if (!isActive && prefix && pathname.startsWith(prefix)) {
+              isActive = true;
+            }
+
+            // For other items, check startsWith but avoid overlap with longer sibling matches
+            if (!isActive && !prefix && pathname.startsWith(item.href + '/')) {
               const betterMatch = items.some(
                 (other, oi) => oi !== idx && pathname.startsWith(other.href) && other.href.length > item.href.length,
               );
