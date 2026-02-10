@@ -64,21 +64,26 @@ const isEnabled = setting?.fieldValue === 'true';
 ---
 
 ### Rule: Toggle - Upload Proposal
-Controls mahasiswa ability to upload and submit proposals.
+Controls mahasiswa ability to upload/re-upload and submit original proposals.
 
 **When ON (`true`)**:
-- Mahasiswa can upload proposal files
+- Mahasiswa can upload original proposal files (first upload or re-upload)
 - Mahasiswa can submit proposals (draft → submitted)
+- Re-upload replaces the existing file (old file deleted from storage + DB)
+- Upload is allowed **regardless of proposal status** — only toggle matters
 
 **When OFF (`false`)**:
-- ❌ Mahasiswa CANNOT upload files
+- ❌ Mahasiswa CANNOT upload/re-upload original proposal files
 - ❌ Mahasiswa CANNOT submit proposals
 
 **Enforcement:**
 ```typescript
-const uploadEnabled = await getSettingValue('uploadProposalEnabled');
-if (!uploadEnabled) {
-  throw new ForbiddenException('Proposal upload is currently disabled');
+// Check by proposal TYPE, not status
+if (proposal.type === 'original') {
+  const uploadEnabled = await getSettingValue('uploadProposalEnabled');
+  if (!uploadEnabled) {
+    throw new BadRequestException('Pengumpulan proposal sedang ditutup');
+  }
 }
 ```
 
@@ -127,19 +132,18 @@ async function finalizeReviews() {
 ---
 
 ### Rule: Toggle - Upload Revision
-Controls mahasiswa ability to upload revised proposals.
+Controls mahasiswa ability to upload/re-upload revised proposals.
 
 **When Toggled ON**:
 - ALL proposals with status `reviewed` → `needs_revision` **automatically**
-- Mahasiswa can upload revision files
-- Can upload multiple times while toggle is ON
-- Each upload: status changes to `revised`
+- Mahasiswa can upload revision files (first upload or re-upload)
+- Re-upload replaces the existing file (old file deleted from storage + DB)
+- Upload is allowed **regardless of proposal status** — only toggle matters
+- Auto-transition: `needs_revision` → `revised` after upload
 
 **When Toggled OFF**:
-- ❌ Mahasiswa CANNOT upload revision files
-- Proposals remain in current status:
-  - `needs_revision` stays `needs_revision`
-  - `revised` stays `revised`
+- ❌ Mahasiswa CANNOT upload/re-upload revision files
+- Proposals remain in current status
 
 **Enforcement:**
 ```typescript
@@ -151,10 +155,12 @@ async function enableRevisions() {
   });
 }
 
-// On file upload
-const revisionEnabled = await getSettingValue('uploadRevisionEnabled');
-if (!revisionEnabled) {
-  throw new ForbiddenException('Revision upload is currently disabled');
+// Check by proposal TYPE, not status
+if (proposal.type === 'revised') {
+  const revisionEnabled = await getSettingValue('uploadRevisionEnabled');
+  if (!revisionEnabled) {
+    throw new BadRequestException('Upload revisi sedang ditutup');
+  }
 }
 ```
 
@@ -961,15 +967,17 @@ function MahasiswaDashboard() {
 
 ---
 
-### Rule: Upload Proposal State Machine ⭐ FROM WIREFRAME
-Upload proposal page has 4 different layouts based on state:
+### Rule: Upload Proposal State Machine ⭐ UPDATED
+Upload is controlled by **toggle + proposal type** only, NOT by proposal status.
 
-| Layout | Condition | Action |
-|--------|-----------|--------|
-| **A** | Toggle Upload Proposal = ON, belum upload | Upload proposal original |
-| **B** | Original reviewed, Toggle Upload Ulang = OFF | Lihat hasil review, revisi locked |
-| **C** | Original reviewed, Toggle Upload Ulang = ON | Upload proposal revisi |
-| **D** | Kedua proposal sudah upload | Lihat kedua proposal |
+| Proposal Type | Toggle | Action |
+|---------------|--------|--------|
+| **original** | `uploadProposalEnabled` = ON | Upload / re-upload original (replaces old file) |
+| **original** | `uploadProposalEnabled` = OFF | Upload locked |
+| **revised** | `uploadRevisionEnabled` = ON | Upload / re-upload revised (replaces old file) |
+| **revised** | `uploadRevisionEnabled` = OFF | Upload locked |
+
+**Re-upload behavior**: Old file is deleted from Supabase Storage + DB, new file replaces it.
 
 ---
 

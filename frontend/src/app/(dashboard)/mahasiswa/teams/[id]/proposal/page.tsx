@@ -117,8 +117,8 @@ export default function ProposalPage() {
   const originalFile = originalProposal?.proposalFiles?.[0];
   const revisedFile = revisedProposal?.proposalFiles?.[0];
 
-  // For revised proposal: upload is allowed when status is needs_revision and revision toggle is on
-  const canUploadRevision = revisedProposal?.status === 'needs_revision' && revisionEnabled;
+  // For revised proposal: upload is allowed when revision toggle is ON (regardless of status)
+  const canUploadRevision = revisionEnabled;
 
   const memberCount = team?._count?.teamMembers || 0;
   const hasDosen = !!team?.dosenPembimbing;
@@ -291,8 +291,8 @@ export default function ProposalPage() {
                     <ProposalDownloadButton proposalId={String(originalProposal?.id)} />
                   </div>
 
-                  {/* Re-upload when draft or submitted */}
-                  {(originalProposal?.status === 'draft' || originalProposal?.status === 'submitted') && uploadEnabled && (
+                  {/* Re-upload when upload toggle is ON */}
+                  {uploadEnabled && (
                     <div className="space-y-3">
                       <input
                         ref={fileInputOriginal}
@@ -456,8 +456,8 @@ export default function ProposalPage() {
                     <ProposalDownloadButton proposalId={String(revisedProposal?.id)} />
                   </div>
 
-                  {/* Re-upload for revised when needs_revision or revised */}
-                  {(revisedProposal?.status === 'needs_revision' || revisedProposal?.status === 'revised') && revisionEnabled && (
+                  {/* Re-upload when revision toggle is ON */}
+                  {revisionEnabled && (
                     <div className="space-y-2">
                       <input
                         ref={fileInputRevised}
@@ -507,16 +507,8 @@ export default function ProposalPage() {
                     <div className="space-y-3">
                       <div className="flex flex-col items-center gap-3 rounded-md border-2 border-dashed border-muted p-8 text-center opacity-60">
                         <Lock className="h-12 w-12 text-muted-foreground" />
-                        <p className="font-medium text-muted-foreground">
-                          {revisedProposal?.status !== 'needs_revision'
-                            ? 'Proposal belum memerlukan revisi'
-                            : 'Upload Revisi Belum Dibuka'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {revisedProposal?.status !== 'needs_revision'
-                            ? 'Upload revisi tersedia setelah proposal original direview dan admin membuka periode revisi'
-                            : 'Tunggu admin membuka periode upload revisi'}
-                        </p>
+                        <p className="font-medium text-muted-foreground">Upload Revisi Belum Dibuka</p>
+                        <p className="text-xs text-muted-foreground">Tunggu admin membuka periode upload revisi</p>
                       </div>
                       <Alert>
                         <Info className="h-4 w-4" />

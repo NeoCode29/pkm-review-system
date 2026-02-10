@@ -114,18 +114,13 @@ export class ProposalsService {
       throw new BadRequestException('Ukuran file maksimal 10MB');
     }
 
-    // Validate status allows upload
-    if (!['draft', 'submitted', 'needs_revision', 'revised'].includes(proposal.status)) {
-      throw new BadRequestException(`Tidak bisa upload file pada status "${proposal.status}"`);
-    }
-
     // Dosen pembimbing required for upload
     if (!proposal.team.dosenPembimbingId) {
       throw new BadRequestException('Tim harus memiliki dosen pembimbing sebelum upload file');
     }
 
-    // Check toggle based on status
-    if (['draft', 'submitted'].includes(proposal.status)) {
+    // Check toggle based on proposal TYPE (not status)
+    if (proposal.type === 'original') {
       const uploadToggle = await this.prisma.systemConfig.findUnique({
         where: { configKey: 'uploadProposalEnabled' },
       });
@@ -134,13 +129,30 @@ export class ProposalsService {
       }
     }
 
-    if (['needs_revision', 'revised'].includes(proposal.status)) {
+    if (proposal.type === 'revised') {
       const revisionToggle = await this.prisma.systemConfig.findUnique({
         where: { configKey: 'uploadRevisionEnabled' },
       });
       if (revisionToggle && !(revisionToggle.configValue as any)?.enabled) {
         throw new BadRequestException('Upload revisi sedang ditutup');
       }
+    }
+
+    // Delete old files (replace on re-upload)
+    const oldFiles = await this.prisma.proposalFile.findMany({
+      where: { proposalId },
+    });
+    for (const oldFile of oldFiles) {
+      try {
+        await this.storageService.remove(oldFile.filePath);
+      } catch {
+        // Ignore storage deletion errors (file may not exist)
+      }
+    }
+    if (oldFiles.length > 0) {
+      await this.prisma.proposalFile.deleteMany({
+        where: { proposalId },
+      });
     }
 
     // Upload to Supabase Storage

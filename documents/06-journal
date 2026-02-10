@@ -105,6 +105,34 @@ if (!ready || !isAuthenticated || !user) {
 
 ---
 
+## 2026-02-10: Upload & Re-upload Rule Change
+
+### Perubahan Aturan Upload Proposal
+
+**Sebelum:** Upload dipengaruhi oleh status proposal (`draft`, `submitted`, `needs_revision`, `revised`).
+
+**Sesudah:** Upload hanya dipengaruhi oleh **toggle + tipe proposal**, TIDAK oleh status.
+
+| Tipe Proposal | Toggle | Aksi |
+|---------------|--------|------|
+| `original` | `uploadProposalEnabled` = ON | Upload / re-upload (ganti file) |
+| `original` | `uploadProposalEnabled` = OFF | Upload terkunci |
+| `revised` | `uploadRevisionEnabled` = ON | Upload / re-upload (ganti file) |
+| `revised` | `uploadRevisionEnabled` = OFF | Upload terkunci |
+
+**Re-upload behavior:**
+- File lama dihapus dari Supabase Storage + DB
+- File baru menggantikan file lama
+- Tidak ada batasan status — selama toggle ON, upload bisa dilakukan
+
+**File yang diubah:**
+- `backend/src/proposals/proposals.service.ts` — hapus status check, cek toggle by type, delete old file
+- `frontend/src/app/(dashboard)/mahasiswa/teams/[id]/proposal/page.tsx` — re-upload by toggle only
+- `documents/02-backend/BUSINESS_RULES.md` — update rules
+- `documents/02-backend/API_CONTRACT.md` — update API contract
+
+---
+
 ## 2026-02-10: Phase 2 — Mahasiswa Features
 
 ### Halaman yang dibuat:

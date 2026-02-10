@@ -233,29 +233,39 @@ Create proposal for a team.
 ---
 
 #### `POST /proposals/:id/upload`
-**Auth:** team ketua  
-Upload proposal PDF file.
+**Auth:** team member  
+Upload or re-upload proposal PDF file. Re-upload replaces the existing file.
 
 **Request:** `multipart/form-data`
 ```
 file: <PDF file>
-type: "original" | "revised"
 ```
 
 **Response:** `200 OK`
 ```json
 {
-  "fileId": "1",
+  "id": "1",
   "fileName": "proposal.pdf",
   "fileSize": 2048576,
-  "uploadedAt": "2026-02-04T12:00:00Z",
-  "url": "https://storage.../proposals/..."
+  "filePath": "original/1/123_proposal.pdf",
+  "mimeType": "application/pdf",
+  "uploadedAt": "2026-02-04T12:00:00Z"
 }
 ```
 
 **Validations:**
 - Max size: 10MB
 - Type: application/pdf only
+- Dosen pembimbing must be assigned
+
+**Toggle check (by proposal type, NOT status):**
+- `original` proposal → requires `uploadProposalEnabled` = ON
+- `revised` proposal → requires `uploadRevisionEnabled` = ON
+
+**Re-upload behavior:**
+- Old file deleted from Supabase Storage + DB
+- New file replaces it
+- No status restriction — upload allowed regardless of proposal status
 
 ---
 
