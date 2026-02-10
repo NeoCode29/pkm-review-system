@@ -111,7 +111,18 @@ export class DashboardService {
       where: { reviewerUserId: reviewer.id },
       include: {
         proposal: {
-          select: { id: true, type: true, status: true, team: { select: { id: true, namaTeam: true, judulProposal: true } } },
+          select: {
+            id: true, type: true, status: true,
+            proposalFiles: { select: { id: true, fileName: true, fileSize: true }, orderBy: { uploadedAt: 'desc' as const }, take: 1 },
+            team: {
+              select: {
+                id: true, namaTeam: true, judulProposal: true, jenisPkmId: true,
+                jenisPkm: { select: { id: true, nama: true } },
+                dosenPembimbing: { select: { nama: true } },
+                _count: { select: { teamMembers: true } },
+              },
+            },
+          },
         },
         penilaianAdministrasi: { select: { isComplete: true } },
         penilaianSubstansi: { select: { isComplete: true } },

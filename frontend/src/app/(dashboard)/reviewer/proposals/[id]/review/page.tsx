@@ -4,12 +4,13 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Lock } from 'lucide-react';
 import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -93,6 +94,13 @@ export default function ReviewPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const assignmentId = params.id as string;
+
+  // Toggle state
+  const { data: toggles } = useQuery<Record<string, boolean>>({
+    queryKey: ['system-config'],
+    queryFn: () => api.get('/config'),
+  });
+  const reviewEnabled = toggles?.reviewEnabled ?? false;
 
   // State for admin checklist
   const [adminChecklist, setAdminChecklist] = useState<Record<string, boolean>>({});
@@ -266,6 +274,16 @@ export default function ReviewPage() {
         </CardContent>
       </Card>
 
+      {/* Review Closed Alert */}
+      {!reviewEnabled && (
+        <Alert className="border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950">
+          <Lock className="h-4 w-4 text-red-600" />
+          <AlertDescription>
+            <strong>Fase review ditutup.</strong> Form penilaian tidak bisa diubah saat ini. Hubungi admin jika ada kendala.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Review Tabs */}
       <Tabs defaultValue="admin" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2">
@@ -294,6 +312,7 @@ export default function ReviewPage() {
                   <Checkbox
                     id={`admin-${k.id}`}
                     checked={adminChecklist[String(k.id)] || false}
+                    disabled={!reviewEnabled}
                     onCheckedChange={(checked) =>
                       setAdminChecklist((prev) => ({ ...prev, [String(k.id)]: !!checked }))
                     }
@@ -326,12 +345,13 @@ export default function ReviewPage() {
                   onChange={(e) => setAdminCatatan(e.target.value)}
                   placeholder="Catatan tambahan untuk mahasiswa..."
                   rows={3}
+                  disabled={!reviewEnabled}
                 />
               </div>
 
               <Button
                 onClick={() => adminMutation.mutate()}
-                disabled={adminMutation.isPending}
+                disabled={adminMutation.isPending || !reviewEnabled}
                 className="w-full"
               >
                 {adminDone ? 'Update Penilaian Administratif' : 'Simpan Penilaian Administratif'}
@@ -381,6 +401,7 @@ export default function ReviewPage() {
                               min={k.skorMin}
                               max={k.skorMax}
                               value={skor || ''}
+                              disabled={!reviewEnabled}
                               onChange={(e) => {
                                 const val = parseInt(e.target.value, 10);
                                 setSubstansiScores((prev) => ({
@@ -431,12 +452,13 @@ export default function ReviewPage() {
                   onChange={(e) => setSubstansiCatatan(e.target.value)}
                   placeholder="Catatan tambahan..."
                   rows={3}
+                  disabled={!reviewEnabled}
                 />
               </div>
 
               <Button
                 onClick={() => substansiMutation.mutate()}
-                disabled={substansiMutation.isPending}
+                disabled={substansiMutation.isPending || !reviewEnabled}
                 className="w-full"
               >
                 {substansiDone ? 'Update Penilaian Substantif' : 'Simpan Penilaian Substantif'}
