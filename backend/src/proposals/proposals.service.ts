@@ -204,8 +204,13 @@ export class ProposalsService {
 
   async getFileDownloadUrl(proposalId: bigint) {
     const file = await this.getFile(proposalId);
-    const signedUrl = await this.storageService.getSignedUrl(file.filePath);
-    return { ...file, downloadUrl: signedUrl };
+    try {
+      const signedUrl = await this.storageService.getSignedUrl(file.filePath);
+      return { ...file, downloadUrl: signedUrl };
+    } catch {
+      // File record exists in DB but actual file missing from storage
+      return { ...file, downloadUrl: null };
+    }
   }
 
   async downloadFile(proposalId: bigint) {

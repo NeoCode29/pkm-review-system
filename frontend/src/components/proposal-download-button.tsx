@@ -11,11 +11,13 @@ interface FileInfo {
   fileSize: number;
   filePath: string;
   mimeType: string;
-  downloadUrl: string;
+  downloadUrl: string | null;
 }
 
 interface ProposalDownloadButtonProps {
   proposalId: string;
+  /** Set to false to skip fetching (e.g. when you know no file exists) */
+  hasFile?: boolean;
   label?: string;
   size?: 'sm' | 'default' | 'lg';
   variant?: 'outline' | 'default' | 'secondary' | 'ghost';
@@ -23,6 +25,7 @@ interface ProposalDownloadButtonProps {
 
 export function ProposalDownloadButton({
   proposalId,
+  hasFile = true,
   label = 'Download',
   size = 'sm',
   variant = 'outline',
@@ -30,20 +33,23 @@ export function ProposalDownloadButton({
   const { data: fileInfo, isLoading } = useQuery<FileInfo>({
     queryKey: ['proposal-file', proposalId],
     queryFn: () => api.get(`/proposals/${proposalId}/file`),
-    enabled: !!proposalId,
+    enabled: !!proposalId && hasFile,
+    retry: false,
   });
 
-  if (!proposalId) return null;
+  if (!proposalId || !hasFile) return null;
+
+  const downloadUrl = fileInfo?.downloadUrl;
 
   return (
     <Button
       size={size}
       variant={variant}
-      disabled={isLoading || !fileInfo?.downloadUrl}
-      asChild={!!fileInfo?.downloadUrl}
+      disabled={isLoading || !downloadUrl}
+      asChild={!!downloadUrl}
     >
-      {fileInfo?.downloadUrl ? (
-        <a href={fileInfo.downloadUrl} target="_blank" rel="noopener noreferrer">
+      {downloadUrl ? (
+        <a href={downloadUrl} target="_blank" rel="noopener noreferrer">
           <Download className="mr-1 h-3 w-3" />
           {label}
         </a>
