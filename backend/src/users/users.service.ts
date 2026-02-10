@@ -66,7 +66,7 @@ export class UsersService {
       return paginate(data.map((m) => ({ ...m, role: 'mahasiswa' })), total, params);
     }
 
-    // Default: return both (no pagination, grouped)
+    // Default: return all roles combined in paginated format
     const mahasiswaSearch = search
       ? {
           OR: [
@@ -76,25 +76,28 @@ export class UsersService {
           ],
         }
       : {};
-    const [mahasiswaList, reviewerList] = await Promise.all([
+    const [mahasiswaList, mahasiswaCount, reviewerList, reviewerCount] = await Promise.all([
       this.prisma.mahasiswa.findMany({
         where: { ...mahasiswaSearch },
         orderBy: { nama: 'asc' },
-        skip,
-        take: params.limit,
         select: { id: true, userId: true, nama: true, nim: true, email: true, createdAt: true },
       }),
+      this.prisma.mahasiswa.count({ where: { ...mahasiswaSearch } }),
       this.prisma.reviewerUser.findMany({
         where: { ...searchFilter },
         orderBy: { nama: 'asc' },
         select: { id: true, userId: true, nama: true, email: true, nidn: true, createdAt: true },
       }),
+      this.prisma.reviewerUser.count({ where: { ...searchFilter } }),
     ]);
 
-    return {
-      mahasiswa: mahasiswaList.map((m) => ({ ...m, role: 'mahasiswa' })),
-      reviewers: reviewerList.map((r) => ({ ...r, role: 'reviewer' })),
-    };
+    const combined = [
+      ...mahasiswaList.map((m) => ({ ...m, role: 'mahasiswa' })),
+      ...reviewerList.map((r) => ({ ...r, role: 'reviewer' })),
+    ];
+    const total = mahasiswaCount + reviewerCount;
+    const paged = combined.slice(skip, skip + params.limit);
+    return paginate(paged, total, params);
   }
 
   async deactivate(userId: string) {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, UserCog, Shield, GraduationCap, BookOpen } from 'lucide-react';
+import { Search, UserCog } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -39,11 +39,12 @@ import { api } from '@/lib/api';
 
 interface User {
   id: string;
+  userId: string;
   email: string;
   role: string;
-  isActive: boolean;
-  mahasiswa?: { nama: string; nim: string; programStudi?: { nama: string } };
-  reviewerUser?: { nama: string };
+  nama?: string;
+  nim?: string;
+  nidn?: string;
 }
 
 interface UsersResponse {
@@ -75,24 +76,6 @@ export default function AdminUsersPage() {
     },
   });
 
-  const activateMutation = useMutation({
-    mutationFn: (userId: string) => api.put(`/admin/users/${userId}/activate`),
-    onSuccess: () => {
-      toast.success('User berhasil diaktifkan');
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-    },
-    onError: (err: { message?: string }) => toast.error(err.message || 'Gagal mengaktifkan user'),
-  });
-
-  const deactivateMutation = useMutation({
-    mutationFn: (userId: string) => api.put(`/admin/users/${userId}/deactivate`),
-    onSuccess: () => {
-      toast.success('User berhasil dinonaktifkan');
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-    },
-    onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menonaktifkan user'),
-  });
-
   const deleteMutation = useMutation({
     mutationFn: (userId: string) => api.delete(`/admin/users/${userId}`),
     onSuccess: () => {
@@ -108,14 +91,7 @@ export default function AdminUsersPage() {
   };
 
   const getName = (user: User) => {
-    if (user.mahasiswa?.nama) return user.mahasiswa.nama;
-    if (user.reviewerUser?.nama) return user.reviewerUser.nama;
-    if (user.role === 'admin') return 'Administrator';
-    return '-';
-  };
-
-  const getProdi = (user: User) => {
-    return user.mahasiswa?.programStudi?.nama || '-';
+    return user.nama || '-';
   };
 
   return (
@@ -192,15 +168,14 @@ export default function AdminUsersPage() {
                       <TableHead>Nama</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Role</TableHead>
-                      <TableHead>Prodi</TableHead>
-                      <TableHead>Status</TableHead>
+                      <TableHead>NIM/NIDN</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {data?.data.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                        <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                           Tidak ada user ditemukan
                         </TableCell>
                       </TableRow>
@@ -214,34 +189,9 @@ export default function AdminUsersPage() {
                           <TableCell>
                             <Badge variant={roleBadge.variant}>{roleBadge.label}</Badge>
                           </TableCell>
-                          <TableCell className="text-sm">{getProdi(user)}</TableCell>
-                          <TableCell>
-                            <Badge variant={user.isActive ? 'default' : 'outline'}>
-                              {user.isActive ? 'Active' : 'Inactive'}
-                            </Badge>
-                          </TableCell>
+                          <TableCell className="text-sm font-mono">{user.nim || user.nidn || '-'}</TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-1">
-                              {user.isActive ? (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="text-red-600"
-                                  onClick={() => deactivateMutation.mutate(user.id)}
-                                  disabled={user.role === 'admin'}
-                                >
-                                  Deactivate
-                                </Button>
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="text-green-600"
-                                  onClick={() => activateMutation.mutate(user.id)}
-                                >
-                                  Activate
-                                </Button>
-                              )}
                               {user.role !== 'admin' && (
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
