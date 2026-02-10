@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
+import { PenilaianTabs } from '@/components/penilaian-tabs';
 
 interface JenisPkm { id: string; nama: string }
 interface KriteriaAdmin {
@@ -44,6 +45,12 @@ export default function KriteriaAdministratifPage() {
     queryKey: ['jenis-pkm'],
     queryFn: () => api.get('/master-data/jenis-pkm'),
   });
+
+  useEffect(() => {
+    if (jenisPkmList?.length && !selectedPkm) {
+      setSelectedPkm(String(jenisPkmList[0].id));
+    }
+  }, [jenisPkmList, selectedPkm]);
 
   const { data: kriteria, isLoading } = useQuery<KriteriaAdmin[]>({
     queryKey: ['kriteria-admin', selectedPkm],
@@ -99,6 +106,8 @@ export default function KriteriaAdministratifPage() {
 
   return (
     <div className="space-y-6">
+      <PenilaianTabs />
+
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Kriteria Administratif</h1>
         {selectedPkm && (
