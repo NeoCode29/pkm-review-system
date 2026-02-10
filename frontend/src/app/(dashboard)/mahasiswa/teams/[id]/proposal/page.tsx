@@ -291,8 +291,8 @@ export default function ProposalPage() {
                     <ProposalDownloadButton proposalId={String(originalProposal?.id)} />
                   </div>
 
-                  {/* Re-upload + Submit when draft */}
-                  {originalProposal?.status === 'draft' && uploadEnabled && (
+                  {/* Re-upload when draft or submitted */}
+                  {(originalProposal?.status === 'draft' || originalProposal?.status === 'submitted') && uploadEnabled && (
                     <div className="space-y-3">
                       <input
                         ref={fileInputOriginal}
@@ -329,14 +329,16 @@ export default function ProposalPage() {
                           Ganti File Proposal
                         </Button>
                       )}
-                      <Button
-                        className="w-full"
-                        onClick={() => originalProposal && submitMutation.mutate(originalProposal.id)}
-                        disabled={submitMutation.isPending || !!selectedFile}
-                      >
-                        <Upload className="mr-2 h-4 w-4" />
-                        {submitMutation.isPending ? 'Submitting...' : 'Submit Proposal Original'}
-                      </Button>
+                      {originalProposal?.status === 'draft' && (
+                        <Button
+                          className="w-full"
+                          onClick={() => originalProposal && submitMutation.mutate(originalProposal.id)}
+                          disabled={submitMutation.isPending || !!selectedFile}
+                        >
+                          <Upload className="mr-2 h-4 w-4" />
+                          {submitMutation.isPending ? 'Submitting...' : 'Submit Proposal Original'}
+                        </Button>
+                      )}
                     </div>
                   )}
 
@@ -454,8 +456,8 @@ export default function ProposalPage() {
                     <ProposalDownloadButton proposalId={String(revisedProposal?.id)} />
                   </div>
 
-                  {/* Re-upload for revised when needs_revision */}
-                  {revisedProposal?.status === 'needs_revision' && revisionEnabled && (
+                  {/* Re-upload for revised when needs_revision or revised */}
+                  {(revisedProposal?.status === 'needs_revision' || revisedProposal?.status === 'revised') && revisionEnabled && (
                     <div className="space-y-2">
                       <input
                         ref={fileInputRevised}

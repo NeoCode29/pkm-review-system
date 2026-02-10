@@ -115,7 +115,7 @@ export class ProposalsService {
     }
 
     // Validate status allows upload
-    if (!['draft', 'needs_revision'].includes(proposal.status)) {
+    if (!['draft', 'submitted', 'needs_revision', 'revised'].includes(proposal.status)) {
       throw new BadRequestException(`Tidak bisa upload file pada status "${proposal.status}"`);
     }
 
@@ -125,7 +125,7 @@ export class ProposalsService {
     }
 
     // Check toggle based on status
-    if (proposal.status === 'draft') {
+    if (['draft', 'submitted'].includes(proposal.status)) {
       const uploadToggle = await this.prisma.systemConfig.findUnique({
         where: { configKey: 'uploadProposalEnabled' },
       });
@@ -134,7 +134,7 @@ export class ProposalsService {
       }
     }
 
-    if (proposal.status === 'needs_revision') {
+    if (['needs_revision', 'revised'].includes(proposal.status)) {
       const revisionToggle = await this.prisma.systemConfig.findUnique({
         where: { configKey: 'uploadRevisionEnabled' },
       });
