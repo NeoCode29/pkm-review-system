@@ -231,14 +231,14 @@ export default function ReviewPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/reviewer/proposals"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <h1 className="text-2xl font-bold">Review Proposal</h1>
         </div>
-        <Badge variant={bothDone ? 'default' : 'secondary'}>
+        <Badge variant={bothDone ? 'default' : 'secondary'} className="w-fit">
           {bothDone ? 'Selesai' : 'Sedang Direview'}
         </Badge>
       </div>
@@ -249,27 +249,25 @@ export default function ReviewPage() {
           <CardTitle className="text-base">Informasi Proposal</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="grid grid-cols-[120px_1fr] gap-y-1.5 text-sm">
-              <span className="text-muted-foreground">Tim:</span>
-              <span className="font-medium">{team.namaTeam}</span>
-              <span className="text-muted-foreground">Judul:</span>
-              <span>{team.judulProposal}</span>
-              <span className="text-muted-foreground">Jenis PKM:</span>
-              <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
-            </div>
-            <div className="grid grid-cols-[120px_1fr] gap-y-1.5 text-sm">
-              <span className="text-muted-foreground">Dosen:</span>
-              <span>{team.dosenPembimbing?.nama || '-'}</span>
-              <span className="text-muted-foreground">Anggota:</span>
-              <span>{team._count.teamMembers} orang</span>
-              <span className="text-muted-foreground">File:</span>
+          <div className="grid grid-cols-[100px_1fr] gap-x-4 gap-y-2 text-sm sm:grid-cols-[100px_1fr_100px_1fr]">
+            <span className="text-muted-foreground">Tim</span>
+            <span className="font-medium">{team.namaTeam}</span>
+            <span className="text-muted-foreground">Dosen</span>
+            <span>{team.dosenPembimbing?.nama || '-'}</span>
+            <span className="text-muted-foreground">Judul</span>
+            <span className="sm:col-span-3">{team.judulProposal}</span>
+            <span className="text-muted-foreground">Jenis PKM</span>
+            <Badge variant="outline" className="w-fit">{team.jenisPkm?.nama || '-'}</Badge>
+            <span className="text-muted-foreground">Anggota</span>
+            <span>{team._count.teamMembers} orang</span>
+            <span className="text-muted-foreground">File</span>
+            <span className="sm:col-span-3">
               {file ? (
                 <ProposalDownloadButton proposalId={String(assignment.proposalId)} label={file.fileName} />
               ) : (
                 <span className="text-muted-foreground">Belum upload</span>
               )}
-            </div>
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -471,7 +469,7 @@ export default function ReviewPage() {
       {/* Submit Status */}
       {bothDone && (
         <Card className="border-green-300 bg-green-50 dark:border-green-800 dark:bg-green-950">
-          <CardContent className="flex items-center justify-between p-4">
+          <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="font-semibold text-green-700 dark:text-green-300 flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5" /> Kedua penilaian sudah terisi
@@ -480,9 +478,14 @@ export default function ReviewPage() {
                 Review untuk proposal ini telah selesai
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/reviewer/proposals">Kembali ke Daftar</Link>
-            </Button>
+            <div className="flex flex-col gap-2 sm:flex-row sm:shrink-0">
+              <Button asChild>
+                <Link href={`/reviewer/proposals/${assignmentId}`}>Lihat Hasil Review</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/reviewer/proposals">Kembali ke Daftar</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}

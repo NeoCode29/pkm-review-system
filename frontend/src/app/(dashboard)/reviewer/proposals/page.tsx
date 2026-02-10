@@ -149,9 +149,9 @@ export default function ReviewerProposalsPage() {
       {/* Filters */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex flex-wrap gap-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[170px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Status Review" />
               </SelectTrigger>
               <SelectContent>
@@ -162,7 +162,7 @@ export default function ReviewerProposalsPage() {
               </SelectContent>
             </Select>
             <Select value={jenisPkmFilter} onValueChange={setJenisPkmFilter}>
-              <SelectTrigger className="w-[170px]">
+              <SelectTrigger>
                 <SelectValue placeholder="Jenis PKM" />
               </SelectTrigger>
               <SelectContent>
@@ -172,20 +172,26 @@ export default function ReviewerProposalsPage() {
                 ))}
               </SelectContent>
             </Select>
-            <div className="flex flex-1 gap-2">
+            <div className="relative sm:col-span-2 lg:col-span-2">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari nama tim atau judul..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="max-w-sm"
+                className="pl-9"
               />
-              {(statusFilter !== 'all' || jenisPkmFilter !== 'all' || search) && (
-                <Button variant="ghost" size="sm" onClick={() => { setStatusFilter('all'); setJenisPkmFilter('all'); setSearch(''); }}>
-                  Reset
-                </Button>
-              )}
             </div>
           </div>
+          {(statusFilter !== 'all' || jenisPkmFilter !== 'all' || search) && (
+            <div className="mt-3 flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">
+                Menampilkan {filtered.length} dari {data.assignments.length} proposal
+              </p>
+              <Button variant="ghost" size="sm" onClick={() => { setStatusFilter('all'); setJenisPkmFilter('all'); setSearch(''); }}>
+                Reset Filter
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -197,14 +203,13 @@ export default function ReviewerProposalsPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border overflow-auto">
-            <Table>
+          <div className="rounded-md border overflow-x-auto">
+            <Table className="min-w-[600px]">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-12">No</TableHead>
-                  <TableHead>Tim</TableHead>
-                  <TableHead>Judul Proposal</TableHead>
-                  <TableHead>Jenis PKM</TableHead>
+                  <TableHead>Tim / Judul</TableHead>
+                  <TableHead className="hidden md:table-cell">Jenis PKM</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
@@ -212,7 +217,7 @@ export default function ReviewerProposalsPage() {
               <TableBody>
                 {filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                       {data.assignments.length === 0 ? 'Belum ada proposal yang ditugaskan' : 'Tidak ada proposal sesuai filter'}
                     </TableCell>
                   </TableRow>
@@ -220,29 +225,32 @@ export default function ReviewerProposalsPage() {
                 {filtered.map((a, idx) => {
                   const status = getStatus(a);
                   return (
-                    <TableRow key={a.id} className={status === 'in_progress' ? 'bg-orange-50/50 dark:bg-orange-950/20' : status === 'pending' ? 'bg-muted/30' : ''}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell className="font-medium">{a.proposal.team.namaTeam}</TableCell>
-                      <TableCell className="text-sm max-w-[250px] truncate">
-                        {a.proposal.team.judulProposal}
-                      </TableCell>
+                    <TableRow key={a.id}>
+                      <TableCell className="tabular-nums">{idx + 1}</TableCell>
                       <TableCell>
+                        <div className="font-medium">{a.proposal.team.namaTeam}</div>
+                        <div className="text-xs text-muted-foreground line-clamp-1">
+                          {a.proposal.team.judulProposal}
+                        </div>
+                        <Badge variant="outline" className="mt-1 md:hidden">{a.proposal.team.jenisPkm?.nama || '-'}</Badge>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">
                         <Badge variant="outline">{a.proposal.team.jenisPkm?.nama || '-'}</Badge>
                       </TableCell>
                       <TableCell>
                         <Badge variant={status === 'completed' ? 'default' : status === 'in_progress' ? 'secondary' : 'outline'}>
-                          {status === 'completed' ? '✓ Selesai' : status === 'in_progress' ? '⏳ Sedang' : '○ Belum'}
+                          {status === 'completed' ? 'Selesai' : status === 'in_progress' ? 'Sedang' : 'Belum'}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         {status === 'completed' ? (
                           <Button size="sm" variant="outline" asChild>
-                            <Link href={`/reviewer/proposals/${a.id}`}>Lihat Hasil</Link>
+                            <Link href={`/reviewer/proposals/${a.id}`}>Lihat</Link>
                           </Button>
                         ) : (
                           <Button size="sm" asChild>
                             <Link href={`/reviewer/proposals/${a.id}/review`}>
-                              {status === 'in_progress' ? '✏️ Lanjutkan' : '▶️ Mulai Review'}
+                              {status === 'in_progress' ? 'Lanjutkan' : 'Mulai'}
                             </Link>
                           </Button>
                         )}
@@ -259,19 +267,19 @@ export default function ReviewerProposalsPage() {
       {/* Legend */}
       <Card className="bg-muted/50">
         <CardContent className="p-4">
-          <p className="text-sm font-medium mb-2">Keterangan Status</p>
-          <div className="flex flex-wrap gap-4 text-sm">
+          <p className="text-xs font-medium mb-2 text-muted-foreground uppercase tracking-wide">Keterangan Status</p>
+          <div className="flex flex-col gap-2 text-sm sm:flex-row sm:gap-4">
             <div className="flex items-center gap-1.5">
-              <Badge variant="outline">○ Belum</Badge>
-              <span className="text-muted-foreground">= Belum dimulai</span>
+              <Badge variant="outline">Belum</Badge>
+              <span className="text-muted-foreground text-xs">Belum dimulai</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Badge variant="secondary">⏳ Sedang</Badge>
-              <span className="text-muted-foreground">= Sedang dalam proses</span>
+              <Badge variant="secondary">Sedang</Badge>
+              <span className="text-muted-foreground text-xs">Sedang dalam proses</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <Badge variant="default">✓ Selesai</Badge>
-              <span className="text-muted-foreground">= Review sudah disubmit</span>
+              <Badge variant="default">Selesai</Badge>
+              <span className="text-muted-foreground text-xs">Review sudah disubmit</span>
             </div>
           </div>
         </CardContent>

@@ -127,15 +127,15 @@ export default function ReviewSummaryPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/reviewer/proposals"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <h1 className="text-2xl font-bold">Hasil Review</h1>
         </div>
-        <Badge variant={bothDone ? 'default' : 'secondary'}>
-          {bothDone ? '✓ Review Tersubmit' : 'Belum Selesai'}
+        <Badge variant={bothDone ? 'default' : 'secondary'} className="w-fit">
+          {bothDone ? 'Review Tersubmit' : 'Belum Selesai'}
         </Badge>
       </div>
 
@@ -160,27 +160,25 @@ export default function ReviewSummaryPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="grid grid-cols-[120px_1fr] gap-y-1.5 text-sm">
-              <span className="text-muted-foreground">Tim:</span>
-              <span className="font-medium">{team.namaTeam}</span>
-              <span className="text-muted-foreground">Judul:</span>
-              <span>{team.judulProposal}</span>
-              <span className="text-muted-foreground">Jenis PKM:</span>
-              <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
-            </div>
-            <div className="grid grid-cols-[120px_1fr] gap-y-1.5 text-sm">
-              <span className="text-muted-foreground">Dosen:</span>
-              <span>{team.dosenPembimbing?.nama || '-'}</span>
-              <span className="text-muted-foreground">Anggota:</span>
-              <span>{team._count.teamMembers} orang</span>
-              <span className="text-muted-foreground">File:</span>
+          <div className="grid grid-cols-[100px_1fr] gap-x-4 gap-y-2 text-sm sm:grid-cols-[100px_1fr_100px_1fr]">
+            <span className="text-muted-foreground">Tim</span>
+            <span className="font-medium">{team.namaTeam}</span>
+            <span className="text-muted-foreground">Dosen</span>
+            <span>{team.dosenPembimbing?.nama || '-'}</span>
+            <span className="text-muted-foreground">Judul</span>
+            <span className="sm:col-span-3">{team.judulProposal}</span>
+            <span className="text-muted-foreground">Jenis PKM</span>
+            <Badge variant="outline" className="w-fit">{team.jenisPkm?.nama || '-'}</Badge>
+            <span className="text-muted-foreground">Anggota</span>
+            <span>{team._count.teamMembers} orang</span>
+            <span className="text-muted-foreground">File</span>
+            <span className="sm:col-span-3">
               {file ? (
                 <ProposalDownloadButton proposalId={String(assignment.proposalId)} label={file.fileName} />
               ) : (
                 <span className="text-muted-foreground">Belum upload</span>
               )}
-            </div>
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -225,7 +223,7 @@ export default function ReviewSummaryPage() {
                 {assignment.penilaianAdministrasi?.catatan && (
                   <div>
                     <p className="text-sm font-medium mb-1">Catatan:</p>
-                    <div className="rounded-md bg-muted p-3 text-sm border-l-3 border-primary">
+                    <div className="rounded-md bg-muted p-3 text-sm border-l-4 border-primary">
                       {assignment.penilaianAdministrasi.catatan}
                     </div>
                   </div>
@@ -292,7 +290,7 @@ export default function ReviewSummaryPage() {
                 {assignment.penilaianSubstansi?.catatan && (
                   <div>
                     <p className="text-sm font-medium mb-1">Catatan:</p>
-                    <div className="rounded-md bg-muted p-3 text-sm border-l-3 border-primary">
+                    <div className="rounded-md bg-muted p-3 text-sm border-l-4 border-primary">
                       {assignment.penilaianSubstansi.catatan}
                     </div>
                   </div>
@@ -309,8 +307,8 @@ export default function ReviewSummaryPage() {
 
       {/* Actions */}
       <Card className={reviewEnabled ? 'border-orange-300 bg-orange-50 dark:border-orange-800 dark:bg-orange-950' : 'border-muted'}>
-        <CardContent className="flex items-center justify-between p-4">
-          <div>
+        <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             {reviewEnabled ? (
               <>
                 <p className="font-semibold text-orange-700 dark:text-orange-300">
@@ -331,7 +329,7 @@ export default function ReviewSummaryPage() {
               </>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:shrink-0">
             {reviewEnabled && (
               <Button asChild>
                 <Link href={`/reviewer/proposals/${assignmentId}/review`}>

@@ -85,8 +85,8 @@ export default function ReviewerDashboardPage() {
 
       {/* Review Phase Status */}
       <Card className={reviewEnabled ? 'border-green-300 bg-green-50 dark:border-green-800 dark:bg-green-950' : 'border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950'}>
-        <CardContent className="flex items-center justify-between p-4">
-          <div>
+        <CardContent className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
             <p className="text-xs font-medium opacity-70">Status Fase Review</p>
             <p className="text-lg font-bold">
               {reviewEnabled ? 'Periode Review Aktif' : 'Periode Review Ditutup'}
@@ -95,7 +95,7 @@ export default function ReviewerDashboardPage() {
               {reviewEnabled ? 'Anda dapat melakukan penilaian proposal' : 'Review tidak dapat dilakukan saat ini'}
             </p>
           </div>
-          <Badge variant={reviewEnabled ? 'default' : 'destructive'}>
+          <Badge variant={reviewEnabled ? 'default' : 'destructive'} className="w-fit shrink-0">
             Review: {reviewEnabled ? 'DIBUKA' : 'DITUTUP'}
           </Badge>
         </CardContent>
@@ -148,23 +148,24 @@ export default function ReviewerDashboardPage() {
       {/* Progress */}
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">Progress Review</CardTitle>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle className="text-base">Progress Review</CardTitle>
+            <span className="text-sm font-semibold text-primary">{progressPct}%</span>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <Progress value={progressPct} className="h-4" />
-          <div className="flex justify-between text-xs text-muted-foreground">
+        <CardContent className="space-y-3">
+          <Progress value={progressPct} className="h-3" />
+          <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:justify-between">
             <span>Selesai: {data.stats.completed} proposal</span>
             <span>Tersisa: {data.stats.pending} proposal</span>
           </div>
+          <Button className="w-full sm:w-auto" asChild>
+            <Link href="/reviewer/proposals">
+              <ClipboardList className="mr-2 h-4 w-4" /> Lihat Semua Proposal
+            </Link>
+          </Button>
         </CardContent>
       </Card>
-
-      {/* Quick Action */}
-      <Button size="lg" asChild>
-        <Link href="/reviewer/proposals">
-          <ClipboardList className="mr-2 h-4 w-4" /> Lihat Semua Proposal
-        </Link>
-      </Button>
 
       {/* Assignment Table */}
       <Card>
@@ -177,13 +178,13 @@ export default function ReviewerDashboardPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border overflow-auto">
-            <Table>
+          <div className="rounded-md border overflow-x-auto">
+            <Table className="min-w-[500px]">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-12">No</TableHead>
                   <TableHead>Tim</TableHead>
-                  <TableHead>Judul Proposal</TableHead>
+                  <TableHead className="hidden sm:table-cell">Judul Proposal</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
@@ -200,9 +201,14 @@ export default function ReviewerDashboardPage() {
                   const status = getStatus(a);
                   return (
                     <TableRow key={a.id}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell className="font-medium">{a.proposal.team.namaTeam}</TableCell>
-                      <TableCell className="text-sm max-w-[250px] truncate">
+                      <TableCell className="tabular-nums">{idx + 1}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">{a.proposal.team.namaTeam}</div>
+                        <div className="text-xs text-muted-foreground line-clamp-1 sm:hidden">
+                          {a.proposal.team.judulProposal}
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-sm max-w-[250px] truncate">
                         {a.proposal.team.judulProposal}
                       </TableCell>
                       <TableCell>
