@@ -47,8 +47,18 @@ interface TeamDetail {
   _count: { teamMembers: number };
 }
 
-interface SystemConfig {
-  value: string;
+interface ToggleState {
+  key: string;
+  enabled: boolean;
+}
+
+interface FileInfo {
+  id: string;
+  fileName: string;
+  fileSize: number;
+  filePath: string;
+  mimeType: string;
+  downloadUrl: string;
 }
 
 const STATUS_MAP: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
@@ -96,24 +106,27 @@ export default function ProposalPage() {
     queryFn: () => api.get(`/proposals/team/${id}`),
   });
 
-  const { data: uploadConfig } = useQuery<SystemConfig>({
-    queryKey: ['config-upload-proposal'],
-    queryFn: () => api.get('/config/upload_proposal'),
+  const { data: uploadConfig } = useQuery<ToggleState>({
+    queryKey: ['config-uploadProposalEnabled'],
+    queryFn: () => api.get('/config/uploadProposalEnabled'),
   });
 
-  const { data: reuploadConfig } = useQuery<SystemConfig>({
-    queryKey: ['config-reupload-proposal'],
-    queryFn: () => api.get('/config/reupload_proposal'),
+  const { data: revisionConfig } = useQuery<ToggleState>({
+    queryKey: ['config-uploadRevisionEnabled'],
+    queryFn: () => api.get('/config/uploadRevisionEnabled'),
   });
 
-  const uploadEnabled = uploadConfig?.value === 'true';
-  const reuploadEnabled = reuploadConfig?.value === 'true';
+  const uploadEnabled = uploadConfig?.enabled ?? false;
+  const revisionEnabled = revisionConfig?.enabled ?? false;
 
   const originalProposal = proposals?.find((p) => p.type === 'original');
   const revisedProposal = proposals?.find((p) => p.type === 'revised');
 
   const originalFile = originalProposal?.proposalFiles?.[0];
   const revisedFile = revisedProposal?.proposalFiles?.[0];
+
+  // For revised proposal: upload is allowed when status is needs_revision and revision toggle is on
+  const canUploadRevision = revisedProposal?.status === 'needs_revision' && revisionEnabled;
 
   const memberCount = team?._count?.teamMembers || 0;
   const hasDosen = !!team?.dosenPembimbing;
@@ -283,12 +296,7 @@ export default function ProposalPage() {
                         Diupload: {formatDate(originalFile.uploadedAt)} | {formatFileSize(Number(originalFile.fileSize))}
                       </p>
                     </div>
-                    <Button size="sm" variant="outline" asChild>
-                      <a href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/proposals/${originalProposal?.id}/download`} target="_blank">
-                        <Download className="mr-1 h-3 w-3" />
-                        Download
-                      </a>
-                    </Button>
+                    <DownloadButton proposalId={originalProposal?.id} />
                   </div>
 
                   {/* Submit button if draft with file */}
@@ -414,12 +422,7 @@ export default function ProposalPage() {
                         Diupload: {formatDate(revisedFile.uploadedAt)} | {formatFileSize(Number(revisedFile.fileSize))}
                       </p>
                     </div>
-                    <Button size="sm" variant="outline" asChild>
-                      <a href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/proposals/${revisedProposal?.id}/download`} target="_blank">
-                        <Download className="mr-1 h-3 w-3" />
-                        Download
-                      </a>
-                    </Button>
+                    <DownloadButton proposalId={revisedProposal?.id} />
                   </div>
 
                   {revisedProposal?.status === 'draft' && (
@@ -439,12 +442,20 @@ export default function ProposalPage() {
                 </>
               ) : (
                 <>
-                  {!reuploadEnabled ? (
+                  {!canUploadRevision ? (
                     <div className="space-y-3">
                       <div className="flex flex-col items-center gap-3 rounded-md border-2 border-dashed border-muted p-8 text-center opacity-60">
                         <Lock className="h-12 w-12 text-muted-foreground" />
-                        <p className="font-medium text-muted-foreground">Upload Revisi Belum Dibuka</p>
-                        <p className="text-xs text-muted-foreground">Tunggu admin membuka periode upload revisi</p>
+                        <p className="font-medium text-muted-foreground">
+                          {revisedProposal?.status !== 'needs_revision'
+                            ? 'Proposal belum memerlukan revisi'
+                            : 'Upload Revisi Belum Dibuka'}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {revisedProposal?.status !== 'needs_revision'
+                            ? 'Upload revisi tersedia setelah proposal original direview dan admin membuka periode revisi'
+                            : 'Tunggu admin membuka periode upload revisi'}
+                        </p>
                       </div>
                       <Alert>
                         <Info className="h-4 w-4" />
@@ -454,7 +465,7 @@ export default function ProposalPage() {
                             <li>Hanya untuk dokumentasi perbaikan</li>
                             <li><strong>TIDAK akan direview lagi</strong></li>
                             <li>Proposal original + review tetap dapat diakses</li>
-                            <li>Tunggu admin buka toggle &quot;Upload Ulang&quot;</li>
+                            <li>Tersedia setelah admin buka toggle &quot;Upload Revisi&quot;</li>
                           </ul>
                         </AlertDescription>
                       </Alert>
@@ -560,5 +571,36 @@ export default function ProposalPage() {
         </Alert>
       )}
     </div>
+  );
+}
+
+function DownloadButton({ proposalId }: { proposalId?: string }) {
+  const { data: fileInfo, isLoading } = useQuery<FileInfo>({
+    queryKey: ['proposal-file', proposalId],
+    queryFn: () => api.get(`/proposals/${proposalId}/file`),
+    enabled: !!proposalId,
+  });
+
+  if (!proposalId) return null;
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      disabled={isLoading || !fileInfo?.downloadUrl}
+      asChild={!!fileInfo?.downloadUrl}
+    >
+      {fileInfo?.downloadUrl ? (
+        <a href={fileInfo.downloadUrl} target="_blank" rel="noopener noreferrer">
+          <Download className="mr-1 h-3 w-3" />
+          Download
+        </a>
+      ) : (
+        <span>
+          <Download className="mr-1 h-3 w-3" />
+          {isLoading ? 'Loading...' : 'Download'}
+        </span>
+      )}
+    </Button>
   );
 }
