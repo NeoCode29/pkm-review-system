@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   Info,
-  Download,
   AlertTriangle,
   FileText,
 } from 'lucide-react';
+import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -164,15 +164,7 @@ export default function ReviewResultsPage() {
               <span className="text-muted-foreground">Reviewer:</span>
               <span>{reviewSummary?.length || 0} Reviewer</span>
               <span className="text-muted-foreground">Proposal:</span>
-              <Button size="sm" variant="outline" asChild>
-                <a
-                  href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/proposals/${originalProposal.id}/download`}
-                  target="_blank"
-                >
-                  <Download className="mr-1 h-3 w-3" />
-                  Download Original
-                </a>
-              </Button>
+              <ProposalDownloadButton proposalId={String(originalProposal.id)} label="Download Original" />
             </div>
           </div>
         </CardContent>

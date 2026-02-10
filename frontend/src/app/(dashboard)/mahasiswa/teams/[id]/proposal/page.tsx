@@ -8,13 +8,13 @@ import { toast } from 'sonner';
 import {
   Upload,
   FileText,
-  Download,
   Info,
   AlertTriangle,
   Check,
   X,
   Lock,
   BarChart3,
+  RefreshCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api';
+import { ProposalDownloadButton } from '@/components/proposal-download-button';
 
 interface ProposalFile {
   id: string;
@@ -50,15 +51,6 @@ interface TeamDetail {
 interface ToggleState {
   key: string;
   enabled: boolean;
-}
-
-interface FileInfo {
-  id: string;
-  fileName: string;
-  fileSize: number;
-  filePath: string;
-  mimeType: string;
-  downloadUrl: string;
 }
 
 const STATUS_MAP: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
@@ -296,19 +288,56 @@ export default function ProposalPage() {
                         Diupload: {formatDate(originalFile.uploadedAt)} | {formatFileSize(Number(originalFile.fileSize))}
                       </p>
                     </div>
-                    <DownloadButton proposalId={originalProposal?.id} />
+                    <ProposalDownloadButton proposalId={String(originalProposal?.id)} />
                   </div>
 
-                  {/* Submit button if draft with file */}
-                  {originalProposal?.status === 'draft' && (
-                    <Button
-                      className="w-full"
-                      onClick={() => originalProposal && submitMutation.mutate(originalProposal.id)}
-                      disabled={submitMutation.isPending}
-                    >
-                      <Upload className="mr-2 h-4 w-4" />
-                      {submitMutation.isPending ? 'Submitting...' : 'Submit Proposal Original'}
-                    </Button>
+                  {/* Re-upload + Submit when draft */}
+                  {originalProposal?.status === 'draft' && uploadEnabled && (
+                    <div className="space-y-3">
+                      <input
+                        ref={fileInputOriginal}
+                        type="file"
+                        accept=".pdf"
+                        className="hidden"
+                        onChange={(e) => handleFileSelect(e, 'original')}
+                      />
+                      {selectedFile ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 rounded bg-blue-100 px-3 py-2 text-sm text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            <FileText className="h-4 w-4 shrink-0" />
+                            <span className="truncate flex-1">{selectedFile.name} ({formatFileSize(selectedFile.size)})</span>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-xs" onClick={() => setSelectedFile(null)}>
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                          <Button
+                            className="w-full"
+                            onClick={() => originalProposal && handleUpload(originalProposal.id, selectedFile)}
+                            disabled={uploadMutation.isPending}
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            {uploadMutation.isPending ? 'Uploading...' : 'Upload Ulang File'}
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => fileInputOriginal.current?.click()}
+                        >
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                          Ganti File Proposal
+                        </Button>
+                      )}
+                      <Button
+                        className="w-full"
+                        onClick={() => originalProposal && submitMutation.mutate(originalProposal.id)}
+                        disabled={submitMutation.isPending || !!selectedFile}
+                      >
+                        <Upload className="mr-2 h-4 w-4" />
+                        {submitMutation.isPending ? 'Submitting...' : 'Submit Proposal Original'}
+                      </Button>
+                    </div>
                   )}
 
                   {/* Review results link */}
@@ -422,18 +451,48 @@ export default function ProposalPage() {
                         Diupload: {formatDate(revisedFile.uploadedAt)} | {formatFileSize(Number(revisedFile.fileSize))}
                       </p>
                     </div>
-                    <DownloadButton proposalId={revisedProposal?.id} />
+                    <ProposalDownloadButton proposalId={String(revisedProposal?.id)} />
                   </div>
 
-                  {revisedProposal?.status === 'draft' && (
-                    <Button
-                      className="w-full bg-amber-600 hover:bg-amber-700"
-                      onClick={() => revisedProposal && submitMutation.mutate(revisedProposal.id)}
-                      disabled={submitMutation.isPending}
-                    >
-                      <Upload className="mr-2 h-4 w-4" />
-                      {submitMutation.isPending ? 'Submitting...' : 'Submit Proposal Revised'}
-                    </Button>
+                  {/* Re-upload for revised when needs_revision */}
+                  {revisedProposal?.status === 'needs_revision' && revisionEnabled && (
+                    <div className="space-y-2">
+                      <input
+                        ref={fileInputRevised}
+                        type="file"
+                        accept=".pdf"
+                        className="hidden"
+                        onChange={(e) => handleFileSelect(e, 'revised')}
+                      />
+                      {selectedRevisedFile ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 rounded bg-amber-100 px-3 py-2 text-sm text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+                            <FileText className="h-4 w-4 shrink-0" />
+                            <span className="truncate flex-1">{selectedRevisedFile.name} ({formatFileSize(selectedRevisedFile.size)})</span>
+                            <Button size="sm" variant="ghost" className="h-6 px-2 text-xs" onClick={() => setSelectedRevisedFile(null)}>
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                          <Button
+                            className="w-full bg-amber-600 hover:bg-amber-700"
+                            onClick={() => revisedProposal && handleUpload(revisedProposal.id, selectedRevisedFile)}
+                            disabled={uploadMutation.isPending}
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            {uploadMutation.isPending ? 'Uploading...' : 'Upload Ulang Revisi'}
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => fileInputRevised.current?.click()}
+                        >
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                          Ganti File Revisi
+                        </Button>
+                      )}
+                    </div>
                   )}
 
                   <div className="rounded-md bg-amber-50 p-3 text-center text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
@@ -571,36 +630,5 @@ export default function ProposalPage() {
         </Alert>
       )}
     </div>
-  );
-}
-
-function DownloadButton({ proposalId }: { proposalId?: string }) {
-  const { data: fileInfo, isLoading } = useQuery<FileInfo>({
-    queryKey: ['proposal-file', proposalId],
-    queryFn: () => api.get(`/proposals/${proposalId}/file`),
-    enabled: !!proposalId,
-  });
-
-  if (!proposalId) return null;
-
-  return (
-    <Button
-      size="sm"
-      variant="outline"
-      disabled={isLoading || !fileInfo?.downloadUrl}
-      asChild={!!fileInfo?.downloadUrl}
-    >
-      {fileInfo?.downloadUrl ? (
-        <a href={fileInfo.downloadUrl} target="_blank" rel="noopener noreferrer">
-          <Download className="mr-1 h-3 w-3" />
-          Download
-        </a>
-      ) : (
-        <span>
-          <Download className="mr-1 h-3 w-3" />
-          {isLoading ? 'Loading...' : 'Download'}
-        </span>
-      )}
-    </Button>
   );
 }

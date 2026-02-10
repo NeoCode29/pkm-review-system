@@ -3,7 +3,8 @@
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Trash2, Users, FileText, Pencil, UserPlus, Eye, Download } from 'lucide-react';
+import { ArrowLeft, Trash2, Users, FileText, Pencil, UserPlus, Eye } from 'lucide-react';
+import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -253,15 +254,7 @@ export default function AdminTeamDetailPage() {
                           ({(originalProposal.proposalFiles[0].fileSize / 1024 / 1024).toFixed(1)} MB)
                         </span>
                       </div>
-                      <Button size="sm" variant="outline" asChild>
-                        <a
-                          href={`${baseUrl}/proposals/${originalProposal.id}/download`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Download className="mr-1 h-3 w-3" /> Download
-                        </a>
-                      </Button>
+                      <ProposalDownloadButton proposalId={String(originalProposal.id)} />
                     </div>
                   )}
                 </div>

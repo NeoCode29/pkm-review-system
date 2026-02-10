@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Download, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -256,14 +257,7 @@ export default function ReviewPage() {
               <span>{team._count.teamMembers} orang</span>
               <span className="text-muted-foreground">File:</span>
               {file ? (
-                <Button size="sm" variant="outline" asChild>
-                  <a
-                    href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/proposals/${assignment.proposalId}/download`}
-                    target="_blank"
-                  >
-                    <Download className="mr-1 h-3 w-3" /> {file.fileName}
-                  </a>
-                </Button>
+                <ProposalDownloadButton proposalId={String(assignment.proposalId)} label={file.fileName} />
               ) : (
                 <span className="text-muted-foreground">Belum upload</span>
               )}
