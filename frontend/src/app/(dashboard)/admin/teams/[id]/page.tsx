@@ -1,14 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Trash2, Users, FileText, Pencil, UserPlus, Eye } from 'lucide-react';
+import { ArrowLeft, Trash2, Users, FileText, Pencil, UserPlus, Eye, AlertTriangle, RefreshCw } from 'lucide-react';
 import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -64,11 +68,14 @@ const STATUS_BADGE: Record<string, 'default' | 'secondary' | 'outline' | 'destru
   needs_revision: 'destructive',
 };
 
+const VALID_STATUSES = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision', 'revised'];
+
 export default function AdminTeamDetailPage() {
   const params = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
   const id = params.id as string;
+  const [overrideStatus, setOverrideStatus] = useState<string>('');
 
   const { data: team, isLoading } = useQuery<TeamDetail>({
     queryKey: ['admin-team', id],
@@ -76,6 +83,7 @@ export default function AdminTeamDetailPage() {
   });
 
   const originalProposal = team?.proposals?.find((p) => p.type === 'original');
+  const revisedProposal = team?.proposals?.find((p) => p.type === 'revised');
 
   const { data: assignments } = useQuery<Assignment[]>({
     queryKey: ['admin-assignments', originalProposal?.id],
@@ -91,6 +99,17 @@ export default function AdminTeamDetailPage() {
       router.push('/admin/teams');
     },
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menghapus tim'),
+  });
+
+  const overrideMutation = useMutation({
+    mutationFn: ({ proposalId, status }: { proposalId: string; status: string }) =>
+      api.put(`/proposals/${proposalId}/override-status`, { body: { status } }),
+    onSuccess: () => {
+      toast.success('Status proposal berhasil diubah');
+      queryClient.invalidateQueries({ queryKey: ['admin-team', id] });
+      setOverrideStatus('');
+    },
+    onError: (err: { message?: string }) => toast.error(err.message || 'Gagal mengubah status'),
   });
 
   if (isLoading) {
@@ -110,7 +129,8 @@ export default function AdminTeamDetailPage() {
     ['submitted', 'under_review'].includes(originalProposal.status) &&
     (originalProposal._count.reviewerAssignments ?? 0) < 2;
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  const proposalCount = team.proposals.length;
+  const reviewCount = assignments?.filter((a) => a.penilaianAdministrasi?.isComplete || a.penilaianSubstansi?.isComplete).length ?? 0;
 
   return (
     <div className="space-y-6">
@@ -143,14 +163,26 @@ export default function AdminTeamDetailPage() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Hapus Tim?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Tim &quot;{team.namaTeam}&quot; beserta semua proposal dan data terkait akan dihapus permanen.
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-destructive" /> Hapus Tim?
+                </AlertDialogTitle>
+                <AlertDialogDescription asChild>
+                  <div className="space-y-3">
+                    <p>PERINGATAN: Ini akan menghapus:</p>
+                    <ul className="list-disc ml-4 space-y-1 text-sm">
+                      <li>Team <strong>&quot;{team.namaTeam}&quot;</strong> beserta <strong>{team.teamMembers.length}</strong> anggota</li>
+                      <li><strong>{proposalCount}</strong> proposal</li>
+                      <li><strong>{reviewCount}</strong> review yang sudah dibuat</li>
+                    </ul>
+                    <p className="font-semibold text-destructive">Aksi ini TIDAK BISA DIBATALKAN!</p>
+                  </div>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteMutation.mutate()}>Hapus</AlertDialogAction>
+                <AlertDialogAction onClick={() => deleteMutation.mutate()} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  Ya, Hapus Permanen
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -223,11 +255,11 @@ export default function AdminTeamDetailPage() {
 
         {/* Right Column */}
         <div className="space-y-6">
-          {/* Proposal Status */}
+          {/* Proposal Original */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
-                <FileText className="h-4 w-4" /> Proposal Status
+                <FileText className="h-4 w-4" /> Proposal Original
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -257,9 +289,76 @@ export default function AdminTeamDetailPage() {
                       <ProposalDownloadButton proposalId={String(originalProposal.id)} />
                     </div>
                   )}
+                  {/* Override Status */}
+                  <div className="border-t pt-3 space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground">Override Status</p>
+                    <div className="flex gap-2">
+                      <Select value={overrideStatus} onValueChange={setOverrideStatus}>
+                        <SelectTrigger className="flex-1 h-8 text-xs">
+                          <SelectValue placeholder="Pilih status baru..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {VALID_STATUSES.filter((s) => s !== originalProposal.status).map((s) => (
+                            <SelectItem key={s} value={s} className="capitalize text-xs">
+                              {s.replace(/_/g, ' ')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 text-xs"
+                        disabled={!overrideStatus || overrideMutation.isPending}
+                        onClick={() => overrideMutation.mutate({ proposalId: String(originalProposal.id), status: overrideStatus })}
+                      >
+                        <RefreshCw className="mr-1 h-3 w-3" />
+                        {overrideMutation.isPending ? 'Updating...' : 'Override'}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-4">Belum ada proposal</p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Proposal Revised */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <FileText className="h-4 w-4" /> Proposal Revised
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {revisedProposal ? (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-center flex-col gap-2 py-3">
+                    <Badge
+                      variant={STATUS_BADGE[revisedProposal.status] || 'outline'}
+                      className="capitalize text-sm px-3 py-0.5"
+                    >
+                      {revisedProposal.status.replace(/_/g, ' ')}
+                    </Badge>
+                  </div>
+                  {revisedProposal.proposalFiles[0] ? (
+                    <div className="border-t pt-3 flex items-center justify-between text-sm">
+                      <div>
+                        <span className="font-medium">{revisedProposal.proposalFiles[0].fileName}</span>
+                        <span className="text-muted-foreground ml-2">
+                          ({(revisedProposal.proposalFiles[0].fileSize / 1024 / 1024).toFixed(1)} MB)
+                        </span>
+                      </div>
+                      <ProposalDownloadButton proposalId={String(revisedProposal.id)} />
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground text-center border-t pt-3">Belum ada file revisi</p>
+                  )}
+                  <p className="text-xs text-muted-foreground text-center">Proposal revised untuk dokumentasi (tidak direview)</p>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">Belum ada proposal revised</p>
               )}
             </CardContent>
           </Card>
@@ -333,14 +432,26 @@ export default function AdminTeamDetailPage() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Hapus Tim?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Tim &quot;{team.namaTeam}&quot; beserta semua data terkait akan dihapus permanen.
+                    <AlertDialogTitle className="flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-destructive" /> Hapus Tim?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription asChild>
+                      <div className="space-y-3">
+                        <p>PERINGATAN: Ini akan menghapus:</p>
+                        <ul className="list-disc ml-4 space-y-1 text-sm">
+                          <li>Team <strong>&quot;{team.namaTeam}&quot;</strong> beserta <strong>{team.teamMembers.length}</strong> anggota</li>
+                          <li><strong>{proposalCount}</strong> proposal</li>
+                          <li><strong>{reviewCount}</strong> review yang sudah dibuat</li>
+                        </ul>
+                        <p className="font-semibold text-destructive">Aksi ini TIDAK BISA DIBATALKAN!</p>
+                      </div>
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Batal</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => deleteMutation.mutate()}>Hapus</AlertDialogAction>
+                    <AlertDialogAction onClick={() => deleteMutation.mutate()} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                      Ya, Hapus Permanen
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
