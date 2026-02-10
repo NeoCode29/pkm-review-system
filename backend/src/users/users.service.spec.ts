@@ -47,7 +47,7 @@ describe('UsersService', () => {
       mockPrisma.mahasiswa.findMany.mockResolvedValueOnce([{ id: 1n, nama: 'M1' }]);
       mockPrisma.reviewerUser.findMany.mockResolvedValueOnce([{ id: 1n, nama: 'R1' }]);
 
-      const result = await service.findAll();
+      const result: any = await service.findAll();
       expect(result.mahasiswa).toHaveLength(1);
       expect(result.reviewers).toHaveLength(1);
       expect(result.mahasiswa[0].role).toBe('mahasiswa');
