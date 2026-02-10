@@ -161,6 +161,20 @@ export class AuthService {
     };
   }
 
+  async refreshToken(refreshToken: string) {
+    const supabase = this.supabaseService.getClient();
+    const { data, error } = await supabase.auth.refreshSession({ refresh_token: refreshToken });
+
+    if (error || !data.session) {
+      throw new UnauthorizedException('Refresh token tidak valid atau sudah expired');
+    }
+
+    return {
+      access_token: data.session.access_token,
+      refresh_token: data.session.refresh_token,
+    };
+  }
+
   async getProfile(userId: string) {
     // Try mahasiswa
     const mahasiswa = await this.prisma.mahasiswa.findUnique({

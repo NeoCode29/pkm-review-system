@@ -12,6 +12,8 @@ interface RequestOptions {
 
 class ApiClient {
   private baseUrl: string;
+  private isRefreshing = false;
+  private refreshPromise: Promise<boolean> | null = null;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -35,6 +37,44 @@ class ApiClient {
       });
     }
     return url.toString();
+  }
+
+  private async tryRefreshToken(): Promise<boolean> {
+    if (this.isRefreshing) {
+      return this.refreshPromise!;
+    }
+
+    this.isRefreshing = true;
+    this.refreshPromise = (async () => {
+      try {
+        const refreshToken = useAuthStore.getState().refreshToken;
+        if (!refreshToken) return false;
+
+        const res = await fetch(`${this.baseUrl}/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        });
+
+        if (!res.ok) return false;
+
+        const data = await res.json();
+        useAuthStore.getState().setTokens(data.access_token, data.refresh_token);
+
+        // Update cookie too
+        if (typeof document !== 'undefined') {
+          document.cookie = `pkm-auth-token=${data.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+        }
+        return true;
+      } catch {
+        return false;
+      } finally {
+        this.isRefreshing = false;
+        this.refreshPromise = null;
+      }
+    })();
+
+    return this.refreshPromise;
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {
@@ -65,9 +105,35 @@ class ApiClient {
     return response.json();
   }
 
+  private async fetchWithRefresh<T>(
+    url: string,
+    init: RequestInit,
+  ): Promise<T> {
+    const response = await fetch(url, init);
+
+    // If 401 and not an auth endpoint, try refresh
+    if (response.status === 401 && !url.includes('/auth/')) {
+      const refreshed = await this.tryRefreshToken();
+      if (refreshed) {
+        // Retry with new token
+        const newInit = {
+          ...init,
+          headers: {
+            ...init.headers,
+            ...this.getAuthHeader(),
+          },
+        };
+        const retryResponse = await fetch(url, newInit);
+        return this.handleResponse<T>(retryResponse);
+      }
+    }
+
+    return this.handleResponse<T>(response);
+  }
+
   async get<T>(path: string, options?: RequestOptions): Promise<T> {
     const url = this.buildUrl(path, options?.params);
-    const response = await fetch(url, {
+    return this.fetchWithRefresh<T>(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -76,12 +142,11 @@ class ApiClient {
       },
       signal: options?.signal,
     });
-    return this.handleResponse<T>(response);
   }
 
   async post<T>(path: string, options?: RequestOptions): Promise<T> {
     const url = this.buildUrl(path, options?.params);
-    const response = await fetch(url, {
+    return this.fetchWithRefresh<T>(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,12 +156,11 @@ class ApiClient {
       body: options?.body ? JSON.stringify(options.body) : undefined,
       signal: options?.signal,
     });
-    return this.handleResponse<T>(response);
   }
 
   async put<T>(path: string, options?: RequestOptions): Promise<T> {
     const url = this.buildUrl(path, options?.params);
-    const response = await fetch(url, {
+    return this.fetchWithRefresh<T>(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -106,12 +170,11 @@ class ApiClient {
       body: options?.body ? JSON.stringify(options.body) : undefined,
       signal: options?.signal,
     });
-    return this.handleResponse<T>(response);
   }
 
   async delete<T>(path: string, options?: RequestOptions): Promise<T> {
     const url = this.buildUrl(path, options?.params);
-    const response = await fetch(url, {
+    return this.fetchWithRefresh<T>(url, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -120,7 +183,6 @@ class ApiClient {
       },
       signal: options?.signal,
     });
-    return this.handleResponse<T>(response);
   }
 
   async upload<T>(path: string, file: File, fieldName = 'file'): Promise<T> {
@@ -128,14 +190,13 @@ class ApiClient {
     const formData = new FormData();
     formData.append(fieldName, file);
 
-    const response = await fetch(url, {
+    return this.fetchWithRefresh<T>(url, {
       method: 'POST',
       headers: {
         ...this.getAuthHeader(),
       },
       body: formData,
     });
-    return this.handleResponse<T>(response);
   }
 }
 
