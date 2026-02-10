@@ -9,11 +9,15 @@ import {
   Settings,
   ClipboardList,
   ArrowRight,
+  Eye,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from '@/components/ui/table';
 import { api } from '@/lib/api';
 
 interface AdminDashboard {
@@ -27,6 +31,29 @@ interface AdminDashboard {
   };
   proposalsByStatus: Record<string, { count: number; percentage: number }>;
 }
+
+interface RecentTeam {
+  id: string;
+  namaTeam: string;
+  judulProposal: string;
+  jenisPkm?: { nama: string };
+  teamMembers?: { role: string; mahasiswa: { nama: string } }[];
+  proposals?: { status: string }[];
+  createdAt: string;
+}
+
+interface TeamsResponse {
+  data: RecentTeam[];
+  meta: { total: number };
+}
+
+const PROPOSAL_BADGE: Record<string, 'default' | 'secondary' | 'outline' | 'destructive'> = {
+  draft: 'outline',
+  submitted: 'default',
+  under_review: 'secondary',
+  reviewed: 'default',
+  needs_revision: 'destructive',
+};
 
 const PHASE_LABELS: Record<string, { label: string; color: string; desc: string }> = {
   CLOSED: { label: 'Closed', color: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200', desc: 'Semua fitur upload dan review sedang ditutup' },
@@ -49,6 +76,11 @@ export default function AdminDashboardPage() {
   const { data, isLoading } = useQuery<AdminDashboard>({
     queryKey: ['admin-dashboard'],
     queryFn: () => api.get('/dashboard/admin'),
+  });
+
+  const { data: recentTeams } = useQuery<TeamsResponse>({
+    queryKey: ['admin-recent-teams'],
+    queryFn: () => api.get('/teams?page=1&limit=5'),
   });
 
   if (isLoading) {
@@ -125,13 +157,74 @@ export default function AdminDashboardPage() {
             <CardTitle className="text-base">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <QuickAction href="/admin/reviewers" icon={<ClipboardList className="h-4 w-4" />} label="Assign Reviewers" />
+            <QuickAction href="/admin/reviewers" icon={<ClipboardList className="h-4 w-4" />} label="Manage Reviewers" />
             <QuickAction href="/admin/teams" icon={<Users className="h-4 w-4" />} label="Manage Teams" />
-            <QuickAction href="/admin/users" icon={<Users className="h-4 w-4" />} label="Manage Users" />
+            <QuickAction href="/admin/master-data/prodi" icon={<Settings className="h-4 w-4" />} label="Master Data" />
             <QuickAction href="/admin/settings" icon={<Settings className="h-4 w-4" />} label="System Settings" />
           </CardContent>
         </Card>
       </div>
+
+      {/* Recent Teams */}
+      <Card>
+        <CardHeader className="pb-3 flex flex-row items-center justify-between">
+          <CardTitle className="text-base">Recent Teams</CardTitle>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/admin/teams">
+              View All <ArrowRight className="ml-1 h-3 w-3" />
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nama Tim</TableHead>
+                  <TableHead>Jenis PKM</TableHead>
+                  <TableHead>Ketua</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {(!recentTeams?.data || recentTeams.data.length === 0) && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-4">
+                      Belum ada tim
+                    </TableCell>
+                  </TableRow>
+                )}
+                {recentTeams?.data.map((team) => {
+                  const pStatus = team.proposals?.[0]?.status || 'no_proposal';
+                  const ketua = team.teamMembers?.find((m) => m.role === 'ketua')?.mahasiswa.nama;
+                  return (
+                    <TableRow key={team.id}>
+                      <TableCell className="font-medium">{team.namaTeam}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
+                      </TableCell>
+                      <TableCell className="text-sm">{ketua || '-'}</TableCell>
+                      <TableCell>
+                        <Badge variant={PROPOSAL_BADGE[pStatus] || 'outline'} className="capitalize">
+                          {pStatus.replace(/_/g, ' ')}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" variant="outline" asChild>
+                          <Link href={`/admin/teams/${team.id}`}>
+                            <Eye className="mr-1 h-3 w-3" /> Detail
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

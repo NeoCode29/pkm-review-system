@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, UserCog } from 'lucide-react';
+import { Search, UserCog, Users, UserCheck, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -108,6 +108,33 @@ export default function AdminUsersPage() {
             <div>
               <p className="text-2xl font-bold">{data?.meta.total ?? '-'}</p>
               <p className="text-xs text-muted-foreground">Total Users</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <Users className="h-5 w-5 text-green-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.data?.filter((u) => u.role === 'mahasiswa').length ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Mahasiswa</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <UserCheck className="h-5 w-5 text-yellow-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.data?.filter((u) => u.role === 'reviewer').length ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Reviewer</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="flex items-center gap-3 p-4">
+            <Shield className="h-5 w-5 text-red-500" />
+            <div>
+              <p className="text-2xl font-bold">{data?.data?.filter((u) => u.role === 'admin').length ?? '-'}</p>
+              <p className="text-xs text-muted-foreground">Admin</p>
             </div>
           </CardContent>
         </Card>

@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, FileText } from 'lucide-react';
+import { ArrowLeft, FileText, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,10 +16,12 @@ import { api } from '@/lib/api';
 interface ReviewerDetail {
   id: string;
   nama: string;
+  email: string;
   nidn: string | null;
-  bidangKeahlian: string | null;
+  noHp: string | null;
   userId: string;
-  user?: { email: string };
+  programStudi?: { id: string; nama: string; jurusan?: { id: string; nama: string } } | null;
+  stats: { totalAssigned: number; completed: number; pending: number };
   reviewerAssignments: {
     id: string;
     reviewerNumber: number;
@@ -27,10 +29,10 @@ interface ReviewerDetail {
       id: string;
       type: string;
       status: string;
-      team: { id: string; namaTeam: string; judulProposal: string };
+      team: { id: string; namaTeam: string };
     };
-    penilaianAdministrasi?: { isComplete: boolean };
-    penilaianSubstansi?: { isComplete: boolean };
+    penilaianAdministrasi?: { isComplete: boolean } | null;
+    penilaianSubstansi?: { isComplete: boolean } | null;
   }[];
 }
 
@@ -56,10 +58,6 @@ export default function AdminReviewerDetailPage() {
     return <p className="text-muted-foreground">Reviewer tidak ditemukan</p>;
   }
 
-  const completed = reviewer.reviewerAssignments.filter(
-    (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
-  ).length;
-
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -79,11 +77,19 @@ export default function AdminReviewerDetailPage() {
             <span className="text-muted-foreground">Nama:</span>
             <span className="font-medium">{reviewer.nama}</span>
             <span className="text-muted-foreground">Email:</span>
-            <span>{reviewer.user?.email || '-'}</span>
+            <span>{reviewer.email || '-'}</span>
             <span className="text-muted-foreground">NIDN:</span>
             <span className="font-mono">{reviewer.nidn || '-'}</span>
-            <span className="text-muted-foreground">Bidang Keahlian:</span>
-            <span>{reviewer.bidangKeahlian || '-'}</span>
+            <span className="text-muted-foreground">No. HP:</span>
+            <span>{reviewer.noHp || '-'}</span>
+            <span className="text-muted-foreground">Program Studi:</span>
+            <span>{reviewer.programStudi?.nama || '-'}</span>
+            {reviewer.programStudi?.jurusan && (
+              <>
+                <span className="text-muted-foreground">Jurusan:</span>
+                <span>{reviewer.programStudi.jurusan.nama}</span>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -92,21 +98,19 @@ export default function AdminReviewerDetailPage() {
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold">{reviewer.reviewerAssignments.length}</p>
+            <p className="text-2xl font-bold">{reviewer.stats.totalAssigned}</p>
             <p className="text-xs text-muted-foreground">Total Assigned</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-green-600">{completed}</p>
+            <p className="text-2xl font-bold text-green-600">{reviewer.stats.completed}</p>
             <p className="text-xs text-muted-foreground">Completed</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-yellow-600">
-              {reviewer.reviewerAssignments.length - completed}
-            </p>
+            <p className="text-2xl font-bold text-yellow-600">{reviewer.stats.pending}</p>
             <p className="text-xs text-muted-foreground">Pending</p>
           </CardContent>
         </Card>
@@ -116,7 +120,7 @@ export default function AdminReviewerDetailPage() {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base flex items-center gap-2">
-            <FileText className="h-4 w-4" /> Assignments
+            <FileText className="h-4 w-4" /> Assignments ({reviewer.reviewerAssignments.length})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -125,39 +129,47 @@ export default function AdminReviewerDetailPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Tim</TableHead>
-                  <TableHead>Judul</TableHead>
-                  <TableHead>Type</TableHead>
                   <TableHead className="text-center">Administratif</TableHead>
                   <TableHead className="text-center">Substantif</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {reviewer.reviewerAssignments.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground py-4">
+                    <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
                       Belum ada assignment
                     </TableCell>
                   </TableRow>
                 )}
-                {reviewer.reviewerAssignments.map((a) => (
-                  <TableRow key={a.id}>
-                    <TableCell className="font-medium">{a.proposal.team.namaTeam}</TableCell>
-                    <TableCell className="text-sm max-w-[200px] truncate">
-                      {a.proposal.team.judulProposal}
-                    </TableCell>
-                    <TableCell className="capitalize text-sm">{a.proposal.type}</TableCell>
-                    <TableCell className="text-center">
-                      <Badge variant={a.penilaianAdministrasi?.isComplete ? 'default' : 'outline'}>
-                        {a.penilaianAdministrasi?.isComplete ? 'Done' : 'Pending'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge variant={a.penilaianSubstansi?.isComplete ? 'default' : 'outline'}>
-                        {a.penilaianSubstansi?.isComplete ? 'Done' : 'Pending'}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {reviewer.reviewerAssignments.map((a) => {
+                  const adminDone = a.penilaianAdministrasi?.isComplete;
+                  const subsDone = a.penilaianSubstansi?.isComplete;
+                  return (
+                    <TableRow key={a.id}>
+                      <TableCell className="font-medium">{a.proposal.team.namaTeam}</TableCell>
+                      <TableCell className="text-center">
+                        <Badge variant={adminDone ? 'default' : 'outline'}>
+                          {adminDone ? 'Done' : 'Pending'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge variant={subsDone ? 'default' : 'outline'}>
+                          {subsDone ? 'Done' : 'Pending'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {(adminDone || subsDone) && (
+                          <Button size="sm" variant="outline" asChild>
+                            <Link href={`/admin/teams/${a.proposal.team.id}/review/${a.id}`}>
+                              <Eye className="mr-1 h-3 w-3" /> View
+                            </Link>
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
