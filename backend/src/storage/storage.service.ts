@@ -1,18 +1,50 @@
-import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Logger, InternalServerErrorException, OnModuleInit } from '@nestjs/common';
 import { SupabaseService } from '../auth/supabase.service';
 
 @Injectable()
-export class StorageService {
+export class StorageService implements OnModuleInit {
   private readonly logger = new Logger(StorageService.name);
   private readonly bucket = 'proposals';
+  private bucketReady = false;
 
   constructor(private readonly supabaseService: SupabaseService) {}
+
+  async onModuleInit() {
+    await this.ensureBucket();
+  }
+
+  private async ensureBucket() {
+    if (this.bucketReady) return;
+    try {
+      const client = this.supabaseService.getClient();
+      const { data: buckets } = await client.storage.listBuckets();
+      const exists = buckets?.some((b) => b.name === this.bucket);
+      if (!exists) {
+        this.logger.warn(`Bucket "${this.bucket}" not found, creating...`);
+        const { error } = await client.storage.createBucket(this.bucket, {
+          public: false,
+          fileSizeLimit: 10 * 1024 * 1024,
+        });
+        if (error) {
+          this.logger.error(`Failed to create bucket: ${error.message}`);
+        } else {
+          this.logger.log(`✅ Bucket "${this.bucket}" created`);
+        }
+      } else {
+        this.logger.log(`✅ Bucket "${this.bucket}" exists`);
+      }
+      this.bucketReady = true;
+    } catch (err) {
+      this.logger.error(`Bucket check failed: ${err}`);
+    }
+  }
 
   async upload(
     filePath: string,
     fileBuffer: Buffer,
     contentType: string,
   ): Promise<string> {
+    await this.ensureBucket();
     const client = this.supabaseService.getClient();
 
     const { data, error } = await client.storage
@@ -23,8 +55,8 @@ export class StorageService {
       });
 
     if (error) {
-      this.logger.error(`Failed to upload file: ${error.message}`);
-      throw new InternalServerErrorException('Gagal mengupload file');
+      this.logger.error(`Failed to upload file to "${filePath}": ${error.message} (statusCode: ${(error as any).statusCode})`);
+      throw new InternalServerErrorException(`Gagal mengupload file: ${error.message}`);
     }
 
     return data.path;

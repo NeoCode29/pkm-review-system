@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Put, Param, Body, Res, UseGuards, UseInterceptors, UploadedFile,
+  Controller, Get, Post, Put, Param, Body, Res, UseGuards, UseInterceptors, UploadedFile, BadRequestException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
@@ -51,7 +51,7 @@ export class ProposalsController {
     @CurrentUser() user: any,
   ) {
     if (!file) {
-      return { statusCode: 400, message: 'File tidak ditemukan' };
+      throw new BadRequestException('File tidak ditemukan');
     }
     return this.proposalsService.uploadFile(BigInt(id), file, user.id);
   }

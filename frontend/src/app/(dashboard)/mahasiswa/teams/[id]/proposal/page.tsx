@@ -144,8 +144,8 @@ export default function ProposalPage() {
         body: formData,
       });
       if (!resp.ok) {
-        const err = await resp.json().catch(() => ({ message: 'Upload gagal' }));
-        throw err;
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.message || `Upload gagal (${resp.status})`);
       }
       return resp.json();
     },
@@ -156,7 +156,7 @@ export default function ProposalPage() {
       queryClient.invalidateQueries({ queryKey: ['proposals', id] });
       queryClient.invalidateQueries({ queryKey: ['mahasiswa-dashboard'] });
     },
-    onError: (err: { message?: string }) => {
+    onError: (err: Error) => {
       toast.error(err.message || 'Gagal upload file');
     },
   });
