@@ -56,7 +56,7 @@ export function ProposalDownloadButton({
       ) : (
         <span>
           <Download className="mr-1 h-3 w-3" />
-          {isLoading ? 'Loading...' : label}
+          {isLoading ? 'Loading...' : fileInfo && !downloadUrl ? 'File tidak tersedia' : label}
         </span>
       )}
     </Button>

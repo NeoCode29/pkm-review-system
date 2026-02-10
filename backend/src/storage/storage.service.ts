@@ -70,7 +70,11 @@ export class StorageService implements OnModuleInit {
       .createSignedUrl(filePath, expiresIn);
 
     if (error) {
-      this.logger.error(`Failed to get signed URL: ${error.message}`);
+      if (error.message?.includes('not found') || error.message?.includes('Object not found')) {
+        this.logger.warn(`File not found in storage: ${filePath}`);
+      } else {
+        this.logger.error(`Failed to get signed URL: ${error.message}`);
+      }
       throw new InternalServerErrorException('Gagal mendapatkan URL file');
     }
 
