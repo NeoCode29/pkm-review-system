@@ -224,19 +224,21 @@ export default function AdminSettingsPage() {
               <AlertTriangle className="h-5 w-5 text-yellow-500" />
               Konfirmasi Perubahan
             </AlertDialogTitle>
-            <AlertDialogDescription className="space-y-2">
-              <p>
-                Anda akan {confirmDialog?.enabled ? 'mengaktifkan' : 'menonaktifkan'}{' '}
-                <strong>{confirmDialog ? TOGGLE_INFO[confirmDialog.key]?.label : ''}</strong>.
-              </p>
-              {confirmDialog && (
-                <p className="text-yellow-600 dark:text-yellow-400 font-medium">
-                  {confirmDialog.enabled
-                    ? TOGGLE_INFO[confirmDialog.key]?.sideEffects?.on
-                    : TOGGLE_INFO[confirmDialog.key]?.sideEffects?.off}
-                </p>
-              )}
-              <p>Tindakan ini tidak dapat dibatalkan. Lanjutkan?</p>
+            <AlertDialogDescription asChild>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <span className="block">
+                  Anda akan {confirmDialog?.enabled ? 'mengaktifkan' : 'menonaktifkan'}{' '}
+                  <strong>{confirmDialog ? TOGGLE_INFO[confirmDialog.key]?.label : ''}</strong>.
+                </span>
+                {confirmDialog && (
+                  <span className="block text-yellow-600 dark:text-yellow-400 font-medium">
+                    {confirmDialog.enabled
+                      ? TOGGLE_INFO[confirmDialog.key]?.sideEffects?.on
+                      : TOGGLE_INFO[confirmDialog.key]?.sideEffects?.off}
+                  </span>
+                )}
+                <span className="block">Tindakan ini tidak dapat dibatalkan. Lanjutkan?</span>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
