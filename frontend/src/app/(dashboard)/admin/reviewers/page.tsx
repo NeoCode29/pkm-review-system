@@ -11,6 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import {
@@ -26,12 +29,15 @@ import { api } from '@/lib/api';
 interface Reviewer {
   id: string;
   nama: string;
+  email: string;
   nidn: string | null;
-  bidangKeahlian: string | null;
+  noHp: string | null;
   userId: string;
-  user?: { email: string };
+  programStudi?: { id: string; nama: string } | null;
   _count?: { reviewerAssignments: number };
 }
+
+interface ProgramStudi { id: string; nama: string }
 
 export default function AdminReviewersPage() {
   const queryClient = useQueryClient();
@@ -40,11 +46,17 @@ export default function AdminReviewersPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nidn, setNidn] = useState('');
-  const [bidangKeahlian, setBidangKeahlian] = useState('');
+  const [noHp, setNoHp] = useState('');
+  const [programStudiId, setProgramStudiId] = useState('');
 
   const { data: reviewers, isLoading } = useQuery<Reviewer[]>({
     queryKey: ['admin-reviewers'],
     queryFn: () => api.get('/reviewers'),
+  });
+
+  const { data: prodiList } = useQuery<ProgramStudi[]>({
+    queryKey: ['master-prodi'],
+    queryFn: () => api.get('/master-data/program-studi'),
   });
 
   const createMutation = useMutation({
@@ -54,7 +66,8 @@ export default function AdminReviewersPage() {
         email,
         password,
         nidn: nidn || undefined,
-        bidangKeahlian: bidangKeahlian || undefined,
+        noHp: noHp || undefined,
+        programStudiId: programStudiId || undefined,
       },
     }),
     onSuccess: () => {
@@ -80,7 +93,8 @@ export default function AdminReviewersPage() {
     setEmail('');
     setPassword('');
     setNidn('');
-    setBidangKeahlian('');
+    setNoHp('');
+    setProgramStudiId('');
   };
 
   return (
@@ -110,7 +124,7 @@ export default function AdminReviewersPage() {
                   <TableRow>
                     <TableHead>Nama</TableHead>
                     <TableHead>NIDN</TableHead>
-                    <TableHead>Bidang Keahlian</TableHead>
+                    <TableHead>Email</TableHead>
                     <TableHead className="text-center">Assignments</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -127,7 +141,7 @@ export default function AdminReviewersPage() {
                     <TableRow key={r.id}>
                       <TableCell className="font-medium">{r.nama}</TableCell>
                       <TableCell className="text-sm font-mono">{r.nidn || '-'}</TableCell>
-                      <TableCell className="text-sm">{r.bidangKeahlian || '-'}</TableCell>
+                      <TableCell className="text-sm">{r.email}</TableCell>
                       <TableCell className="text-center">
                         <Badge variant="outline">{r._count?.reviewerAssignments ?? 0}</Badge>
                       </TableCell>
@@ -192,8 +206,21 @@ export default function AdminReviewersPage() {
               <Input value={nidn} onChange={(e) => setNidn(e.target.value)} placeholder="0012345678" />
             </div>
             <div className="space-y-2">
-              <Label>Bidang Keahlian</Label>
-              <Input value={bidangKeahlian} onChange={(e) => setBidangKeahlian(e.target.value)} placeholder="Teknik Informatika" />
+              <Label>No. HP</Label>
+              <Input value={noHp} onChange={(e) => setNoHp(e.target.value)} placeholder="081234567890" />
+            </div>
+            <div className="space-y-2">
+              <Label>Program Studi</Label>
+              <Select value={programStudiId} onValueChange={setProgramStudiId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih Program Studi (opsional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {prodiList?.map((p) => (
+                    <SelectItem key={p.id} value={String(p.id)}>{p.nama}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>

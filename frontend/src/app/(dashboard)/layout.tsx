@@ -54,7 +54,7 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { label: 'Teams', href: '/admin/teams', icon: <Users size={18} /> },
     { label: 'Reviewers', href: '/admin/reviewers', icon: <ClipboardList size={18} /> },
     { label: 'Penilaian', href: '/admin/penilaian/administratif', icon: <BarChart3 size={18} /> },
-    { label: 'Master Data', href: '/admin/master-data/jurusan', icon: <Database size={18} /> },
+    { label: 'Master Data', href: '/admin/master-data/prodi', icon: <Database size={18} /> },
     { label: 'Settings', href: '/admin/settings', icon: <Settings size={18} /> },
   ],
 };

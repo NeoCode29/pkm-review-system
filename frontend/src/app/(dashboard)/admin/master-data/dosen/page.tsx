@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -23,81 +23,80 @@ import { MasterDataTabs } from '@/components/master-data-tabs';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 
-interface JenisPkm {
+interface DosenPembimbing {
   id: string;
   nama: string;
-  kode: string;
-  deskripsi: string | null;
+  nidn: string | null;
+  email: string | null;
+  noHp: string | null;
   _count?: { teams: number };
 }
 
-export default function MasterJenisPkmPage() {
+export default function MasterDosenPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [editItem, setEditItem] = useState<JenisPkm | null>(null);
+  const [editItem, setEditItem] = useState<DosenPembimbing | null>(null);
   const [nama, setNama] = useState('');
-  const [kode, setKode] = useState('');
-  const [deskripsi, setDeskripsi] = useState('');
+  const [nidn, setNidn] = useState('');
+  const [email, setEmail] = useState('');
+  const [noHp, setNoHp] = useState('');
+  const [search, setSearch] = useState('');
 
-  const { data: items, isLoading } = useQuery<JenisPkm[]>({
-    queryKey: ['jenis-pkm'],
-    queryFn: () => api.get('/master-data/jenis-pkm'),
+  const { data: items, isLoading } = useQuery<DosenPembimbing[]>({
+    queryKey: ['master-dosen', search],
+    queryFn: () => {
+      const params = search ? `?search=${encodeURIComponent(search)}` : '';
+      return api.get(`/dosen-pembimbing${params}`);
+    },
   });
 
   const createMutation = useMutation({
-    mutationFn: () => api.post('/master-data/jenis-pkm', { body: { nama, kode, deskripsi: deskripsi || undefined } }),
+    mutationFn: () => api.post('/dosen-pembimbing', {
+      body: { nama, nidn: nidn || undefined, email: email || undefined, noHp: noHp || undefined },
+    }),
     onSuccess: () => {
-      toast.success('Jenis PKM berhasil ditambahkan');
-      queryClient.invalidateQueries({ queryKey: ['jenis-pkm'] });
+      toast.success('Dosen Pembimbing berhasil ditambahkan');
+      queryClient.invalidateQueries({ queryKey: ['master-dosen'] });
       resetForm();
     },
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menambahkan'),
   });
 
   const updateMutation = useMutation({
-    mutationFn: () => api.put(`/master-data/jenis-pkm/${editItem!.id}`, { body: { nama, kode, deskripsi: deskripsi || undefined } }),
+    mutationFn: () => api.put(`/dosen-pembimbing/${editItem!.id}`, {
+      body: { nama, nidn: nidn || undefined, email: email || undefined, noHp: noHp || undefined },
+    }),
     onSuccess: () => {
-      toast.success('Jenis PKM berhasil diperbarui');
-      queryClient.invalidateQueries({ queryKey: ['jenis-pkm'] });
+      toast.success('Dosen Pembimbing berhasil diperbarui');
+      queryClient.invalidateQueries({ queryKey: ['master-dosen'] });
       resetForm();
     },
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal memperbarui'),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => api.delete(`/master-data/jenis-pkm/${id}`),
+    mutationFn: (id: string) => api.delete(`/dosen-pembimbing/${id}`),
     onSuccess: () => {
-      toast.success('Jenis PKM berhasil dihapus');
-      queryClient.invalidateQueries({ queryKey: ['jenis-pkm'] });
+      toast.success('Dosen Pembimbing berhasil dihapus');
+      queryClient.invalidateQueries({ queryKey: ['master-dosen'] });
     },
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menghapus'),
   });
 
   const resetForm = () => {
-    setOpen(false);
-    setEditItem(null);
-    setNama('');
-    setKode('');
-    setDeskripsi('');
+    setOpen(false); setEditItem(null); setNama(''); setNidn(''); setEmail(''); setNoHp('');
   };
 
-  const openEdit = (item: JenisPkm) => {
-    setEditItem(item);
-    setNama(item.nama);
-    setKode(item.kode);
-    setDeskripsi(item.deskripsi || '');
-    setOpen(true);
+  const openEdit = (item: DosenPembimbing) => {
+    setEditItem(item); setNama(item.nama); setNidn(item.nidn || '');
+    setEmail(item.email || ''); setNoHp(item.noHp || ''); setOpen(true);
   };
 
-  const openCreate = () => {
-    resetForm();
-    setOpen(true);
-  };
+  const openCreate = () => { resetForm(); setOpen(true); };
 
   const handleSubmit = () => {
-    if (!nama || !kode) return;
-    if (editItem) updateMutation.mutate();
-    else createMutation.mutate();
+    if (!nama) return;
+    if (editItem) updateMutation.mutate(); else createMutation.mutate();
   };
 
   return (
@@ -106,14 +105,24 @@ export default function MasterJenisPkmPage() {
       <MasterDataTabs />
 
       <div className="flex items-center justify-between">
-        <span />
+        <Input
+          className="max-w-xs"
+          placeholder="Cari dosen..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <Button onClick={openCreate}>
-          <Plus className="mr-1 h-4 w-4" /> Tambah Jenis PKM
+          <Plus className="mr-1 h-4 w-4" /> Tambah Dosen
         </Button>
       </div>
 
       <Card>
-        <CardContent className="pt-6">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium">
+            Daftar Dosen Pembimbing ({items?.length ?? 0})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
@@ -123,29 +132,31 @@ export default function MasterJenisPkmPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Kode</TableHead>
                     <TableHead>Nama</TableHead>
-                    <TableHead>Deskripsi</TableHead>
-                    <TableHead className="text-center">Teams</TableHead>
+                    <TableHead>NIDN</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>No. HP</TableHead>
+                    <TableHead className="text-center">Tim</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {items?.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                        Belum ada data jenis PKM
+                      <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                        Belum ada data dosen pembimbing
                       </TableCell>
                     </TableRow>
                   )}
                   {items?.map((item) => (
                     <TableRow key={item.id}>
-                      <TableCell className="font-mono text-sm">{item.kode}</TableCell>
                       <TableCell className="font-medium">{item.nama}</TableCell>
-                      <TableCell className="text-sm text-muted-foreground max-w-[200px] truncate">
-                        {item.deskripsi || '-'}
+                      <TableCell className="font-mono text-sm">{item.nidn || '-'}</TableCell>
+                      <TableCell className="text-sm">{item.email || '-'}</TableCell>
+                      <TableCell className="text-sm">{item.noHp || '-'}</TableCell>
+                      <TableCell className="text-center">
+                        <Badge variant="outline">{item._count?.teams ?? 0}</Badge>
                       </TableCell>
-                      <TableCell className="text-center">{item._count?.teams ?? 0}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
                           <Button size="sm" variant="outline" onClick={() => openEdit(item)}>
@@ -159,7 +170,7 @@ export default function MasterJenisPkmPage() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Hapus Jenis PKM?</AlertDialogTitle>
+                                <AlertDialogTitle>Hapus Dosen Pembimbing?</AlertDialogTitle>
                                 <AlertDialogDescription>
                                   &quot;{item.nama}&quot; akan dihapus. Pastikan tidak ada tim terkait.
                                 </AlertDialogDescription>
@@ -181,28 +192,33 @@ export default function MasterJenisPkmPage() {
         </CardContent>
       </Card>
 
+      {/* Create/Edit Dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editItem ? 'Edit Jenis PKM' : 'Tambah Jenis PKM'}</DialogTitle>
+            <DialogTitle>{editItem ? 'Edit Dosen Pembimbing' : 'Tambah Dosen Pembimbing'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-2">
-              <Label>Kode</Label>
-              <Input value={kode} onChange={(e) => setKode(e.target.value)} placeholder="Contoh: PKM-KC" />
+              <Label>Nama <span className="text-destructive">*</span></Label>
+              <Input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Dr. Nama Dosen, M.T." />
             </div>
             <div className="space-y-2">
-              <Label>Nama</Label>
-              <Input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Contoh: PKM Karsa Cipta" />
+              <Label>NIDN</Label>
+              <Input value={nidn} onChange={(e) => setNidn(e.target.value)} placeholder="0012345678" />
             </div>
             <div className="space-y-2">
-              <Label>Deskripsi</Label>
-              <Textarea value={deskripsi} onChange={(e) => setDeskripsi(e.target.value)} placeholder="Deskripsi singkat..." />
+              <Label>Email</Label>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="dosen@email.com" />
+            </div>
+            <div className="space-y-2">
+              <Label>No. HP</Label>
+              <Input value={noHp} onChange={(e) => setNoHp(e.target.value)} placeholder="081234567890" />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={resetForm}>Batal</Button>
-            <Button onClick={handleSubmit} disabled={!nama || !kode || createMutation.isPending || updateMutation.isPending}>
+            <Button onClick={handleSubmit} disabled={!nama || createMutation.isPending || updateMutation.isPending}>
               {editItem ? 'Simpan' : 'Tambah'}
             </Button>
           </DialogFooter>

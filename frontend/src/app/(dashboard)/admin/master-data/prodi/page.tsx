@@ -22,16 +22,16 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { MasterDataTabs } from '@/components/master-data-tabs';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 
-interface Jurusan { id: string; nama: string; kode: string }
+interface Jurusan { id: string; nama: string }
 interface ProgramStudi {
   id: string;
   nama: string;
-  kode: string;
   jurusanId: string;
-  jurusan?: { id: string; nama: string; kode: string };
+  jurusan?: { id: string; nama: string };
   _count?: { mahasiswa: number };
 }
 
@@ -41,7 +41,6 @@ export default function MasterProdiPage() {
   const [open, setOpen] = useState(false);
   const [editItem, setEditItem] = useState<ProgramStudi | null>(null);
   const [nama, setNama] = useState('');
-  const [kode, setKode] = useState('');
   const [jurusanId, setJurusanId] = useState('');
 
   const { data: jurusanList } = useQuery<Jurusan[]>({
@@ -58,7 +57,7 @@ export default function MasterProdiPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: () => api.post('/master-data/program-studi', { body: { nama, kode, jurusanId } }),
+    mutationFn: () => api.post('/master-data/program-studi', { body: { nama, jurusanId } }),
     onSuccess: () => {
       toast.success('Program Studi berhasil ditambahkan');
       queryClient.invalidateQueries({ queryKey: ['master-prodi'] });
@@ -68,7 +67,7 @@ export default function MasterProdiPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: () => api.put(`/master-data/program-studi/${editItem!.id}`, { body: { nama, kode, jurusanId } }),
+    mutationFn: () => api.put(`/master-data/program-studi/${editItem!.id}`, { body: { nama, jurusanId } }),
     onSuccess: () => {
       toast.success('Program Studi berhasil diperbarui');
       queryClient.invalidateQueries({ queryKey: ['master-prodi'] });
@@ -87,25 +86,28 @@ export default function MasterProdiPage() {
   });
 
   const resetForm = () => {
-    setOpen(false); setEditItem(null); setNama(''); setKode(''); setJurusanId('');
+    setOpen(false); setEditItem(null); setNama(''); setJurusanId('');
   };
 
   const openEdit = (item: ProgramStudi) => {
-    setEditItem(item); setNama(item.nama); setKode(item.kode);
+    setEditItem(item); setNama(item.nama);
     setJurusanId(String(item.jurusan?.id || item.jurusanId)); setOpen(true);
   };
 
   const openCreate = () => { resetForm(); setOpen(true); };
 
   const handleSubmit = () => {
-    if (!nama || !kode || !jurusanId) return;
+    if (!nama || !jurusanId) return;
     if (editItem) updateMutation.mutate(); else createMutation.mutate();
   };
 
   return (
     <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Master Data</h1>
+      <MasterDataTabs />
+
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Master Data - Program Studi</h1>
+        <span />
         <Button onClick={openCreate}>
           <Plus className="mr-1 h-4 w-4" /> Tambah Program Studi
         </Button>
@@ -151,7 +153,6 @@ export default function MasterProdiPage() {
                     <TableHead className="w-12">No</TableHead>
                     <TableHead>Jurusan</TableHead>
                     <TableHead>Nama Program Studi</TableHead>
-                    <TableHead>Kode</TableHead>
                     <TableHead className="text-center">Mahasiswa</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -171,7 +172,6 @@ export default function MasterProdiPage() {
                         <Badge variant="outline">{item.jurusan?.nama || '-'}</Badge>
                       </TableCell>
                       <TableCell className="font-medium">{item.nama}</TableCell>
-                      <TableCell className="font-mono text-sm">{item.kode}</TableCell>
                       <TableCell className="text-center">{item._count?.mahasiswa ?? 0}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
@@ -229,17 +229,13 @@ export default function MasterProdiPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Kode <span className="text-destructive">*</span></Label>
-              <Input value={kode} onChange={(e) => setKode(e.target.value)} placeholder="Contoh: TI" />
-            </div>
-            <div className="space-y-2">
               <Label>Nama Program Studi <span className="text-destructive">*</span></Label>
               <Input value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Contoh: Teknik Informatika" />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={resetForm}>Batal</Button>
-            <Button onClick={handleSubmit} disabled={!nama || !kode || !jurusanId || createMutation.isPending || updateMutation.isPending}>
+            <Button onClick={handleSubmit} disabled={!nama || !jurusanId || createMutation.isPending || updateMutation.isPending}>
               {editItem ? 'Simpan' : 'Tambah'}
             </Button>
           </DialogFooter>
