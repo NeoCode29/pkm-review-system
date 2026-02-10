@@ -24,19 +24,19 @@ export class DashboardService {
     else if (toggleStates.reviewEnabled) currentPhase = 'REVIEW';
     else if (toggleStates.uploadRevisionEnabled) currentPhase = 'REVISION';
 
-    // Stats
+    // Stats (only original proposals)
     const [totalMahasiswa, totalReviewers, totalTeams, totalProposals] = await Promise.all([
       this.prisma.mahasiswa.count(),
       this.prisma.reviewerUser.count(),
       this.prisma.team.count({ where: { status: 'active' } }),
-      this.prisma.proposal.count(),
+      this.prisma.proposal.count({ where: { type: 'original' } }),
     ]);
 
-    // Proposals by status
-    const proposalStatuses = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision', 'revised'];
+    // Proposals by status (only original)
+    const proposalStatuses = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision'];
     const proposalsByStatus: Record<string, { count: number; percentage: number }> = {};
     for (const status of proposalStatuses) {
-      const count = await this.prisma.proposal.count({ where: { status: status as any } });
+      const count = await this.prisma.proposal.count({ where: { status: status as any, type: 'original' } });
       proposalsByStatus[status] = {
         count,
         percentage: totalProposals > 0 ? Math.round((count / totalProposals) * 1000) / 10 : 0,
@@ -79,7 +79,7 @@ export class DashboardService {
     const proposalsByJenisPkm: { id: string; nama: string; count: number }[] = [];
     for (const jp of jenisPkmList) {
       const count = await this.prisma.proposal.count({
-        where: { team: { jenisPkmId: jp.id } },
+        where: { team: { jenisPkmId: jp.id }, type: 'original' },
       });
       proposalsByJenisPkm.push({ id: jp.id.toString(), nama: jp.nama, count });
     }
