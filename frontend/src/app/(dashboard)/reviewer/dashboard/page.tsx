@@ -40,10 +40,7 @@ interface ReviewerDashboard {
   assignments: Assignment[];
 }
 
-interface ToggleState {
-  configKey: string;
-  configValue: { enabled: boolean };
-}
+type ToggleStates = Record<string, boolean>;
 
 export default function ReviewerDashboardPage() {
   const { data, isLoading } = useQuery<ReviewerDashboard>({
@@ -51,12 +48,12 @@ export default function ReviewerDashboardPage() {
     queryFn: () => api.get('/dashboard/reviewer'),
   });
 
-  const { data: toggles } = useQuery<ToggleState[]>({
+  const { data: toggles } = useQuery<ToggleStates>({
     queryKey: ['system-config'],
     queryFn: () => api.get('/config'),
   });
 
-  const reviewEnabled = toggles?.find((t) => t.configKey === 'reviewEnabled')?.configValue?.enabled ?? false;
+  const reviewEnabled = toggles?.reviewEnabled ?? false;
 
   if (isLoading) {
     return (

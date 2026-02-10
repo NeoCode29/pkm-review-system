@@ -65,10 +65,7 @@ interface AssignmentDetail {
   };
 }
 
-interface ToggleState {
-  configKey: string;
-  configValue: { enabled: boolean };
-}
+type ToggleStates = Record<string, boolean>;
 
 export default function ReviewSummaryPage() {
   const params = useParams();
@@ -88,12 +85,12 @@ export default function ReviewSummaryPage() {
     },
   });
 
-  const { data: toggles } = useQuery<ToggleState[]>({
+  const { data: toggles } = useQuery<ToggleStates>({
     queryKey: ['system-config'],
     queryFn: () => api.get('/config'),
   });
 
-  const reviewEnabled = toggles?.find((t) => t.configKey === 'reviewEnabled')?.configValue?.enabled ?? false;
+  const reviewEnabled = toggles?.reviewEnabled ?? false;
 
   if (isLoading) {
     return (
