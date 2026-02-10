@@ -10,7 +10,12 @@ export class DosenPembimbingService {
     const existing = await this.prisma.dosenPembimbing.findFirst({
       where: { nama: { equals: dto.nama, mode: 'insensitive' } },
     });
-    if (existing) return existing;
+    if (existing) {
+      return this.prisma.dosenPembimbing.update({
+        where: { id: existing.id },
+        data: { nidn: dto.nidn, email: dto.email, noHp: dto.noHp, updatedBy: userId },
+      });
+    }
 
     return this.prisma.dosenPembimbing.create({
       data: { nama: dto.nama, nidn: dto.nidn, email: dto.email, noHp: dto.noHp, createdBy: userId },

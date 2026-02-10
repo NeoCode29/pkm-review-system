@@ -148,7 +148,7 @@ export class TeamsService {
       where: { id },
       include: {
         jenisPkm: { select: { id: true, nama: true } },
-        dosenPembimbing: { select: { id: true, nama: true } },
+        dosenPembimbing: { select: { id: true, nama: true, nidn: true, email: true, noHp: true } },
         teamMembers: {
           include: {
             mahasiswa: {

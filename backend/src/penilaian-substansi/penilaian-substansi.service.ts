@@ -158,6 +158,55 @@ export class PenilaianSubstansiService {
     return totalNilai;
   }
 
+  async getReviewSummary(proposalId: bigint) {
+    const assignments = await this.prisma.reviewerAssignment.findMany({
+      where: { proposalId },
+      include: {
+        penilaianSubstansi: {
+          include: {
+            detailPenilaianSubstansi: {
+              include: {
+                kriteriaSubstansi: {
+                  select: { id: true, nama: true, deskripsi: true, skorMin: true, skorMax: true, bobot: true, urutan: true },
+                },
+              },
+              orderBy: { kriteriaSubstansi: { urutan: 'asc' } },
+            },
+          },
+        },
+        penilaianAdministrasi: {
+          select: { totalKesalahan: true, catatan: true },
+        },
+      },
+      orderBy: { id: 'asc' },
+    });
+
+    return assignments.map((a, index) => ({
+      reviewerLabel: `Reviewer ${index + 1}`,
+      assignmentId: a.id.toString(),
+      reviewerNumber: a.reviewerNumber,
+      substansi: a.penilaianSubstansi
+        ? {
+            totalSkor: a.penilaianSubstansi.totalSkor,
+            catatan: a.penilaianSubstansi.catatan,
+            details: a.penilaianSubstansi.detailPenilaianSubstansi.map((d) => ({
+              kriteria: d.kriteriaSubstansi.nama,
+              deskripsi: d.kriteriaSubstansi.deskripsi,
+              bobot: d.kriteriaSubstansi.bobot,
+              skor: d.skor,
+              nilai: Number(d.skor) * d.kriteriaSubstansi.bobot,
+            })),
+          }
+        : null,
+      administrasi: a.penilaianAdministrasi
+        ? {
+            totalKesalahan: a.penilaianAdministrasi.totalKesalahan,
+            catatan: a.penilaianAdministrasi.catatan,
+          }
+        : null,
+    }));
+  }
+
   private async validateAssignment(assignmentId: bigint, userId: string) {
     const assignment = await this.prisma.reviewerAssignment.findUnique({
       where: { id: assignmentId },

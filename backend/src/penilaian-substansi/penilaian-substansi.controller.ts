@@ -40,4 +40,11 @@ export class PenilaianSubstansiController {
   async get(@Param('assignmentId') assignmentId: string) {
     return this.service.getByAssignment(BigInt(assignmentId));
   }
+
+  @Get('proposal/:proposalId/summary')
+  @ApiOperation({ summary: 'Get review summary for proposal (mahasiswa view, blind review)' })
+  @ApiResponse({ status: 200, description: 'Review summary with scores per reviewer' })
+  async getReviewSummary(@Param('proposalId') proposalId: string) {
+    return this.service.getReviewSummary(BigInt(proposalId));
+  }
 }

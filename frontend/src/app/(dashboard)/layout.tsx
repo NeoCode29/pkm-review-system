@@ -44,9 +44,6 @@ const NAV_ITEMS: Record<string, NavItem[]> = {
     { label: 'Cari Tim', href: '/mahasiswa/teams/browse', icon: <Search size={18} /> },
     { label: 'Buat Tim', href: '/mahasiswa/teams/create', icon: <PlusCircle size={18} /> },
   ],
-  mahasiswa_has_team: [
-    { label: 'Tim Saya', href: '/mahasiswa/teams', icon: <Users size={18} /> },
-  ],
   reviewer: [
     { label: 'Dashboard', href: '/reviewer/dashboard', icon: <Home size={18} /> },
     { label: 'Daftar Proposal', href: '/reviewer/proposals', icon: <FileText size={18} /> },
@@ -74,22 +71,24 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const { user, profile, logout } = useAuthStore();
   const role = user?.role || 'mahasiswa';
 
-  const { data: dashboardData } = useQuery<{ layout: string }>({
+  const { data: dashboardData } = useQuery<{ layout: string; team?: { id: string } }>({
     queryKey: ['mahasiswa-dashboard'],
     queryFn: () => api.get('/dashboard/mahasiswa'),
     enabled: role === 'mahasiswa',
     staleTime: 30_000,
   });
 
+  const teamId = dashboardData?.team?.id;
+
   const items = (() => {
     const base = NAV_ITEMS[role] || [];
     if (role !== 'mahasiswa') return base;
-    const hasTeam = dashboardData?.layout === 'TEAM_DASHBOARD';
+    const hasTeam = dashboardData?.layout === 'TEAM_DASHBOARD' && teamId;
+    if (!hasTeam) return [...base, ...NAV_ITEMS.mahasiswa_no_team];
     return [
       ...base,
-      ...(hasTeam
-        ? NAV_ITEMS.mahasiswa_has_team
-        : NAV_ITEMS.mahasiswa_no_team),
+      { label: 'Tim Saya', href: `/mahasiswa/teams/${teamId}`, icon: <Users size={18} /> },
+      { label: 'Proposal', href: `/mahasiswa/teams/${teamId}/proposal`, icon: <FileText size={18} /> },
     ];
   })();
 
@@ -122,8 +121,17 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       {/* Navigation */}
       <ScrollArea className="flex-1 px-3 py-4">
         <nav className="flex flex-col gap-1">
-          {items.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+          {items.map((item, idx) => {
+            // For dynamic team links, check if current path matches this item
+            // but not a more specific sibling (e.g. Tim Saya shouldn't match /proposal)
+            let isActive = pathname === item.href;
+            if (!isActive && pathname.startsWith(item.href + '/')) {
+              // Check no other sibling item is a better (longer) match
+              const betterMatch = items.some(
+                (other, oi) => oi !== idx && pathname.startsWith(other.href) && other.href.length > item.href.length,
+              );
+              isActive = !betterMatch;
+            }
             return (
               <Link
                 key={item.href}
