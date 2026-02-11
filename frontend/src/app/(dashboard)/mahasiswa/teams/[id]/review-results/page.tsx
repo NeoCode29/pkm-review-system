@@ -251,31 +251,29 @@ export default function ReviewResultsPage() {
 
 function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
   const colors = reviewer.reviewerNumber === 1
-    ? { border: 'border-blue-200 dark:border-blue-900', header: 'bg-blue-50 dark:bg-blue-950', text: 'text-blue-700 dark:text-blue-400', badge: 'default' as const }
-    : { border: 'border-indigo-200 dark:border-indigo-900', header: 'bg-indigo-50 dark:bg-indigo-950', text: 'text-indigo-700 dark:text-indigo-400', badge: 'secondary' as const };
+    ? { border: 'border-blue-200 dark:border-blue-900', header: 'bg-blue-50/50 dark:bg-blue-950/30', text: 'text-blue-700 dark:text-blue-400', badge: 'default' as const }
+    : { border: 'border-indigo-200 dark:border-indigo-900', header: 'bg-indigo-50/50 dark:bg-indigo-950/30', text: 'text-indigo-700 dark:text-indigo-400', badge: 'secondary' as const };
 
   const totalNilai = reviewer.substansi?.details.reduce((sum, d) => sum + (d.nilai ?? 0), 0) ?? 0;
 
   return (
-    <Card className={colors.border}>
-      <CardHeader className={`${colors.header} pb-3`}>
+    <Card className={`${colors.border} overflow-hidden`}>
+      <CardHeader className={`${colors.header} py-4`}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Badge variant={colors.badge}>{reviewer.reviewerLabel}</Badge>
-          </div>
+          <Badge variant={colors.badge} className="font-medium">{reviewer.reviewerLabel}</Badge>
           {reviewer.substansi && (
             <div className="text-right">
               <p className="text-xs text-muted-foreground">Total Nilai</p>
-              <p className={`text-2xl font-bold ${colors.text}`}>{totalNilai}</p>
+              <p className={`text-xl font-bold ${colors.text}`}>{totalNilai}</p>
             </div>
           )}
         </div>
       </CardHeader>
-      <CardContent className="p-4 space-y-6">
+      <CardContent className="p-5">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Penilaian Administratif */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-red-700 dark:text-red-400 flex items-center gap-2">
+            <h4 className="font-semibold text-red-700 dark:text-red-400 flex items-center gap-2 text-sm">
               <FileText className="h-4 w-4" />
               Penilaian Administratif
             </h4>
@@ -303,38 +301,43 @@ function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
 
           {/* Penilaian Substantif */}
           <div className="space-y-3">
-            <h4 className="font-semibold text-blue-700 dark:text-blue-400 flex items-center gap-2">
+            <h4 className="font-semibold text-blue-700 dark:text-blue-400 flex items-center gap-2 text-sm">
               <FileText className="h-4 w-4" />
               Penilaian Substantif
             </h4>
             {reviewer.substansi ? (
               <>
-                <div className="rounded-md border overflow-hidden">
+                <div className="rounded-md border">
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead>Kriteria</TableHead>
-                        <TableHead className="w-16 text-center">Bobot</TableHead>
-                        <TableHead className="w-16 text-center">Skor</TableHead>
-                        <TableHead className="w-20 text-center">Nilai</TableHead>
+                      <TableRow className="bg-muted/30">
+                        <TableHead className="text-xs">Kriteria</TableHead>
+                        <TableHead className="w-14 text-center text-xs">Bobot</TableHead>
+                        <TableHead className="w-14 text-center text-xs">Skor</TableHead>
+                        <TableHead className="w-16 text-center text-xs">Nilai</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {reviewer.substansi.details.map((d, i) => {
                           const skorNum = Number(d.skor);
-                          const skor = Number.isNaN(skorNum) ? 0 : skorNum;
+                          const skor = Number.isNaN(skorNum) ? null : skorNum;
+                          const nilai = d.nilai ?? null;
                           return (
-                            <TableRow key={i}>
-                              <TableCell className="text-sm">{d.kriteria}</TableCell>
-                              <TableCell className="text-center text-sm">{d.bobot}</TableCell>
-                              <TableCell className="text-center font-bold text-blue-600">{skor || '-'}</TableCell>
-                              <TableCell className="text-center text-sm">= {d.nilai ?? '-'}</TableCell>
+                            <TableRow key={i} className="border-b last:border-0">
+                              <TableCell className="text-sm py-2">{d.kriteria}</TableCell>
+                              <TableCell className="text-center text-sm py-2">{d.bobot}</TableCell>
+                              <TableCell className="text-center font-medium text-blue-600 py-2">
+                                {skor !== null ? skor : '-'}
+                              </TableCell>
+                              <TableCell className="text-center text-sm py-2">
+                                {nilai !== null ? `= ${nilai}` : '-'}
+                              </TableCell>
                             </TableRow>
                           );
                         })}
-                      <TableRow className="bg-blue-50 dark:bg-blue-950 font-bold">
-                        <TableCell colSpan={3} className="text-right">Total Nilai</TableCell>
-                        <TableCell className="text-center text-blue-700 dark:text-blue-400">
+                      <TableRow className={`${colors.header} font-semibold border-t`}>
+                        <TableCell colSpan={3} className="text-right text-xs py-2">Total Nilai</TableCell>
+                        <TableCell className={`text-center ${colors.text} py-2`}>
                           {totalNilai}
                         </TableCell>
                       </TableRow>
