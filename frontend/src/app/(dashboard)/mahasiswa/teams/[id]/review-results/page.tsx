@@ -243,7 +243,7 @@ function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
     ? { border: 'border-blue-200 dark:border-blue-900', header: 'bg-blue-50 dark:bg-blue-950', text: 'text-blue-700 dark:text-blue-400', badge: 'default' as const }
     : { border: 'border-indigo-200 dark:border-indigo-900', header: 'bg-indigo-50 dark:bg-indigo-950', text: 'text-indigo-700 dark:text-indigo-400', badge: 'secondary' as const };
 
-  const totalNilai = reviewer.substansi?.details.reduce((sum, d) => sum + d.nilai, 0) || 0;
+  const totalNilai = reviewer.substansi?.details.reduce((sum, d) => sum + (d.nilai ?? 0), 0) ?? 0;
 
   return (
     <Card className={colors.border}>
@@ -309,14 +309,18 @@ function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {reviewer.substansi.details.map((d, i) => (
-                        <TableRow key={i}>
-                          <TableCell className="text-sm">{d.kriteria}</TableCell>
-                          <TableCell className="text-center text-sm">{d.bobot}</TableCell>
-                          <TableCell className="text-center font-bold text-blue-600">{Number(d.skor)}</TableCell>
-                          <TableCell className="text-center text-sm">= {d.nilai}</TableCell>
-                        </TableRow>
-                      ))}
+                      {reviewer.substansi.details.map((d, i) => {
+                          const skorNum = Number(d.skor);
+                          const skor = Number.isNaN(skorNum) ? 0 : skorNum;
+                          return (
+                            <TableRow key={i}>
+                              <TableCell className="text-sm">{d.kriteria}</TableCell>
+                              <TableCell className="text-center text-sm">{d.bobot}</TableCell>
+                              <TableCell className="text-center font-bold text-blue-600">{skor || '-'}</TableCell>
+                              <TableCell className="text-center text-sm">= {d.nilai ?? '-'}</TableCell>
+                            </TableRow>
+                          );
+                        })}
                       <TableRow className="bg-blue-50 dark:bg-blue-950 font-bold">
                         <TableCell colSpan={3} className="text-right">Total Nilai</TableCell>
                         <TableCell className="text-center text-blue-700 dark:text-blue-400">
