@@ -120,7 +120,9 @@ export default function ReviewSummaryPage() {
   // Substansi penilaian data
   const substansiDetails = assignment.penilaianSubstansi?.detailPenilaianSubstansi || [];
   const totalNilai = substansiDetails.reduce((sum, d) => {
-    return sum + Number(d.skor) * d.kriteriaSubstansi.bobot;
+    const skor = Number(d.skor);
+    if (Number.isNaN(skor)) return sum;
+    return sum + skor * d.kriteriaSubstansi.bobot;
   }, 0);
   const totalBobot = substansiDetails.reduce((sum, d) => sum + d.kriteriaSubstansi.bobot, 0);
 
@@ -170,7 +172,7 @@ export default function ReviewSummaryPage() {
             <span className="text-muted-foreground">Jenis PKM</span>
             <Badge variant="outline" className="w-fit">{team.jenisPkm?.nama || '-'}</Badge>
             <span className="text-muted-foreground">Anggota</span>
-            <span>{team._count.teamMembers} orang</span>
+            <span>{(team._count?.teamMembers ?? 0)} orang</span>
             <span className="text-muted-foreground">File</span>
             <span className="sm:col-span-3">
               {file ? (
@@ -266,14 +268,15 @@ export default function ReviewSummaryPage() {
                       {substansiDetails
                         .sort((a, b) => (a.kriteriaSubstansi.urutan ?? 0) - (b.kriteriaSubstansi.urutan ?? 0))
                         .map((d) => {
-                          const skor = Number(d.skor);
+                          const skorNum = Number(d.skor);
+                          const skor = Number.isNaN(skorNum) ? 0 : skorNum;
                           const nilai = skor * d.kriteriaSubstansi.bobot;
                           return (
                             <TableRow key={d.kriteriaSubstansiId}>
                               <TableCell className="text-sm">{d.kriteriaSubstansi.nama}</TableCell>
                               <TableCell className="text-center">{d.kriteriaSubstansi.bobot}</TableCell>
-                              <TableCell className="text-center">{skor}</TableCell>
-                              <TableCell className="text-center font-bold">{nilai}</TableCell>
+                              <TableCell className="text-center">{skor || '-'}</TableCell>
+                              <TableCell className="text-center font-bold">{nilai || '-'}</TableCell>
                             </TableRow>
                           );
                         })}

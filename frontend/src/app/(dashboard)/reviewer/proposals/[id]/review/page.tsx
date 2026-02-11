@@ -259,7 +259,7 @@ export default function ReviewPage() {
             <span className="text-muted-foreground">Jenis PKM</span>
             <Badge variant="outline" className="w-fit">{team.jenisPkm?.nama || '-'}</Badge>
             <span className="text-muted-foreground">Anggota</span>
-            <span>{team._count.teamMembers} orang</span>
+            <span>{(team._count?.teamMembers ?? 0)} orang</span>
             <span className="text-muted-foreground">File</span>
             <span className="sm:col-span-3">
               {file ? (
