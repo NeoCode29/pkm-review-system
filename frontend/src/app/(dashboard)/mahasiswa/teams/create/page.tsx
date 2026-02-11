@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Info, Check, Circle } from 'lucide-react';
+import { Info, Check, Circle, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -79,16 +79,15 @@ export default function CreateTeamPage() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      {/* Breadcrumb */}
-      <div className="text-sm text-muted-foreground">
-        <Link href="/mahasiswa/dashboard" className="hover:underline">
-          Dashboard
-        </Link>
-        {' / '}
-        <span>Buat Tim Baru</span>
+      {/* Header with Back Button */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/mahasiswa/dashboard">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-semibold">Buat Tim Baru</h1>
       </div>
-
-      <h1 className="text-2xl font-semibold">Buat Tim Baru</h1>
 
       <Alert>
         <Info size={16} />

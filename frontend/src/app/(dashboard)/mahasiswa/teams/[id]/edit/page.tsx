@@ -205,20 +205,15 @@ export default function EditTeamPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Link href="/mahasiswa/dashboard" className="hover:text-foreground">
-          Dashboard
-        </Link>
-        <span>/</span>
-        <Link href={`/mahasiswa/teams/${id}`} className="hover:text-foreground">
-          Tim Saya
-        </Link>
-        <span>/</span>
-        <span className="text-foreground">Edit Tim</span>
+      {/* Header with Back Button */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href={`/mahasiswa/teams/${id}`}>
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-bold">Edit Data Tim</h1>
       </div>
-
-      <h1 className="text-2xl font-bold">Edit Data Tim</h1>
 
       {/* Info Alert */}
       <Alert>

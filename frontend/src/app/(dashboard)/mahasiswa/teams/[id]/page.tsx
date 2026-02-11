@@ -14,6 +14,7 @@ import {
   Trash2,
   Info,
   Users,
+  ArrowLeft,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -190,16 +191,15 @@ export default function TeamDetailPage({
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <div className="text-sm text-muted-foreground">
-        <Link href="/mahasiswa/dashboard" className="hover:underline">
-          Dashboard
-        </Link>
-        {' / '}
-        <span>Tim Saya</span>
+      {/* Header with Back Button */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/mahasiswa/dashboard">
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-semibold">Detail Tim</h1>
       </div>
-
-      <h1 className="text-2xl font-semibold">Detail Tim</h1>
 
       {/* Team Header */}
       <Card className="bg-muted/30">

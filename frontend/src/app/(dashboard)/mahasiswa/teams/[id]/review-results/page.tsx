@@ -7,6 +7,7 @@ import {
   Info,
   AlertTriangle,
   FileText,
+  ArrowLeft,
 } from 'lucide-react';
 import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -127,8 +128,15 @@ export default function ReviewResultsPage() {
   if (!isReviewed && !reviewSummary?.length) {
     return (
       <div className="space-y-6">
-        <Breadcrumb teamId={id} />
-        <h1 className="text-2xl font-bold">Hasil Review Proposal</h1>
+        {/* Header with Back Button */}
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href={`/mahasiswa/teams/${id}`}>
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <h1 className="text-2xl font-bold">Hasil Review Proposal</h1>
+        </div>
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
@@ -141,8 +149,15 @@ export default function ReviewResultsPage() {
 
   return (
     <div className="space-y-6">
-      <Breadcrumb teamId={id} />
-      <h1 className="text-2xl font-bold">Hasil Review Proposal</h1>
+      {/* Header with Back Button */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href={`/mahasiswa/teams/${id}/proposal`}>
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-bold">Hasil Review Proposal</h1>
+      </div>
 
       {/* Proposal Info */}
       <Card>
@@ -220,20 +235,6 @@ export default function ReviewResultsPage() {
       {reviewSummary?.map((reviewer) => (
         <ReviewerCard key={reviewer.assignmentId} reviewer={reviewer} />
       ))}
-    </div>
-  );
-}
-
-function Breadcrumb({ teamId }: { teamId: string }) {
-  return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <Link href="/mahasiswa/dashboard" className="hover:text-foreground">Dashboard</Link>
-      <span>/</span>
-      <Link href={`/mahasiswa/teams/${teamId}`} className="hover:text-foreground">Tim Saya</Link>
-      <span>/</span>
-      <Link href={`/mahasiswa/teams/${teamId}/proposal`} className="hover:text-foreground">Proposal</Link>
-      <span>/</span>
-      <span className="text-foreground">Hasil Review</span>
     </div>
   );
 }
