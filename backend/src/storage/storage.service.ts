@@ -65,11 +65,28 @@ export class StorageService implements OnModuleInit {
   async getSignedUrl(filePath: string, expiresIn = 3600): Promise<string> {
     const client = this.supabaseService.getClient();
 
+    // Debug: Log the bucket and path being accessed
+    this.logger.log(`Getting signed URL for bucket: ${this.bucket}, path: ${filePath}`);
+
+    // First try to list the file to verify it exists
+    const pathParts = filePath.split('/');
+    const folderPath = pathParts.slice(0, -1).join('/');
+    const { data: listData, error: listError } = await client.storage
+      .from(this.bucket)
+      .list(folderPath);
+
+    if (listError) {
+      this.logger.error(`Failed to list folder ${folderPath}: ${listError.message}`);
+    } else {
+      this.logger.log(`Files in folder ${folderPath}: ${listData?.map(f => f.name).join(', ') || 'none'}`);
+    }
+
     const { data, error } = await client.storage
       .from(this.bucket)
       .createSignedUrl(filePath, expiresIn);
 
     if (error) {
+      this.logger.error(`Supabase storage error: ${error.message}, code: ${(error as any).statusCode || 'unknown'}`);
       if (error.message?.includes('not found') || error.message?.includes('Object not found')) {
         this.logger.warn(`File not found in storage: ${filePath}`);
       } else {
