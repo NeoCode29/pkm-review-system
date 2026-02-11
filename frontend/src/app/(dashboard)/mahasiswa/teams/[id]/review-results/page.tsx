@@ -161,25 +161,35 @@ export default function ReviewResultsPage() {
 
       {/* Proposal Info */}
       <Card>
-        <CardContent className="p-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="grid grid-cols-[120px_1fr] gap-y-1.5 text-sm">
-              <span className="text-muted-foreground">Tim:</span>
-              <span className="font-medium">{team.namaTeam}</span>
-              <span className="text-muted-foreground">Judul:</span>
-              <span>{team.judulProposal}</span>
-              <span className="text-muted-foreground">Jenis PKM:</span>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">Informasi Proposal</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm">
+          <div className="grid grid-cols-[140px_1fr] gap-y-3">
+            <span className="text-muted-foreground">Nama Tim</span>
+            <span className="font-medium text-right">{team.namaTeam}</span>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Judul Proposal</span>
+            <span className="text-right">{team.judulProposal}</span>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Jenis PKM</span>
+            <div className="text-right">
               <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
             </div>
-            <div className="grid grid-cols-[120px_1fr] gap-y-1.5 text-sm">
-              <span className="text-muted-foreground">Status:</span>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Status</span>
+            <div className="text-right">
               <Badge variant="default">
                 {originalProposal.status === 'reviewed' ? 'Reviewed' : originalProposal.status}
               </Badge>
-              <span className="text-muted-foreground">Reviewer:</span>
-              <span>{reviewSummary?.length || 0} Reviewer</span>
-              <span className="text-muted-foreground">Proposal:</span>
-              <ProposalDownloadButton proposalId={String(originalProposal.id)} label="Download Original" />
+            </div>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Reviewer</span>
+            <span className="text-right">{reviewSummary?.length || 0} Reviewer</span>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Proposal</span>
+            <div className="text-right">
+              <ProposalDownloadButton proposalId={String(originalProposal.id)} label="Download" />
             </div>
           </div>
         </CardContent>

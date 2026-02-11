@@ -580,27 +580,31 @@ export default function ProposalPage() {
         <CardHeader>
           <CardTitle className="text-lg">Informasi Tim</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-[140px_1fr] gap-y-2 text-sm">
-            <span className="text-muted-foreground">Nama Tim:</span>
-            <span className="font-medium">{team.namaTeam}</span>
-            <span className="text-muted-foreground">Judul Proposal:</span>
-            <span>{team.judulProposal}</span>
-            <span className="text-muted-foreground">Jenis PKM:</span>
-            <span>
+        <CardContent className="text-sm">
+          <div className="grid grid-cols-[140px_1fr] gap-y-3">
+            <span className="text-muted-foreground">Nama Tim</span>
+            <span className="font-medium text-right">{team.namaTeam}</span>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Judul Proposal</span>
+            <span className="text-right">{team.judulProposal}</span>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Jenis PKM</span>
+            <div className="text-right">
               <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
-            </span>
-            <span className="text-muted-foreground">Anggota:</span>
-            <span>
+            </div>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Anggota</span>
+            <div className="text-right">
               {memberCount} orang{' '}
               {memberCount >= 3 ? (
                 <Badge variant="outline" className="text-green-700 border-green-300">Min. 3</Badge>
               ) : (
                 <Badge variant="destructive">Kurang dari 3</Badge>
               )}
-            </span>
-            <span className="text-muted-foreground">Dosen Pembimbing:</span>
-            <span>
+            </div>
+            <Separator className="col-span-2" />
+            <span className="text-muted-foreground">Dosen Pembimbing</span>
+            <span className="text-right">
               {team.dosenPembimbing?.nama || (
                 <span className="text-muted-foreground italic">
                   Belum ditentukan.{' '}

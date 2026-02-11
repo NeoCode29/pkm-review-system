@@ -274,27 +274,23 @@ export default function TeamDetailPage({
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Informasi Tim</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div className="flex justify-between">
+            <CardContent className="text-sm">
+              <div className="grid grid-cols-[140px_1fr] gap-y-3">
                 <span className="text-muted-foreground">Nama Tim</span>
-                <span className="font-medium">{team.namaTeam}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between gap-4">
-                <span className="text-muted-foreground shrink-0">Judul</span>
+                <span className="font-medium text-right">{team.namaTeam}</span>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Judul</span>
                 <span className="text-right">{team.judulProposal}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between">
+                <Separator className="col-span-2" />
                 <span className="text-muted-foreground">Jenis PKM</span>
-                {team.jenisPkm && (
-                  <Badge variant="secondary">{team.jenisPkm.nama}</Badge>
-                )}
-              </div>
-              <Separator />
-              <div className="flex justify-between">
+                <div className="text-right">
+                  {team.jenisPkm && (
+                    <Badge variant="secondary">{team.jenisPkm.nama}</Badge>
+                  )}
+                </div>
+                <Separator className="col-span-2" />
                 <span className="text-muted-foreground">Dibuat pada</span>
-                <span>
+                <span className="text-right">
                   {new Date(team.createdAt).toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'long',
