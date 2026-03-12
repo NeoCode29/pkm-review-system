@@ -168,7 +168,7 @@ export default function ReviewSummaryPage() {
             <span className="text-muted-foreground">Dosen</span>
             <span>{team.dosenPembimbing?.nama || '-'}</span>
             <span className="text-muted-foreground">Judul</span>
-            <span className="sm:col-span-3">{team.judulProposal}</span>
+            <span className="sm:col-span-3 break-words break-all sm:break-normal">{team.judulProposal}</span>
             <span className="text-muted-foreground">Jenis PKM</span>
             <Badge variant="outline" className="w-fit">{team.jenisPkm?.nama || '-'}</Badge>
             <span className="text-muted-foreground">Anggota</span>
@@ -282,9 +282,8 @@ export default function ReviewSummaryPage() {
                           );
                         })}
                       <TableRow className="bg-muted/50 font-bold">
-                        <TableCell className="text-right hidden sm:table-cell">TOTAL (Bobot: {totalBobot})</TableCell>
-                        <TableCell className="text-right sm:hidden">TOTAL</TableCell>
-                        <TableCell className="text-center hidden sm:table-cell">-</TableCell>
+                        <TableCell colSpan={3} className="text-right hidden sm:table-cell">TOTAL (Bobot: {totalBobot})</TableCell>
+                        <TableCell colSpan={2} className="text-right sm:hidden">TOTAL</TableCell>
                         <TableCell className="text-center text-primary text-lg">{totalNilai}</TableCell>
                       </TableRow>
                     </TableBody>
