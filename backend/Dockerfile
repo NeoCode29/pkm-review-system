@@ -1,5 +1,5 @@
 # NestJS Backend
-FROM node:18-alpine AS backend-builder
+FROM node:20-alpine AS backend-builder
 WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
@@ -8,7 +8,7 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-FROM node:18-alpine AS backend-production
+FROM node:20-alpine AS backend-production
 WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/

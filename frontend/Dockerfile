@@ -1,5 +1,5 @@
 # Next.js Frontend
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /app
 
 # Build args for NEXT_PUBLIC_* vars (baked in at build time)
@@ -16,7 +16,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:18-alpine AS frontend-production
+FROM node:20-alpine AS frontend-production
 WORKDIR /app
 ENV NODE_ENV production
 COPY package*.json ./
