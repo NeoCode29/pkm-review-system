@@ -559,20 +559,20 @@ export default function ProposalPage() {
           <CardTitle className="text-lg">Informasi Tim</CardTitle>
         </CardHeader>
         <CardContent className="text-sm">
-          <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-y-3">
-            <span className="text-muted-foreground">Nama Tim</span>
-            <span className="font-medium text-right">{team.namaTeam}</span>
-            <Separator className="col-span-2" />
-            <span className="text-muted-foreground">Judul Proposal</span>
-            <span className="text-right">{team.judulProposal}</span>
-            <Separator className="col-span-2" />
-            <span className="text-muted-foreground">Jenis PKM</span>
-            <div className="text-right">
+          <div className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-y-1 md:gap-y-3">
+            <span className="text-muted-foreground text-xs md:text-sm">Nama Tim</span>
+            <span className="font-medium break-words mb-2 md:mb-0 md:text-right">{team.namaTeam}</span>
+            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <span className="text-muted-foreground text-xs md:text-sm">Judul Proposal</span>
+            <span className="break-words mb-2 md:mb-0 md:text-right leading-relaxed">{team.judulProposal}</span>
+            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <span className="text-muted-foreground text-xs md:text-sm">Jenis PKM</span>
+            <div className="mb-2 md:mb-0 md:text-right">
               <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
             </div>
-            <Separator className="col-span-2" />
-            <span className="text-muted-foreground">Anggota</span>
-            <div className="text-right">
+            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <span className="text-muted-foreground text-xs md:text-sm">Anggota</span>
+            <div className="mb-2 md:mb-0 md:text-right">
               {memberCount} orang{' '}
               {memberCount >= 3 ? (
                 <Badge variant="outline" className="text-green-700 border-green-300">Min. 3</Badge>
@@ -580,9 +580,9 @@ export default function ProposalPage() {
                 <Badge variant="destructive">Kurang dari 3</Badge>
               )}
             </div>
-            <Separator className="col-span-2" />
-            <span className="text-muted-foreground">Dosen Pembimbing</span>
-            <span className="text-right">
+            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <span className="text-muted-foreground text-xs md:text-sm">Dosen Pembimbing</span>
+            <span className="break-words mb-1 md:mb-0 md:text-right">
               {team.dosenPembimbing?.nama || (
                 <span className="text-muted-foreground italic">
                   Belum ditentukan.{' '}
