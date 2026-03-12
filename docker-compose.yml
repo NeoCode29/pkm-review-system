@@ -82,6 +82,8 @@ services:
       JWT_EXP: ${JWT_EXPIRY}
     volumes:
       - supabase-db-data:/var/lib/postgresql/data
+      - ./supabase/volumes/db/roles.sql:/docker-entrypoint-initdb.d/init-scripts/99-roles.sql:Z
+      - ./supabase/volumes/db/jwt.sql:/docker-entrypoint-initdb.d/init-scripts/99-jwt.sql:Z
     command:
       - postgres
       - -c
