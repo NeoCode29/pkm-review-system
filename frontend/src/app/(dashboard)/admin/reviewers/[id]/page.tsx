@@ -3,10 +3,11 @@
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, FileText, Eye } from 'lucide-react';
+import { ArrowLeft, FileText, Eye, ClipboardList } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { EmptyState } from '@/components/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -137,8 +138,12 @@ export default function AdminReviewerDetailPage() {
               <TableBody>
                 {reviewer.reviewerAssignments.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground py-4">
-                      Belum ada assignment
+                    <TableCell colSpan={4} className="h-48 text-center p-0">
+                      <EmptyState
+                        icon={ClipboardList}
+                        title="Belum ada assignment"
+                        description="Reviewer ini belum ditugaskan untuk menilai proposal apapun."
+                      />
                     </TableCell>
                   </TableRow>
                 )}

@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, LibraryBig } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@/components/table-skeleton';
+import { EmptyState } from '@/components/empty-state';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -142,9 +143,7 @@ export default function MasterProdiPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
+            <TableSkeleton columns={5} rows={5} />
           ) : (
             <div className="rounded-md border">
               <Table>
@@ -160,8 +159,12 @@ export default function MasterProdiPage() {
                 <TableBody>
                   {items?.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                        Belum ada data program studi
+                      <TableCell colSpan={6} className="h-48 text-center p-0">
+                        <EmptyState
+                          icon={LibraryBig}
+                          title="Tidak ada program studi ditemukan"
+                          description="Belum ada data program studi di sistem. Silakan tambah program studi baru."
+                        />
                       </TableCell>
                     </TableRow>
                   )}

@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@/components/table-skeleton';
+import { EmptyState } from '@/components/empty-state';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -107,9 +108,7 @@ export default function MasterJurusanPage() {
       <Card>
         <CardContent className="pt-6">
           {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
+            <TableSkeleton columns={4} rows={5} />
           ) : (
             <div className="rounded-md border">
               <Table>
@@ -124,8 +123,12 @@ export default function MasterJurusanPage() {
                 <TableBody>
                   {items?.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                        Belum ada data jurusan
+                      <TableCell colSpan={5} className="h-48 text-center p-0">
+                        <EmptyState
+                          icon={Building2}
+                          title="Tidak ada jurusan ditemukan"
+                          description="Belum ada data jurusan di sistem. Silakan tambah jurusan baru."
+                        />
                       </TableCell>
                     </TableRow>
                   )}

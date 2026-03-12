@@ -259,7 +259,7 @@ export default function ReviewSummaryPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Kriteria</TableHead>
-                        <TableHead className="w-14 text-center">Bobot</TableHead>
+                        <TableHead className="w-14 text-center hidden sm:table-cell">Bobot</TableHead>
                         <TableHead className="w-14 text-center">Skor</TableHead>
                         <TableHead className="w-16 text-center">Nilai</TableHead>
                       </TableRow>
@@ -275,16 +275,16 @@ export default function ReviewSummaryPage() {
                           return (
                             <TableRow key={d.kriteriaSubstansiId}>
                               <TableCell className="text-sm">{d.kriteriaSubstansi.nama}</TableCell>
-                              <TableCell className="text-center">{d.kriteriaSubstansi.bobot}</TableCell>
+                              <TableCell className="text-center hidden sm:table-cell">{d.kriteriaSubstansi.bobot}</TableCell>
                               <TableCell className="text-center">{skor !== null ? skor : '-'}</TableCell>
                               <TableCell className="text-center font-bold">{nilai !== null ? nilai : '-'}</TableCell>
                             </TableRow>
                           );
                         })}
                       <TableRow className="bg-muted/50 font-bold">
-                        <TableCell>TOTAL</TableCell>
-                        <TableCell className="text-center">{totalBobot}</TableCell>
-                        <TableCell className="text-center">-</TableCell>
+                        <TableCell className="text-right hidden sm:table-cell">TOTAL (Bobot: {totalBobot})</TableCell>
+                        <TableCell className="text-right sm:hidden">TOTAL</TableCell>
+                        <TableCell className="text-center hidden sm:table-cell">-</TableCell>
                         <TableCell className="text-center text-primary text-lg">{totalNilai}</TableCell>
                       </TableRow>
                     </TableBody>

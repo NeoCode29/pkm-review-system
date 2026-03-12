@@ -12,6 +12,9 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -389,7 +392,7 @@ export default function ReviewPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-12">No</TableHead>
+                      <TableHead className="w-12 hidden md:table-cell">No</TableHead>
                       <TableHead>Kriteria</TableHead>
                       <TableHead className="w-16 text-center">Bobot</TableHead>
                       <TableHead className="w-20 text-center">Skor</TableHead>
@@ -402,30 +405,36 @@ export default function ReviewPage() {
                       const nilai = skor * k.bobot;
                       return (
                         <TableRow key={k.id}>
-                          <TableCell>{k.urutan ?? idx + 1}</TableCell>
+                          <TableCell className="hidden md:table-cell">{k.urutan ?? idx + 1}</TableCell>
                           <TableCell>
                             <div className="font-medium text-sm">{k.nama}</div>
                             {k.deskripsi && (
-                              <div className="text-xs text-muted-foreground">{k.deskripsi}</div>
+                              <div className="text-xs text-muted-foreground mt-0.5">{k.deskripsi}</div>
                             )}
                           </TableCell>
                           <TableCell className="text-center">{k.bobot}</TableCell>
                           <TableCell className="text-center">
-                            <Input
-                              type="number"
-                              min={k.skorMin}
-                              max={k.skorMax}
-                              value={skor > 0 ? skor : ''}
+                            <Select
+                              value={skor > 0 ? String(skor) : undefined}
                               disabled={!reviewEnabled}
-                              onChange={(e) => {
-                                const val = parseInt(e.target.value, 10);
+                              onValueChange={(val) => {
                                 setSubstansiScores((prev) => ({
                                   ...prev,
-                                  [String(k.id)]: isNaN(val) ? 0 : val,
+                                  [String(k.id)]: parseInt(val, 10),
                                 }));
                               }}
-                              className="w-16 text-center mx-auto"
-                            />
+                            >
+                              <SelectTrigger className="w-[70px] mx-auto h-8 text-center px-2">
+                                <SelectValue placeholder="-" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {[1, 2, 3, 5, 6, 7].map((val) => (
+                                  <SelectItem key={val} value={String(val)}>
+                                    {val}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                           <TableCell className="text-center font-bold">
                             {skor > 0 ? nilai : '-'}
@@ -442,7 +451,8 @@ export default function ReviewPage() {
                     )}
                     {kriteriaSubstansiList && kriteriaSubstansiList.length > 0 && (
                       <TableRow className="bg-muted/50 font-bold">
-                        <TableCell colSpan={2} className="text-right">TOTAL</TableCell>
+                        <TableCell colSpan={2} className="text-right hidden md:table-cell">TOTAL</TableCell>
+                        <TableCell className="text-right md:hidden">TOTAL</TableCell>
                         <TableCell className="text-center">
                           {kriteriaSubstansiList.reduce((s, k) => s + k.bobot, 0)}
                         </TableCell>

@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, GraduationCap, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@/components/table-skeleton';
+import { EmptyState } from '@/components/empty-state';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -41,11 +43,12 @@ export default function MasterDosenPage() {
   const [email, setEmail] = useState('');
   const [noHp, setNoHp] = useState('');
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
 
   const { data: items, isLoading } = useQuery<DosenPembimbing[]>({
-    queryKey: ['master-dosen', search],
+    queryKey: ['master-dosen', debouncedSearch],
     queryFn: () => {
-      const params = search ? `?search=${encodeURIComponent(search)}` : '';
+      const params = debouncedSearch ? `?search=${encodeURIComponent(debouncedSearch)}` : '';
       return api.get(`/dosen-pembimbing${params}`);
     },
   });
@@ -105,12 +108,19 @@ export default function MasterDosenPage() {
       <MasterDataTabs />
 
       <div className="flex items-center justify-between">
-        <Input
-          className="max-w-xs"
-          placeholder="Cari dosen..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <div className="flex flex-1 gap-2">
+          <Input
+            className="max-w-xs"
+            placeholder="Cari dosen..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search && (
+            <Button variant="ghost" onClick={() => setSearch('')} className="px-2 lg:px-3">
+              <X className="h-4 w-4 mr-2" /> Clear
+            </Button>
+          )}
+        </div>
         <Button onClick={openCreate}>
           <Plus className="mr-1 h-4 w-4" /> Tambah Dosen
         </Button>
@@ -124,9 +134,7 @@ export default function MasterDosenPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
+            <TableSkeleton columns={6} rows={5} />
           ) : (
             <div className="rounded-md border">
               <Table>
@@ -143,8 +151,14 @@ export default function MasterDosenPage() {
                 <TableBody>
                   {items?.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                        Belum ada data dosen pembimbing
+                      <TableCell colSpan={6} className="h-48 text-center p-0">
+                        <EmptyState
+                          icon={GraduationCap}
+                          title="Tidak ada dosen ditemukan"
+                          description={search ? "Coba sesuaikan kata kunci pencarian Anda." : "Belum ada data dosen pembimbing di sistem."}
+                          actionLabel={search ? "Clear Search" : undefined}
+                          onAction={search ? () => setSearch('') : undefined}
+                        />
                       </TableCell>
                     </TableRow>
                   )}

@@ -179,10 +179,10 @@ export default function ReviewerDashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="rounded-md border overflow-x-auto">
-            <Table className="min-w-[500px]">
+            <Table className="w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-12">No</TableHead>
+                  <TableHead className="w-12 hidden sm:table-cell">No</TableHead>
                   <TableHead>Tim</TableHead>
                   <TableHead className="hidden sm:table-cell">Judul Proposal</TableHead>
                   <TableHead>Status</TableHead>
@@ -201,10 +201,10 @@ export default function ReviewerDashboardPage() {
                   const status = getStatus(a);
                   return (
                     <TableRow key={a.id}>
-                      <TableCell className="tabular-nums">{idx + 1}</TableCell>
+                      <TableCell className="tabular-nums hidden sm:table-cell">{idx + 1}</TableCell>
                       <TableCell>
-                        <div className="font-medium">{a.proposal.team.namaTeam}</div>
-                        <div className="text-xs text-muted-foreground line-clamp-1 sm:hidden">
+                        <div className="font-medium text-sm">{a.proposal.team.namaTeam}</div>
+                        <div className="text-xs text-muted-foreground line-clamp-2 sm:hidden mt-0.5">
                           {a.proposal.team.judulProposal}
                         </div>
                       </TableCell>

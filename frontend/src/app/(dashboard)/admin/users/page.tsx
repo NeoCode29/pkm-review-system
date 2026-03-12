@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, UserCog, Users, UserCheck, Shield, Ban, CheckCircle } from 'lucide-react';
+import { Search, UserCog, Users, UserCheck, Shield, Ban, CheckCircle, UsersRound, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@/components/table-skeleton';
+import { EmptyState } from '@/components/empty-state';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   Select,
   SelectContent,
@@ -66,12 +68,14 @@ export default function AdminUsersPage() {
   const [searchInput, setSearchInput] = useState('');
   const limit = 10;
 
+  const debouncedSearch = useDebounce(search, 500);
+
   const { data, isLoading } = useQuery<UsersResponse>({
-    queryKey: ['admin-users', page, roleFilter, search],
+    queryKey: ['admin-users', page, roleFilter, debouncedSearch],
     queryFn: () => {
       const params = new URLSearchParams({ page: String(page), limit: String(limit) });
       if (roleFilter !== 'all') params.set('role', roleFilter);
-      if (search) params.set('search', search);
+      if (debouncedSearch) params.set('search', debouncedSearch);
       return api.get(`/admin/users?${params}`);
     },
   });
@@ -103,8 +107,11 @@ export default function AdminUsersPage() {
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menonaktifkan user'),
   });
 
-  const handleSearch = () => {
-    setSearch(searchInput);
+  const hasActiveFilters = roleFilter !== 'all' || search !== '';
+
+  const clearFilters = () => {
+    setRoleFilter('all');
+    setSearch('');
     setPage(1);
   };
 
@@ -179,14 +186,19 @@ export default function AdminUsersPage() {
             <div className="flex flex-1 gap-2">
               <Input
                 placeholder="Cari nama atau email..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
                 className="max-w-sm"
               />
-              <Button variant="outline" size="icon" onClick={handleSearch}>
-                <Search className="h-4 w-4" />
-              </Button>
+              {hasActiveFilters && (
+                <Button variant="ghost" onClick={clearFilters} className="px-2 lg:px-3">
+                  <X className="h-4 w-4 mr-2" />
+                  Clear Filters
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
@@ -201,9 +213,7 @@ export default function AdminUsersPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
+            <TableSkeleton columns={5} rows={10} />
           ) : (
             <>
               <div className="rounded-md border overflow-auto">
@@ -220,8 +230,14 @@ export default function AdminUsersPage() {
                   <TableBody>
                     {data?.data.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                          Tidak ada user ditemukan
+                        <TableCell colSpan={5} className="h-48 text-center p-0">
+                          <EmptyState
+                            icon={UsersRound}
+                            title="Tidak ada user ditemukan"
+                            description={hasActiveFilters ? "Coba sesuaikan filter atau pencarian Anda." : "Belum ada data user di sistem."}
+                            actionLabel={hasActiveFilters ? "Clear Filters" : undefined}
+                            onAction={hasActiveFilters ? clearFilters : undefined}
+                          />
                         </TableCell>
                       </TableRow>
                     )}

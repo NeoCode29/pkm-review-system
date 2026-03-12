@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Eye, Trash2, Pencil, Users as UsersIcon, FileCheck, FileEdit, FileSearch } from 'lucide-react';
+import { Search, Eye, Trash2, Pencil, Users as UsersIcon, FileCheck, FileEdit, FileSearch, UsersRound, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@/components/table-skeleton';
+import { EmptyState } from '@/components/empty-state';
+import { useDebounce } from '@/hooks/use-debounce';
 import {
   Select,
   SelectContent,
@@ -79,18 +81,20 @@ export default function AdminTeamsPage() {
   const [searchInput, setSearchInput] = useState('');
   const limit = 10;
 
+  const debouncedSearch = useDebounce(search, 500);
+
   const { data: jenisPkmList } = useQuery<JenisPkm[]>({
     queryKey: ['jenis-pkm'],
     queryFn: () => api.get('/master-data/jenis-pkm'),
   });
 
   const { data, isLoading } = useQuery<TeamsResponse>({
-    queryKey: ['admin-teams', page, jenisPkmFilter, statusFilter, search],
+    queryKey: ['admin-teams', page, jenisPkmFilter, statusFilter, debouncedSearch],
     queryFn: () => {
       const params = new URLSearchParams({ page: String(page), limit: String(limit) });
       if (jenisPkmFilter !== 'all') params.set('jenisPkmId', jenisPkmFilter);
       if (statusFilter !== 'all') params.set('proposalStatus', statusFilter);
-      if (search) params.set('search', search);
+      if (debouncedSearch) params.set('search', debouncedSearch);
       return api.get(`/teams?${params}`);
     },
   });
@@ -104,8 +108,12 @@ export default function AdminTeamsPage() {
     onError: (err: { message?: string }) => toast.error(err.message || 'Gagal menghapus tim'),
   });
 
-  const handleSearch = () => {
-    setSearch(searchInput);
+  const hasActiveFilters = jenisPkmFilter !== 'all' || statusFilter !== 'all' || search !== '';
+
+  const clearFilters = () => {
+    setJenisPkmFilter('all');
+    setStatusFilter('all');
+    setSearch('');
     setPage(1);
   };
 
@@ -194,14 +202,19 @@ export default function AdminTeamsPage() {
             <div className="flex flex-1 gap-2">
               <Input
                 placeholder="Cari nama tim atau judul..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
                 className="max-w-sm"
               />
-              <Button variant="outline" size="icon" onClick={handleSearch}>
-                <Search className="h-4 w-4" />
-              </Button>
+              {hasActiveFilters && (
+                <Button variant="ghost" onClick={clearFilters} className="px-2 lg:px-3">
+                  <X className="h-4 w-4 mr-2" />
+                  Clear Filters
+                </Button>
+              )}
             </div>
           </div>
         </CardContent>
@@ -216,9 +229,7 @@ export default function AdminTeamsPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
+            <TableSkeleton columns={6} rows={10} />
           ) : (
             <>
               <div className="rounded-md border overflow-auto">
@@ -236,8 +247,14 @@ export default function AdminTeamsPage() {
                   <TableBody>
                     {data?.data.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
-                          Tidak ada tim ditemukan
+                        <TableCell colSpan={6} className="h-48 text-center p-0">
+                          <EmptyState
+                            icon={UsersRound}
+                            title="Tidak ada tim ditemukan"
+                            description={hasActiveFilters ? "Coba sesuaikan filter atau pencarian Anda." : "Belum ada data tim di sistem."}
+                            actionLabel={hasActiveFilters ? "Clear Filters" : undefined}
+                            onAction={hasActiveFilters ? clearFilters : undefined}
+                          />
                         </TableCell>
                       </TableRow>
                     )}

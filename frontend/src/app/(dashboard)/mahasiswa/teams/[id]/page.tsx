@@ -294,33 +294,33 @@ export default function TeamDetailPage({
               </CardTitle>
             </CardHeader>
             <CardContent className="text-sm">
-              <div className="grid grid-cols-[140px_1fr] gap-y-3">
-                <span className="text-muted-foreground">Nama Tim</span>
-                <span className="font-medium">{team.namaTeam}</span>
-                <Separator className="col-span-2" />
-                <span className="text-muted-foreground">Judul</span>
-                <span>{team.judulProposal}</span>
-                <Separator className="col-span-2" />
-                <span className="text-muted-foreground">Jenis PKM</span>
-                <div>
+              <div className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-y-1 md:gap-y-3">
+                <span className="text-muted-foreground text-xs md:text-sm">Nama Tim</span>
+                <span className="font-medium break-words mb-2 md:mb-0 md:text-right">{team.namaTeam}</span>
+                <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+                <span className="text-muted-foreground text-xs md:text-sm">Judul</span>
+                <span className="break-words mb-2 md:mb-0 md:text-right leading-relaxed">{team.judulProposal}</span>
+                <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+                <span className="text-muted-foreground text-xs md:text-sm">Jenis PKM</span>
+                <div className="mb-2 md:mb-0 md:text-right">
                   {team.jenisPkm ? (
                     <Badge variant="secondary">{team.jenisPkm.nama}</Badge>
                   ) : (
                     '-'
                   )}
                 </div>
-                <Separator className="col-span-2" />
-                <span className="text-muted-foreground">Dibuat pada</span>
-                <span>
+                <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+                <span className="text-muted-foreground text-xs md:text-sm">Dibuat pada</span>
+                <span className="mb-2 md:mb-0 md:text-right">
                   {new Date(team.createdAt).toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
                   })}
                 </span>
-                <Separator className="col-span-2" />
-                <span className="text-muted-foreground">Dosen Pembimbing</span>
-                <div>
+                <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+                <span className="text-muted-foreground text-xs md:text-sm">Dosen Pembimbing</span>
+                <div className="mb-1 md:mb-0 md:text-right">
                   {team.dosenPembimbing ? (
                     <div>
                       <span className="font-medium block">{team.dosenPembimbing.nama}</span>

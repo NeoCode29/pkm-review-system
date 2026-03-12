@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, Eye } from 'lucide-react';
+import { Plus, Trash2, Eye, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { TableSkeleton } from '@/components/table-skeleton';
+import { EmptyState } from '@/components/empty-state';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -114,9 +115,7 @@ export default function AdminReviewersPage() {
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-12 w-full" />)}
-            </div>
+            <TableSkeleton columns={5} rows={5} />
           ) : (
             <div className="rounded-md border">
               <Table>
@@ -132,8 +131,12 @@ export default function AdminReviewersPage() {
                 <TableBody>
                   {reviewers?.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                        Belum ada reviewer
+                      <TableCell colSpan={5} className="h-48 text-center p-0">
+                        <EmptyState
+                          icon={UserCheck}
+                          title="Tidak ada reviewer ditemukan"
+                          description="Belum ada data reviewer di sistem. Silakan tambah reviewer baru."
+                        />
                       </TableCell>
                     </TableRow>
                   )}
