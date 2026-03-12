@@ -562,15 +562,15 @@ export default function ProposalPage() {
           <div className="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-y-1 md:gap-y-3">
             <span className="text-muted-foreground text-xs md:text-sm">Nama Tim</span>
             <span className="font-medium break-words mb-2 md:mb-0 md:text-right">{team.namaTeam}</span>
-            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <Separator className="col-span-1 md:col-span-2" />
             <span className="text-muted-foreground text-xs md:text-sm">Judul Proposal</span>
             <span className="break-words mb-2 md:mb-0 md:text-right leading-relaxed">{team.judulProposal}</span>
-            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <Separator className="col-span-1 md:col-span-2" />
             <span className="text-muted-foreground text-xs md:text-sm">Jenis PKM</span>
             <div className="mb-2 md:mb-0 md:text-right">
               <Badge variant="outline">{team.jenisPkm?.nama || '-'}</Badge>
             </div>
-            <Separator className="col-span-1 md:col-span-2 hidden md:block" />
+            <Separator className="col-span-1 md:col-span-2" />
             <span className="text-muted-foreground text-xs md:text-sm">Anggota</span>
             <div className="mb-2 md:mb-0 md:text-right">
               {memberCount} orang{' '}
