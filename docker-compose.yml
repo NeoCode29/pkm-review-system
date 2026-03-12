@@ -48,6 +48,7 @@ services:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
       JWT_SECRET: ${JWT_SECRET}
       SUPABASE_URL: http://supabase-kong:8000
+      SUPABASE_SECRET_KEY: ${SERVICE_ROLE_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
       SUPABASE_ANON_KEY: ${ANON_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN}
