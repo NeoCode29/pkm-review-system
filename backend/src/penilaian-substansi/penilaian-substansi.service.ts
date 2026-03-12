@@ -111,7 +111,7 @@ export class PenilaianSubstansiService {
 
   async getByAssignment(assignmentId: bigint, prismaClient?: any) {
     const client = prismaClient || this.prisma;
-    return client.penilaianSubstansi.findUnique({
+    const penilaian = await client.penilaianSubstansi.findUnique({
       where: { reviewerAssignmentId: assignmentId },
       include: {
         detailPenilaianSubstansi: {
@@ -124,6 +124,30 @@ export class PenilaianSubstansiService {
         },
       },
     });
+
+    if (!penilaian) return null;
+
+    // Convert Decimal/BigInt fields explicitly — do NOT use ...d spread
+    // because spreading a Prisma Decimal creates a plain {s, e, d} object
+    // that the BigInt interceptor cannot recognize as Decimal
+    return {
+      id: penilaian.id,
+      reviewerAssignmentId: penilaian.reviewerAssignmentId,
+      totalSkor: Number(penilaian.totalSkor),
+      catatan: penilaian.catatan,
+      isComplete: penilaian.isComplete,
+      createdAt: penilaian.createdAt,
+      updatedAt: penilaian.updatedAt,
+      detailPenilaianSubstansi: penilaian.detailPenilaianSubstansi.map((d) => ({
+        id: d.id,
+        penilaianSubstansiId: d.penilaianSubstansiId,
+        kriteriaSubstansiId: d.kriteriaSubstansiId,
+        skor: Number(d.skor),
+        createdAt: d.createdAt,
+        updatedAt: d.updatedAt,
+        kriteriaSubstansi: d.kriteriaSubstansi,
+      })),
+    };
   }
 
   // nilai = skor × bobot, totalNilai = SUM(all nilai)
@@ -187,13 +211,13 @@ export class PenilaianSubstansiService {
       reviewerNumber: a.reviewerNumber,
       substansi: a.penilaianSubstansi
         ? {
-            totalSkor: a.penilaianSubstansi.totalSkor,
+            totalSkor: Number(a.penilaianSubstansi.totalSkor),
             catatan: a.penilaianSubstansi.catatan,
             details: a.penilaianSubstansi.detailPenilaianSubstansi.map((d) => ({
               kriteria: d.kriteriaSubstansi.nama,
               deskripsi: d.kriteriaSubstansi.deskripsi,
               bobot: d.kriteriaSubstansi.bobot,
-              skor: d.skor,
+              skor: Number(d.skor),
               nilai: Number(d.skor) * d.kriteriaSubstansi.bobot,
             })),
           }

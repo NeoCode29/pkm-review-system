@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Trash2, Users, FileText, Pencil, UserPlus, Eye, AlertTriangle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Trash2, Users, FileText, Pencil, UserPlus, Eye, AlertTriangle, RefreshCw, Info } from 'lucide-react';
 import { ProposalDownloadButton } from '@/components/proposal-download-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -26,7 +27,13 @@ import { api } from '@/lib/api';
 interface TeamMember {
   id: string;
   role: string;
-  mahasiswa: { id: string; nama: string; nim: string; email: string };
+  mahasiswa: {
+    id: string;
+    nama: string;
+    nim: string;
+    email: string;
+    programStudi?: { id: string; nama: string };
+  };
 }
 
 interface Proposal {
@@ -66,6 +73,8 @@ const STATUS_BADGE: Record<string, 'default' | 'secondary' | 'outline' | 'destru
   under_review: 'secondary',
   reviewed: 'default',
   needs_revision: 'destructive',
+  not_reviewed: 'destructive',
+  revised: 'secondary',
 };
 
 const VALID_STATUSES = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision', 'revised'];
@@ -135,14 +144,25 @@ export default function AdminTeamDetailPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/admin/teams"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
-          <h1 className="text-2xl font-bold">{team.namaTeam}</h1>
+          <div>
+            <h1 className="text-2xl font-bold">{team.namaTeam}</h1>
+            <p className="text-muted-foreground text-sm">{team.judulProposal || 'Belum ada judul'}</p>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          {originalProposal && (
+            <Badge
+              variant={STATUS_BADGE[originalProposal.status] || 'outline'}
+              className="capitalize text-sm mr-4"
+            >
+              {originalProposal.status.replace(/_/g, ' ')}
+            </Badge>
+          )}
           <Button variant="outline" size="sm" asChild>
             <Link href={`/admin/teams/${id}/edit`}>
               <Pencil className="mr-1 h-4 w-4" /> Edit
@@ -155,63 +175,49 @@ export default function AdminTeamDetailPage() {
               </Link>
             </Button>
           )}
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm">
-                <Trash2 className="mr-1 h-4 w-4" /> Hapus
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-destructive" /> Hapus Tim?
-                </AlertDialogTitle>
-                <AlertDialogDescription asChild>
-                  <div className="space-y-3">
-                    <p>PERINGATAN: Ini akan menghapus:</p>
-                    <ul className="list-disc ml-4 space-y-1 text-sm">
-                      <li>Team <strong>&quot;{team.namaTeam}&quot;</strong> beserta <strong>{team.teamMembers.length}</strong> anggota</li>
-                      <li><strong>{proposalCount}</strong> proposal</li>
-                      <li><strong>{reviewCount}</strong> review yang sudah dibuat</li>
-                    </ul>
-                    <p className="font-semibold text-destructive">Aksi ini TIDAK BISA DIBATALKAN!</p>
-                  </div>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Batal</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteMutation.mutate()} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                  Ya, Hapus Permanen
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Column */}
-        <div className="space-y-6">
+        <div className="space-y-6 lg:flex-1 min-w-0">
           {/* Team Info */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Informasi Tim</CardTitle>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Info className="h-4 w-4" /> Detail Tim
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-[140px_1fr] gap-y-2 text-sm">
-                <span className="text-muted-foreground">Nama Tim:</span>
+              <div className="grid grid-cols-[140px_1fr] gap-y-3 text-sm">
+                <span className="text-muted-foreground">Nama Tim</span>
                 <span className="font-medium">{team.namaTeam}</span>
-                <span className="text-muted-foreground">Judul Proposal:</span>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Judul Proposal</span>
                 <span>{team.judulProposal || '-'}</span>
-                <span className="text-muted-foreground">Jenis PKM:</span>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Jenis PKM</span>
                 <Badge variant="outline" className="w-fit">{team.jenisPkm?.nama || '-'}</Badge>
-                <span className="text-muted-foreground">Dosen Pembimbing:</span>
-                <span>{team.dosenPembimbing?.nama || '-'}</span>
-                <span className="text-muted-foreground">Open to Join:</span>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Dosen Pembimbing</span>
+                <div>
+                  {team.dosenPembimbing ? (
+                    <div>
+                      <span className="font-medium block">{team.dosenPembimbing.nama}</span>
+                      <span className="text-xs text-muted-foreground block">NIDN: {team.dosenPembimbing.nidn}</span>
+                      <span className="text-xs text-muted-foreground block">Kontak: {team.dosenPembimbing.noHp} / {team.dosenPembimbing.email}</span>
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground italic">Belum ditentukan</span>
+                  )}
+                </div>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Open to Join</span>
                 <Badge variant={team.openToJoin ? 'default' : 'outline'} className="w-fit">
                   {team.openToJoin ? 'Ya' : 'Tidak'}
                 </Badge>
-                <span className="text-muted-foreground">Dibuat:</span>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Dibuat</span>
                 <span>{new Date(team.createdAt).toLocaleDateString('id-ID')}</span>
               </div>
             </CardContent>
@@ -231,14 +237,19 @@ export default function AdminTeamDetailPage() {
                     <TableRow>
                       <TableHead>Nama</TableHead>
                       <TableHead>NIM</TableHead>
+                      <TableHead>Prodi</TableHead>
                       <TableHead>Role</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {team.teamMembers.map((m) => (
                       <TableRow key={m.id}>
-                        <TableCell className="font-medium">{m.mahasiswa.nama}</TableCell>
+                        <TableCell className="font-medium">
+                          {m.mahasiswa.nama}
+                          <span className="block text-xs text-muted-foreground">{m.mahasiswa.email}</span>
+                        </TableCell>
                         <TableCell className="font-mono text-sm">{m.mahasiswa.nim}</TableCell>
+                        <TableCell className="text-sm">{m.mahasiswa.programStudi?.nama || '-'}</TableCell>
                         <TableCell>
                           <Badge variant={m.role === 'ketua' ? 'default' : 'outline'} className="capitalize">
                             {m.role}
@@ -251,47 +262,47 @@ export default function AdminTeamDetailPage() {
               </div>
             </CardContent>
           </Card>
+
         </div>
 
         {/* Right Column */}
-        <div className="space-y-6">
-          {/* Proposal Original */}
+        <div className="space-y-6 lg:flex-1 min-w-0">
+          {/* Proposal Status & Files */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
-                <FileText className="h-4 w-4" /> Proposal Original
+                <FileText className="h-4 w-4" /> Dokumen Proposal
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {originalProposal ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-center flex-col gap-2 py-4">
-                    <Badge
-                      variant={STATUS_BADGE[originalProposal.status] || 'outline'}
-                      className="capitalize text-base px-4 py-1"
-                    >
-                      {originalProposal.status.replace(/_/g, ' ')}
-                    </Badge>
-                    {originalProposal.submittedAt && (
-                      <span className="text-xs text-muted-foreground">
-                        Submitted: {new Date(originalProposal.submittedAt).toLocaleDateString('id-ID')}
-                      </span>
-                    )}
-                  </div>
-                  {originalProposal.proposalFiles[0] && (
-                    <div className="border-t pt-3 flex items-center justify-between text-sm">
-                      <div>
-                        <span className="font-medium">{originalProposal.proposalFiles[0].fileName}</span>
-                        <span className="text-muted-foreground ml-2">
-                          ({(originalProposal.proposalFiles[0].fileSize / 1024 / 1024).toFixed(1)} MB)
-                        </span>
-                      </div>
-                      <ProposalDownloadButton proposalId={String(originalProposal.id)} />
-                    </div>
+            <CardContent className="space-y-4">
+              {/* Active / Original Proposal */}
+              <div>
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-sm font-semibold">Dokumen Utama (Original)</span>
+                  {originalProposal && originalProposal.submittedAt && (
+                    <span className="text-xs text-muted-foreground">
+                      Submisi: {new Date(originalProposal.submittedAt).toLocaleDateString('id-ID')}
+                    </span>
                   )}
-                  {/* Override Status */}
-                  <div className="border-t pt-3 space-y-2">
-                    <p className="text-xs font-medium text-muted-foreground">Override Status</p>
+                </div>
+                {originalProposal && originalProposal.proposalFiles[0] ? (
+                  <div className="rounded-md border p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm bg-muted/20">
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">{originalProposal.proposalFiles[0].fileName}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {(originalProposal.proposalFiles[0].fileSize / 1024 / 1024).toFixed(1)} MB
+                      </p>
+                    </div>
+                    <ProposalDownloadButton proposalId={String(originalProposal.id)} />
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground italic bg-muted/10 p-3 rounded-md border text-center">Belum ada file diupload</p>
+                )}
+
+                {/* Override Status block for original (since that dictates workflow) */}
+                {originalProposal && (
+                  <div className="mt-4 pt-3 border-t">
+                    <label className="text-xs font-medium text-muted-foreground block mb-1">Override Status Proposal</label>
                     <div className="flex gap-2">
                       <Select value={overrideStatus} onValueChange={setOverrideStatus}>
                         <SelectTrigger className="flex-1 h-8 text-xs">
@@ -317,48 +328,32 @@ export default function AdminTeamDetailPage() {
                       </Button>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">Belum ada proposal</p>
-              )}
-            </CardContent>
-          </Card>
+                )}
+              </div>
 
-          {/* Proposal Revised */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <FileText className="h-4 w-4" /> Proposal Revised
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {revisedProposal ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-center flex-col gap-2 py-3">
-                    <Badge
-                      variant={STATUS_BADGE[revisedProposal.status] || 'outline'}
-                      className="capitalize text-sm px-3 py-0.5"
-                    >
-                      {revisedProposal.status.replace(/_/g, ' ')}
-                    </Badge>
-                  </div>
-                  {revisedProposal.proposalFiles[0] ? (
-                    <div className="border-t pt-3 flex items-center justify-between text-sm">
-                      <div>
-                        <span className="font-medium">{revisedProposal.proposalFiles[0].fileName}</span>
-                        <span className="text-muted-foreground ml-2">
-                          ({(revisedProposal.proposalFiles[0].fileSize / 1024 / 1024).toFixed(1)} MB)
-                        </span>
+              {/* Revised Proposal (If exists) */}
+              {(revisedProposal && revisedProposal.proposalFiles[0]) && (
+                <>
+                  <Separator />
+                  <div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-semibold">Dokumen Revisi</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {revisedProposal.status.replace(/_/g, ' ')}
+                      </Badge>
+                    </div>
+                    <div className="rounded-md border p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm bg-amber-50/50">
+                      <div className="min-w-0">
+                        <p className="font-medium truncate text-amber-900">{revisedProposal.proposalFiles[0].fileName}</p>
+                        <p className="text-xs text-amber-700/70">
+                          {(revisedProposal.proposalFiles[0].fileSize / 1024 / 1024).toFixed(1)} MB
+                        </p>
                       </div>
                       <ProposalDownloadButton proposalId={String(revisedProposal.id)} />
                     </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground text-center border-t pt-3">Belum ada file revisi</p>
-                  )}
-                  <p className="text-xs text-muted-foreground text-center">Proposal revised untuk dokumentasi (tidak direview)</p>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground text-center py-4">Belum ada proposal revised</p>
+                    <p className="text-[10px] text-muted-foreground mt-2 text-center">Dokumen revisi disimpan hanya sebagai arsip</p>
+                  </div>
+                </>
               )}
             </CardContent>
           </Card>
@@ -366,16 +361,21 @@ export default function AdminTeamDetailPage() {
           {/* Assigned Reviewers */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Assigned Reviewers</CardTitle>
+              <CardTitle className="text-base flex items-center justify-between">
+                <span>Assigned Reviewers</span>
+                {assignments && assignments.length > 0 && (
+                  <Badge variant="secondary">{assignments.length}/2</Badge>
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {!assignments || assignments.length === 0 ? (
-                <div className="text-center py-4">
+                <div className="text-center py-6 bg-muted/10 rounded-md border border-dashed">
                   <p className="text-sm text-muted-foreground mb-3">Belum ada reviewer yang di-assign</p>
                   {canAssign && (
                     <Button size="sm" asChild>
                       <Link href={`/admin/teams/${id}/assign`}>
-                        <UserPlus className="mr-1 h-3 w-3" /> Assign Reviewers
+                        <UserPlus className="mr-1 h-3 w-3" /> Assign Reviewer
                       </Link>
                     </Button>
                   )}
@@ -388,62 +388,65 @@ export default function AdminTeamDetailPage() {
                     const allDone = adminDone && subsDone;
                     const inProgress = adminDone || subsDone;
                     return (
-                      <div key={a.id} className="rounded-md border p-3 space-y-2">
-                        <div className="flex items-center justify-between">
+                      <div key={a.id} className="rounded-md border p-3 space-y-2 flex flex-col">
+                        <div className="flex items-start justify-between">
                           <div>
-                            <span className="font-medium text-sm">Reviewer {a.reviewerNumber}:</span>{' '}
-                            <span className="text-sm">{a.reviewerUser.nama}</span>
+                            <span className="font-medium text-sm block">Reviewer {a.reviewerNumber}:</span>
+                            <span className="text-sm text-muted-foreground">{a.reviewerUser.nama}</span>
                           </div>
-                          <Badge variant={allDone ? 'default' : inProgress ? 'secondary' : 'outline'}>
+                          <Badge variant={allDone ? 'default' : inProgress ? 'secondary' : 'outline'} className="text-[10px]">
                             {allDone ? 'COMPLETED' : inProgress ? 'IN PROGRESS' : 'NOT STARTED'}
                           </Badge>
                         </div>
                         {(adminDone || subsDone) && (
-                          <Button size="sm" variant="outline" asChild>
+                          <Button size="sm" variant="outline" className="w-full mt-2" asChild>
                             <Link href={`/admin/teams/${id}/review/${a.id}`}>
-                              <Eye className="mr-1 h-3 w-3" /> View Review
+                              <Eye className="mr-1 h-3 w-3" /> Lihat Hasil Review
                             </Link>
                           </Button>
                         )}
                       </div>
                     );
                   })}
+                  {canAssign && (
+                    <Button variant="ghost" size="sm" className="w-full mt-2" asChild>
+                      <Link href={`/admin/teams/${id}/assign`}>
+                        <UserPlus className="mr-1 h-3 w-3" /> Assign Reviewer Tambahan
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               )}
             </CardContent>
           </Card>
 
           {/* Admin Actions */}
-          <Card>
+          <Card className="border-destructive/30 border-dashed">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Admin Actions</CardTitle>
+              <CardTitle className="text-sm text-destructive uppercase tracking-wider font-semibold">Danger Zone</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full" asChild>
-                <Link href={`/admin/teams/${id}/edit`}>
-                  <Pencil className="mr-1 h-4 w-4" /> Edit Team
-                </Link>
-              </Button>
+            <CardContent>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive" className="w-full">
-                    <Trash2 className="mr-1 h-4 w-4" /> Delete Team
+                    <Trash2 className="mr-1 h-4 w-4" /> Hapus Tim
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className="flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5 text-destructive" /> Hapus Tim?
+                      <AlertTriangle className="h-5 w-5 text-destructive" /> Konfirmasi Penghapusan
                     </AlertDialogTitle>
                     <AlertDialogDescription asChild>
                       <div className="space-y-3">
-                        <p>PERINGATAN: Ini akan menghapus:</p>
-                        <ul className="list-disc ml-4 space-y-1 text-sm">
-                          <li>Team <strong>&quot;{team.namaTeam}&quot;</strong> beserta <strong>{team.teamMembers.length}</strong> anggota</li>
-                          <li><strong>{proposalCount}</strong> proposal</li>
-                          <li><strong>{reviewCount}</strong> review yang sudah dibuat</li>
+                        <p>PERINGATAN: Tindakan ini akan menghapus:</p>
+                        <ul className="list-disc ml-4 space-y-1 text-sm bg-destructive/10 text-destructive p-3 rounded-md">
+                          <li>Team <strong>&quot;{team.namaTeam}&quot;</strong></li>
+                          <li><strong>{team.teamMembers.length}</strong> daftar anggota keanggotaan</li>
+                          <li><strong>{proposalCount}</strong> file proposal utuh</li>
+                          <li><strong>{reviewCount}</strong> catatan review terkait</li>
                         </ul>
-                        <p className="font-semibold text-destructive">Aksi ini TIDAK BISA DIBATALKAN!</p>
+                        <p className="font-semibold text-destructive mt-4">Ketik atau klik untuk konfirmasi, aksi TIDAK BISA DIBATALKAN!</p>
                       </div>
                     </AlertDialogDescription>
                   </AlertDialogHeader>

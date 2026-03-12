@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Trash2, Shield, Info, RotateCcw, Save } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -57,7 +59,7 @@ export default function AdminTeamEditPage() {
   const [namaTeam, setNamaTeam] = useState('');
   const [judulProposal, setJudulProposal] = useState('');
   const [jenisPkmId, setJenisPkmId] = useState('');
-  const [openToJoin, setOpenToJoin] = useState('true');
+  const [openToJoin, setOpenToJoin] = useState(true);
   const [proposalStatus, setProposalStatus] = useState('');
 
   const { data: team, isLoading } = useQuery<TeamDetail>({
@@ -74,8 +76,8 @@ export default function AdminTeamEditPage() {
     if (team) {
       setNamaTeam(team.namaTeam);
       setJudulProposal(team.judulProposal || '');
-      setJenisPkmId(String(team.jenisPkm?.id || team.jenisPkmId));
-      setOpenToJoin(team.openToJoin ? 'true' : 'false');
+      setJenisPkmId(String(team.jenisPkm?.id || team.jenisPkmId || ''));
+      setOpenToJoin(team.openToJoin);
       const originalProposal = team.proposals?.find((p) => p.type === 'original');
       if (originalProposal) setProposalStatus(originalProposal.status);
     }
@@ -88,7 +90,7 @@ export default function AdminTeamEditPage() {
           namaTeam,
           judulProposal,
           jenisPkmId,
-          openToJoin: openToJoin === 'true',
+          openToJoin,
         },
       }),
     onSuccess: () => {
@@ -131,129 +133,135 @@ export default function AdminTeamEditPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
             <Link href={`/admin/teams/${teamId}`}><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
-          <h1 className="text-2xl font-bold">Edit Team</h1>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold">Edit Team</h1>
+              <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20"><Shield className="w-3 h-3 mr-1"/> Admin Mode</Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">{team.namaTeam}</p>
+          </div>
         </div>
-        <Button variant="outline" asChild>
-          <Link href={`/admin/teams/${teamId}`}>Batal</Link>
-        </Button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left: Basic Info */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Informasi Dasar</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label>Nama Team <span className="text-destructive">*</span></Label>
-              <Input value={namaTeam} onChange={(e) => setNamaTeam(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Judul Proposal <span className="text-destructive">*</span></Label>
-              <Input value={judulProposal} onChange={(e) => setJudulProposal(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Jenis PKM <span className="text-destructive">*</span></Label>
-              <Select value={jenisPkmId} onValueChange={setJenisPkmId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih Jenis PKM" />
-                </SelectTrigger>
-                <SelectContent>
-                  {jenisPkmList?.map((j) => (
-                    <SelectItem key={j.id} value={String(j.id)}>{j.nama}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Open to Join</Label>
-              <Select value={openToJoin} onValueChange={setOpenToJoin}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="true">Yes - Menerima anggota baru</SelectItem>
-                  <SelectItem value="false">No - Tidak menerima anggota</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Status Proposal (Info)</Label>
-              <Badge variant="outline" className="capitalize text-sm">
-                {proposalStatus ? proposalStatus.replace(/_/g, ' ') : 'No proposal'}
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Right: Members */}
         <div className="space-y-6">
           <Card>
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-3 border-b">
+              <CardTitle className="text-base flex items-center gap-2"><Info className="w-4 h-4"/> Informasi Dasar</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              <div className="space-y-2">
+                <Label>Nama Team <span className="text-destructive">*</span></Label>
+                <Input value={namaTeam} onChange={(e) => setNamaTeam(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Judul Proposal <span className="text-destructive">*</span></Label>
+                <Input value={judulProposal} onChange={(e) => setJudulProposal(e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Jenis PKM <span className="text-destructive">*</span></Label>
+                <Select value={jenisPkmId || ""} onValueChange={setJenisPkmId}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Jenis PKM" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jenisPkmList?.map((j) => (
+                      <SelectItem key={j.id} value={String(j.id)}>{j.nama}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center justify-between gap-4 p-3 rounded-lg border bg-muted/20">
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm">Open Recruitment</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Aktifkan agar mahasiswa lain bisa _request_ join ke dalam tim ini.
+                  </p>
+                </div>
+                <Switch
+                  checked={openToJoin}
+                  onCheckedChange={setOpenToJoin}
+                  disabled={updateMutation.isPending}
+                />
+              </div>
+
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right: Members & Read Only Details */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-3 border-b">
               <CardTitle className="text-base">
-                Manage Members ({team.teamMembers.length}/5)
+                Kelola Anggota ({team.teamMembers.length}/5)
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="rounded-md border">
+            <CardContent className="pt-4">
+              <div className="rounded-md border bg-card">
                 <Table>
-                  <TableHeader>
+                  <TableHeader className="bg-muted/50">
                     <TableRow>
-                      <TableHead>Nama</TableHead>
-                      <TableHead>NIM</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead className="w-12">Action</TableHead>
+                      <TableHead>Mahasiswa</TableHead>
+                      <TableHead className="w-[120px]">Role</TableHead>
+                      <TableHead className="w-12 text-center">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {team.teamMembers.map((m) => (
                       <TableRow key={m.id}>
-                        <TableCell className="font-medium text-sm">{m.mahasiswa.nama}</TableCell>
-                        <TableCell className="font-mono text-sm">{m.mahasiswa.nim}</TableCell>
-                        <TableCell>
+                        <TableCell className="py-2.5">
+                          <p className="font-medium text-sm leading-tight">{m.mahasiswa.nama}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{m.mahasiswa.nim}</p>
+                        </TableCell>
+                        <TableCell className="py-2.5">
                           <Select
                             value={m.role}
                             onValueChange={(role) =>
                               updateMemberRoleMutation.mutate({ memberId: m.id, role })
                             }
                           >
-                            <SelectTrigger className="w-[110px] h-8">
+                            <SelectTrigger className="w-[100px] h-8 text-xs">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="ketua">Ketua</SelectItem>
-                              <SelectItem value="anggota">Anggota</SelectItem>
+                              <SelectItem value="ketua" className="text-xs">Ketua</SelectItem>
+                              <SelectItem value="anggota" className="text-xs">Anggota</SelectItem>
                             </SelectContent>
                           </Select>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="py-2.5 text-center">
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
                                 size="sm"
-                                variant="destructive"
+                                variant="ghost"
+                                className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                                 disabled={m.role === 'ketua'}
                               >
-                                <Trash2 className="h-3 w-3" />
+                                <Trash2 className="h-4 w-4" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>Hapus Anggota?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  {m.mahasiswa.nama} akan dikeluarkan dari tim.
+                                  <strong>{m.mahasiswa.nama}</strong> akan dikeluarkan dari tim.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Batal</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => removeMemberMutation.mutate(m.id)}>
-                                  Hapus
+                                <AlertDialogAction onClick={() => removeMemberMutation.mutate(m.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                  Ya, Keluarkan
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -264,36 +272,59 @@ export default function AdminTeamEditPage() {
                   </TableBody>
                 </Table>
               </div>
+              <p className="text-xs text-muted-foreground mt-3 italic text-center">
+                Info: Hanya anggota dengan role selain "Ketua" yang dapat dikeluarkan. Ketua tim tidak bisa dihapus. Team harus memiliki tepat 1 Ketua.
+              </p>
             </CardContent>
           </Card>
 
-          <Alert>
-            <AlertDescription>
-              <strong>Rules:</strong>
-              <ul className="mt-1 ml-4 list-disc text-sm">
-                <li>Team harus memiliki tepat 1 Ketua</li>
-                <li>Ketua tidak bisa dihapus dari team</li>
-                <li>Max 5 anggota per team</li>
-              </ul>
-            </AlertDescription>
-          </Alert>
+          <Card className="bg-muted/10">
+            <CardHeader className="pb-3 border-b">
+              <CardTitle className="text-sm font-medium">Informasi Proposal (Read Only)</CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4 space-y-3">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-muted-foreground">Status Proposal (Original):</span>
+                <Badge variant="outline" className="capitalize text-xs font-semibold px-2 py-0.5 border-primary text-primary">
+                  {proposalStatus ? proposalStatus.replace(/_/g, ' ') : 'No proposal'}
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground italic mt-2">Status proposal hanya dapat di-override melalui halaman detail, bukan di halaman edit data tim demi menjaga Workflow State.</p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
-      {/* Save */}
-      <Card>
-        <CardContent className="flex justify-end gap-3 p-4">
-          <Button variant="outline" asChild>
-            <Link href={`/admin/teams/${teamId}`}>Batal</Link>
+      <div className="flex bg-card p-4 rounded-xl border items-center justify-between sticky bottom-6 shadow-md shadow-black/5">
+        <Button variant="outline" type="button" onClick={() => router.push(`/admin/teams/${teamId}`)}>
+          Batal Edit
+        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              if (team) {
+                setNamaTeam(team.namaTeam);
+                setJudulProposal(team.judulProposal || '');
+                setJenisPkmId(String(team.jenisPkm?.id || team.jenisPkmId || ''));
+                setOpenToJoin(team.openToJoin);
+              }
+            }}
+            disabled={updateMutation.isPending}
+          >
+            <RotateCcw className="mr-2 h-4 w-4" /> Reset
           </Button>
           <Button
+            type="button"
             onClick={() => updateMutation.mutate()}
             disabled={!namaTeam || !jenisPkmId || updateMutation.isPending}
           >
-            {updateMutation.isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
+            <Save className="mr-2 h-4 w-4" />
+            {updateMutation.isPending ? 'Menyimpan Semua Data...' : 'Simpan Perubahan'}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

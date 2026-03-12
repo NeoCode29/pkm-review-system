@@ -66,6 +66,8 @@ const STATUS_BADGE: Record<string, 'default' | 'secondary' | 'outline' | 'destru
   under_review: 'secondary',
   reviewed: 'default',
   needs_revision: 'destructive',
+  not_reviewed: 'destructive',
+  revised: 'secondary',
 };
 
 export default function AdminTeamsPage() {
@@ -185,6 +187,8 @@ export default function AdminTeamsPage() {
                 <SelectItem value="under_review">Under Review</SelectItem>
                 <SelectItem value="reviewed">Reviewed</SelectItem>
                 <SelectItem value="needs_revision">Needs Revision</SelectItem>
+                <SelectItem value="not_reviewed">Not Reviewed</SelectItem>
+                <SelectItem value="revised">Revised</SelectItem>
               </SelectContent>
             </Select>
             <div className="flex flex-1 gap-2">

@@ -37,9 +37,19 @@ export class SystemConfigService {
 
     return this.prisma.$transaction(async (tx: any) => {
       // 1. Auto-exclusive: turn OFF others if turning ON
+      //    Also track which toggles were previously ON so we can run their OFF side-effects
+      let reviewWasPreviouslyOn = false;
       if (enabled) {
         const otherKeys = TOGGLE_KEYS.filter((k) => k !== key);
         for (const otherKey of otherKeys) {
+          // Check if this toggle was ON before turning it OFF
+          const existing = await tx.systemConfig.findUnique({ where: { configKey: otherKey } });
+          const wasEnabled = existing ? (existing.configValue as any)?.enabled ?? false : false;
+
+          if (otherKey === 'reviewEnabled' && wasEnabled) {
+            reviewWasPreviouslyOn = true;
+          }
+
           await tx.systemConfig.upsert({
             where: { configKey: otherKey },
             update: { configValue: { enabled: false }, updatedBy: adminUserId },
@@ -71,7 +81,13 @@ export class SystemConfigService {
         },
       });
 
-      // 5. Execute side effects
+      // 5. Execute side effects of auto-disabled toggles FIRST
+      //    If reviewEnabled was ON and got auto-turned OFF, finalize reviews
+      if (reviewWasPreviouslyOn && key !== 'reviewEnabled') {
+        await this.finalizeReviews(tx);
+      }
+
+      // 6. Execute side effects of the current toggle
       if (key === 'reviewEnabled' && enabled) {
         // submitted → under_review
         await tx.proposal.updateMany({
@@ -86,52 +102,7 @@ export class SystemConfigService {
       }
 
       if (key === 'reviewEnabled' && !enabled) {
-        // under_review → reviewed (≥1 complete review) or not_reviewed (0 reviews)
-        // Also calculate and store average scores from reviewers
-        const underReviewProposals = await tx.proposal.findMany({
-          where: { status: 'under_review' },
-          include: {
-            reviewerAssignments: {
-              include: {
-                penilaianAdministrasi: { select: { isComplete: true, totalKesalahan: true } },
-                penilaianSubstansi: { select: { isComplete: true, totalSkor: true } },
-              },
-            },
-          },
-        });
-
-        for (const proposal of underReviewProposals) {
-          const completedAssignments = proposal.reviewerAssignments.filter(
-            (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
-          );
-
-          if (completedAssignments.length >= 1) {
-            // Calculate average scores from completed reviews
-            const totalAdministratif = completedAssignments.reduce(
-              (sum, a) => sum + (a.penilaianAdministrasi?.totalKesalahan ?? 0), 0,
-            );
-            const avgAdministratif = totalAdministratif / completedAssignments.length;
-
-            const totalSubstantif = completedAssignments.reduce(
-              (sum, a) => sum + (Number(a.penilaianSubstansi?.totalSkor) || 0), 0,
-            );
-            const avgSubstantif = totalSubstantif / completedAssignments.length;
-
-            await tx.proposal.update({
-              where: { id: proposal.id },
-              data: {
-                status: 'reviewed',
-                administratifScore: avgAdministratif,
-                substantifScore: avgSubstantif,
-              },
-            });
-          } else {
-            await tx.proposal.update({
-              where: { id: proposal.id },
-              data: { status: 'not_reviewed' },
-            });
-          }
-        }
+        await this.finalizeReviews(tx);
       }
 
       if (key === 'uploadRevisionEnabled' && enabled) {
@@ -153,6 +124,57 @@ export class SystemConfigService {
       }
       return result;
     });
+  }
+
+  /**
+   * Finalize reviews: under_review → reviewed (≥1 complete review) or not_reviewed (0 reviews)
+   * Also calculate and store average scores from reviewers.
+   */
+  private async finalizeReviews(tx: any) {
+    const underReviewProposals = await tx.proposal.findMany({
+      where: { status: 'under_review' },
+      include: {
+        reviewerAssignments: {
+          include: {
+            penilaianAdministrasi: { select: { isComplete: true, totalKesalahan: true } },
+            penilaianSubstansi: { select: { isComplete: true, totalSkor: true } },
+          },
+        },
+      },
+    });
+
+    for (const proposal of underReviewProposals) {
+      const completedAssignments = proposal.reviewerAssignments.filter(
+        (a) => a.penilaianAdministrasi?.isComplete && a.penilaianSubstansi?.isComplete,
+      );
+
+      if (completedAssignments.length >= 1) {
+        // Calculate average scores from completed reviews
+        const totalAdministratif = completedAssignments.reduce(
+          (sum, a) => sum + (a.penilaianAdministrasi?.totalKesalahan ?? 0), 0,
+        );
+        const avgAdministratif = totalAdministratif / completedAssignments.length;
+
+        const totalSubstantif = completedAssignments.reduce(
+          (sum, a) => sum + (Number(a.penilaianSubstansi?.totalSkor) || 0), 0,
+        );
+        const avgSubstantif = totalSubstantif / completedAssignments.length;
+
+        await tx.proposal.update({
+          where: { id: proposal.id },
+          data: {
+            status: 'reviewed',
+            administratifScore: avgAdministratif,
+            substantifScore: avgSubstantif,
+          },
+        });
+      } else {
+        await tx.proposal.update({
+          where: { id: proposal.id },
+          data: { status: 'not_reviewed' },
+        });
+      }
+    }
   }
 
   async getAuditLog(limit = 50) {

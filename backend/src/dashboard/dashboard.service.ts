@@ -33,7 +33,7 @@ export class DashboardService {
     ]);
 
     // Proposals by status (only original)
-    const proposalStatuses = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision'];
+    const proposalStatuses = ['draft', 'submitted', 'under_review', 'reviewed', 'not_reviewed', 'needs_revision', 'revised'];
     const proposalsByStatus: Record<string, { count: number; percentage: number }> = {};
     for (const status of proposalStatuses) {
       const count = await this.prisma.proposal.count({ where: { status: status as any, type: 'original' } });
@@ -160,6 +160,7 @@ export class DashboardService {
                   },
                 },
                 proposals: {
+                  where: { type: 'original' },
                   include: {
                     proposalFiles: { orderBy: { uploadedAt: 'desc' }, take: 1 },
                   },

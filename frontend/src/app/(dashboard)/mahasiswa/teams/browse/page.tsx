@@ -35,6 +35,7 @@ interface BrowseTeam {
   namaTeam: string;
   judulProposal: string;
   jenisPkm?: { id: string; nama: string };
+  teamMembers: { role: string; mahasiswa: { id: string; nama: string; nim: string } }[];
   _count: { teamMembers: number };
   openToJoin: boolean;
 }
@@ -153,51 +154,69 @@ export default function BrowseTeamsPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {filteredTeams.map((team) => (
-              <Card key={team.id} className="border">
-                <CardContent className="pt-4 pb-4 space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-medium truncate">{team.namaTeam}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {team.judulProposal}
-                      </p>
+              <Card key={team.id} className="border flex flex-col h-full">
+                <CardHeader className="pb-3 border-b mb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-primary whitespace-normal sm:truncate text-base leading-tight">{team.namaTeam}</p>
                     </div>
                     {team.jenisPkm && (
-                      <Badge variant="secondary" className="shrink-0">
+                      <Badge variant="secondary" className="shrink-0 text-xs">
                         {team.jenisPkm.nama}
                       </Badge>
                     )}
                   </div>
-
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <span>
-                      <strong>{team._count.teamMembers}</strong>/5 anggota
-                    </span>
-                    {team._count.teamMembers < 5 ? (
-                      <Badge variant="outline" className="text-green-600 border-green-300 text-[10px]">
-                        Terbuka
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-red-600 border-red-300 text-[10px]">
-                        Penuh
-                      </Badge>
-                    )}
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col pt-0 space-y-4">
+                  <div className="space-y-2">
+                    <p className="text-sm text-foreground line-clamp-2" title={team.judulProposal}>
+                      {team.judulProposal}
+                    </p>
+                    {/* Render Ketua Info */}
+                    <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground">
+                      <Users size={14} className="text-muted-foreground" />
+                      <span className="font-medium">
+                        Ketua: {team.teamMembers.find(m => m.role === 'ketua')?.mahasiswa.nama || 'Belum ada ketua'}
+                      </span>
+                    </div>
                   </div>
+                  <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3 mt-auto pt-2">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                      <span>
+                        <strong>{team._count.teamMembers}</strong>/5 anggota
+                      </span>
+                      {team._count.teamMembers < 5 ? (
+                        <Badge variant="outline" className="text-green-600 border-green-300 bg-green-50 text-[10px] px-2 py-0">
+                          Menerima Anggota
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-red-600 border-red-300 bg-red-50 text-[10px] px-2 py-0">
+                          Penuh
+                        </Badge>
+                      )}
+                    </div>
 
-                  <div className="flex gap-2">
-                    {team._count.teamMembers < 5 ? (
-                      <Button
-                        size="sm"
-                        onClick={() => setJoinTeam(team)}
-                      >
-                        <Send size={14} className="mr-1.5" />
-                        Request Bergabung
-                      </Button>
-                    ) : (
-                      <Badge variant="secondary" className="py-1.5 px-3">
-                        Tim Sudah Penuh
-                      </Badge>
-                    )}
+                    <div className="flex w-full xl:w-auto gap-2">
+                      {team._count.teamMembers < 5 ? (
+                        <Button
+                          size="sm"
+                          className="w-full xl:w-auto"
+                          onClick={() => setJoinTeam(team)}
+                        >
+                          <Send size={14} className="mr-1.5" />
+                          Request Join
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="w-full xl:w-auto"
+                          disabled
+                        >
+                          Penuh
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>

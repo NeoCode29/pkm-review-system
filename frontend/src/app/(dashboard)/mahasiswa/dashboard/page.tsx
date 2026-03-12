@@ -12,6 +12,7 @@ import {
   Pencil,
   AlertTriangle,
   Info,
+  BarChart3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -103,8 +104,8 @@ function NoTeamLayout({ openTeams }: { openTeams: OpenTeamPreview[] }) {
       {/* Open Teams Preview */}
       {openTeams.length > 0 && (
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Tim yang Tersedia</CardTitle>
+          <CardHeader className="pb-3 border-b mb-3">
+            <CardTitle className="text-base text-primary">Tim yang Tersedia</CardTitle>
             <p className="text-sm text-muted-foreground">
               Beberapa tim yang sedang mencari anggota
             </p>
@@ -114,9 +115,9 @@ function NoTeamLayout({ openTeams }: { openTeams: OpenTeamPreview[] }) {
               {openTeams.map((team) => (
                 <Card key={team.id} className="border">
                   <CardContent className="pt-4 pb-4">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="font-medium truncate">{team.namaTeam}</p>
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium whitespace-normal sm:truncate text-base leading-tight mb-1">{team.namaTeam}</p>
                         <p className="text-sm text-muted-foreground truncate">
                           {team.judulProposal}
                         </p>
@@ -182,8 +183,8 @@ function TeamDashboardLayout({
 
       {/* My Team Summary */}
       <Card>
-        <CardHeader>
-          <div className="flex items-start justify-between gap-4">
+        <CardHeader className="pb-3 border-b mb-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="min-w-0">
               <p className="text-sm text-muted-foreground">Tim Saya</p>
               <h2 className="text-xl font-semibold text-primary truncate">
@@ -201,7 +202,6 @@ function TeamDashboardLayout({
           </div>
         </CardHeader>
         <CardContent>
-          <Separator className="mb-4" />
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
@@ -253,10 +253,37 @@ function TeamDashboardLayout({
         </CardContent>
       </Card>
 
+      {/* Review Results Card (If Reviewed) */}
+      {['reviewed', 'need_revision', 'revised'].includes(proposalStatus) && (
+        <Card className="border-blue-200 bg-blue-50/50 dark:bg-blue-950/20 dark:border-blue-900">
+          <CardHeader className="pb-3 border-b border-blue-100 dark:border-blue-800 mb-3">
+            <CardTitle className="text-base flex items-center gap-2 text-blue-700 dark:text-blue-400">
+              <BarChart3 size={18} />
+              Hasil Review Proposal
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-medium text-blue-900 dark:text-blue-100">Proposal Anda telah selesai direview!</p>
+                <p className="text-sm text-blue-700/80 dark:text-blue-300/80 mt-1">
+                  Lihat hasil penilaian administratif dan substantif untuk mengetahui evaluasi dari reviewer.
+                </p>
+              </div>
+              <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white flex-shrink-0" asChild>
+                <Link href={`/mahasiswa/teams/${team.id}/review-results`}>
+                  <BarChart3 className="mr-2 h-4 w-4" /> Lihat Hasil Review
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Pending Actions */}
       {pendingActions.length > 0 && (
         <Card className="border-amber-200">
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3 border-b mb-3">
             <CardTitle className="text-base flex items-center gap-2 text-amber-700">
               <AlertTriangle size={16} />
               Tindakan yang Diperlukan
@@ -284,8 +311,8 @@ function TeamDashboardLayout({
 
       {/* Team Members Preview */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base">
+        <CardHeader className="pb-3 border-b mb-3">
+          <CardTitle className="text-base text-primary">
             Anggota Tim ({memberCount} orang)
           </CardTitle>
         </CardHeader>

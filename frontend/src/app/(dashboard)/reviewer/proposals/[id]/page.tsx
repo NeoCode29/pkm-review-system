@@ -120,9 +120,9 @@ export default function ReviewSummaryPage() {
   // Substansi penilaian data
   const substansiDetails = assignment.penilaianSubstansi?.detailPenilaianSubstansi || [];
   const totalNilai = substansiDetails.reduce((sum, d) => {
-    const skor = Number(d.skor);
-    if (Number.isNaN(skor)) return sum;
-    return sum + skor * d.kriteriaSubstansi.bobot;
+    const skorNum = Number(d.skor);
+    if (Number.isNaN(skorNum) || d.skor === null || d.skor === undefined) return sum;
+    return sum + skorNum * d.kriteriaSubstansi.bobot;
   }, 0);
   const totalBobot = substansiDetails.reduce((sum, d) => sum + d.kriteriaSubstansi.bobot, 0);
 
@@ -269,14 +269,15 @@ export default function ReviewSummaryPage() {
                         .sort((a, b) => (a.kriteriaSubstansi.urutan ?? 0) - (b.kriteriaSubstansi.urutan ?? 0))
                         .map((d) => {
                           const skorNum = Number(d.skor);
-                          const skor = Number.isNaN(skorNum) ? 0 : skorNum;
-                          const nilai = skor * d.kriteriaSubstansi.bobot;
+                          const skorValid = !Number.isNaN(skorNum) && d.skor !== null && d.skor !== undefined;
+                          const skor = skorValid ? skorNum : null;
+                          const nilai = skor !== null ? skor * d.kriteriaSubstansi.bobot : null;
                           return (
                             <TableRow key={d.kriteriaSubstansiId}>
                               <TableCell className="text-sm">{d.kriteriaSubstansi.nama}</TableCell>
                               <TableCell className="text-center">{d.kriteriaSubstansi.bobot}</TableCell>
-                              <TableCell className="text-center">{skor || '-'}</TableCell>
-                              <TableCell className="text-center font-bold">{nilai || '-'}</TableCell>
+                              <TableCell className="text-center">{skor !== null ? skor : '-'}</TableCell>
+                              <TableCell className="text-center font-bold">{nilai !== null ? nilai : '-'}</TableCell>
                             </TableRow>
                           );
                         })}

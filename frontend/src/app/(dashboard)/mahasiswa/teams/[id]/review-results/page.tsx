@@ -161,7 +161,7 @@ export default function ReviewResultsPage() {
 
       {/* Proposal Info */}
       <Card>
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-3 border-b mb-3">
           <CardTitle className="text-base">Informasi Proposal</CardTitle>
         </CardHeader>
         <CardContent className="text-sm">
@@ -210,7 +210,7 @@ export default function ReviewResultsPage() {
       {/* Combined Admin Errors */}
       {adminErrors && adminErrors.totalKesalahan > 0 && (
         <Card className="border-red-200 dark:border-red-900">
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-3 border-b border-red-100 dark:border-red-900 mb-3">
             <CardTitle className="text-lg text-red-700 dark:text-red-400 flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" />
               Kesalahan Administratif (Gabungan Semua Reviewer)
@@ -251,20 +251,22 @@ export default function ReviewResultsPage() {
 
 function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
   const colors = reviewer.reviewerNumber === 1
-    ? { border: 'border-blue-200 dark:border-blue-900', header: 'bg-blue-50/50 dark:bg-blue-950/30', text: 'text-blue-700 dark:text-blue-400', badge: 'default' as const }
-    : { border: 'border-indigo-200 dark:border-indigo-900', header: 'bg-indigo-50/50 dark:bg-indigo-950/30', text: 'text-indigo-700 dark:text-indigo-400', badge: 'secondary' as const };
+    ? { border: 'border-blue-200 dark:border-blue-900', text: 'text-blue-600 dark:text-blue-400', badge: 'default' as const }
+    : { border: 'border-border', text: 'text-indigo-600 dark:text-indigo-400', badge: 'secondary' as const };
 
   const totalNilai = reviewer.substansi?.details.reduce((sum, d) => sum + (d.nilai ?? 0), 0) ?? 0;
 
   return (
-    <Card className={`${colors.border} overflow-hidden`}>
-      <CardHeader className={`${colors.header} py-4`}>
+    <Card className={`${colors.border} overflow-hidden shadow-sm bg-card`}>
+      <CardHeader className="py-5 bg-transparent border-b border-border/50">
         <div className="flex items-center justify-between">
-          <Badge variant={colors.badge} className="font-medium">{reviewer.reviewerLabel}</Badge>
+          <Badge variant={colors.badge} className="px-3 rounded-full font-medium">{reviewer.reviewerLabel}</Badge>
           {reviewer.substansi && (
-            <div className="text-right">
-              <p className="text-xs text-muted-foreground">Total Nilai</p>
-              <p className={`text-xl font-bold ${colors.text}`}>{totalNilai}</p>
+            <div className="flex flex-col items-center">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Total Nilai</p>
+              <div className={`text-xl font-bold px-4 py-1.5 rounded-md border shadow-sm bg-background/50 backdrop-blur-sm ${colors.text}`}>
+                {totalNilai}
+              </div>
             </div>
           )}
         </div>
@@ -286,11 +288,13 @@ function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
                   <span className="text-sm text-red-700 dark:text-red-300">Kriteria Tidak Sesuai</span>
                 </div>
                 {reviewer.administrasi.catatan && (
-                  <div className="rounded-md border p-3">
-                    <p className="text-xs font-medium text-muted-foreground mb-1">Catatan Reviewer</p>
-                    <p className="text-sm italic text-muted-foreground">
-                      &ldquo;{reviewer.administrasi.catatan}&rdquo;
+                  <div className="rounded-md border border-red-100 bg-red-50/30 dark:border-red-900 dark:bg-red-950/20 p-3 mt-3">
+                    <p className="text-xs font-semibold text-red-800 dark:text-red-300 mb-1.5 flex items-center gap-1.5">
+                      <FileText className="h-3 w-3" /> Catatan Reviewer
                     </p>
+                    <div className="text-sm text-red-900/90 dark:text-red-200/90 pl-4 border-l-2 border-red-200 dark:border-red-800 italic">
+                      &ldquo;{reviewer.administrasi.catatan}&rdquo;
+                    </div>
                   </div>
                 )}
               </>
@@ -307,49 +311,53 @@ function ReviewerCard({ reviewer }: { reviewer: ReviewerSummary }) {
             </h4>
             {reviewer.substansi ? (
               <>
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-muted/30">
-                        <TableHead className="text-xs">Kriteria</TableHead>
-                        <TableHead className="w-14 text-center text-xs">Bobot</TableHead>
-                        <TableHead className="w-14 text-center text-xs">Skor</TableHead>
-                        <TableHead className="w-16 text-center text-xs">Nilai</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {reviewer.substansi.details.map((d, i) => {
-                          const skorNum = Number(d.skor);
-                          const skor = Number.isNaN(skorNum) ? null : skorNum;
-                          const nilai = d.nilai ?? null;
-                          return (
-                            <TableRow key={i} className="border-b last:border-0">
-                              <TableCell className="text-sm py-2">{d.kriteria}</TableCell>
-                              <TableCell className="text-center text-sm py-2">{d.bobot}</TableCell>
-                              <TableCell className="text-center font-medium text-blue-600 py-2">
-                                {skor !== null ? skor : '-'}
-                              </TableCell>
-                              <TableCell className="text-center text-sm py-2">
-                                {nilai !== null ? `= ${nilai}` : '-'}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      <TableRow className={`${colors.header} font-semibold border-t`}>
-                        <TableCell colSpan={3} className="text-right text-xs py-2">Total Nilai</TableCell>
-                        <TableCell className={`text-center ${colors.text} py-2`}>
-                          {totalNilai}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                <div className="rounded-md border border-blue-100 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <Table className="min-w-[400px]">
+                      <TableHeader className="bg-blue-50/50 dark:bg-blue-950/20">
+                        <TableRow className="hover:bg-transparent border-b border-blue-100 dark:border-blue-900">
+                          <TableHead className="text-[11px] font-semibold tracking-wider uppercase text-blue-900 dark:text-blue-200 h-10">Kriteria</TableHead>
+                          <TableHead className="w-16 text-center text-[11px] font-semibold tracking-wider uppercase text-blue-900 dark:text-blue-200 h-10">Bobot</TableHead>
+                          <TableHead className="w-16 text-center text-[11px] font-semibold tracking-wider uppercase text-blue-900 dark:text-blue-200 h-10">Skor</TableHead>
+                          <TableHead className="w-20 text-center text-[11px] font-semibold tracking-wider uppercase text-blue-900 dark:text-blue-200 h-10">Nilai</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {reviewer.substansi.details.map((d, i) => {
+                            const skorNum = Number(d.skor);
+                            const skor = Number.isNaN(skorNum) ? null : skorNum;
+                            const nilai = d.nilai ?? null;
+                            return (
+                              <TableRow key={i} className="hover:bg-transparent border-b/50 border-dotted last:border-0">
+                                <TableCell className="text-sm py-3.5 leading-relaxed">{d.kriteria}</TableCell>
+                                <TableCell className="text-center text-sm py-3.5">{d.bobot}</TableCell>
+                                <TableCell className="text-center font-medium text-blue-600 py-3.5">
+                                  {skor !== null ? skor : '-'}
+                                </TableCell>
+                                <TableCell className="text-center text-sm py-3.5">
+                                  {nilai !== null ? `= ${nilai}` : '-'}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        <TableRow className="bg-muted/10 hover:bg-transparent border-t border-dotted">
+                          <TableCell colSpan={3} className="text-right text-[11px] font-bold text-foreground py-3">Total Nilai</TableCell>
+                          <TableCell className={`text-center font-bold text-base ${colors.text} py-3`}>
+                            {totalNilai}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
                 {reviewer.substansi.catatan && (
-                  <div className="rounded-md border p-3">
-                    <p className="text-xs font-medium text-muted-foreground mb-1">Catatan Reviewer</p>
-                    <p className="text-sm italic text-muted-foreground">
-                      &ldquo;{reviewer.substansi.catatan}&rdquo;
+                  <div className="rounded-md border border-blue-100 bg-blue-50/30 dark:border-blue-900 dark:bg-blue-950/20 p-3 mt-4">
+                    <p className="text-xs font-semibold text-blue-800 dark:text-blue-300 mb-1.5 flex items-center gap-1.5">
+                      <FileText className="h-3 w-3" /> Catatan Reviewer
                     </p>
+                    <div className="text-sm text-blue-900/90 dark:text-blue-200/90 pl-4 border-l-2 border-blue-200 dark:border-blue-800 italic">
+                      &ldquo;{reviewer.substansi.catatan}&rdquo;
+                    </div>
                   </div>
                 )}
               </>

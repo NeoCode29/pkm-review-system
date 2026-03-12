@@ -178,8 +178,20 @@ export class ProposalsService {
       },
     });
 
-    // Auto-transition: needs_revision → revised after uploading revision file
-    if (proposal.status === 'needs_revision') {
+    // Auto-transition after uploading revision file
+    if (proposal.type === 'revised') {
+      // When uploading to the 'revised' proposal, also transition the
+      // team's 'original' proposal from needs_revision → revised
+      await this.prisma.proposal.updateMany({
+        where: {
+          teamId: proposal.teamId,
+          type: 'original',
+          status: 'needs_revision',
+        },
+        data: { status: 'revised', updatedBy: userId },
+      });
+    } else if (proposal.status === 'needs_revision') {
+      // Direct transition if uploading to the same proposal
       await this.prisma.proposal.update({
         where: { id: proposalId },
         data: { status: 'revised', updatedBy: userId },

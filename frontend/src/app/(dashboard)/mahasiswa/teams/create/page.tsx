@@ -98,8 +98,8 @@ export default function CreateTeamPage() {
       </Alert>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Data Tim</CardTitle>
+        <CardHeader className="pb-3 border-b mb-4">
+          <CardTitle className="text-base flex items-center gap-2"><Info className="w-4 h-4"/> Data Tim</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

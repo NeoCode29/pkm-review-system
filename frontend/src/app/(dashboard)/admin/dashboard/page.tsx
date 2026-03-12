@@ -70,6 +70,8 @@ const PROPOSAL_BADGE: Record<string, 'default' | 'secondary' | 'outline' | 'dest
   under_review: 'secondary',
   reviewed: 'default',
   needs_revision: 'destructive',
+  not_reviewed: 'destructive',
+  revised: 'secondary',
 };
 
 const PHASE_LABELS: Record<string, { label: string; color: string; desc: string }> = {

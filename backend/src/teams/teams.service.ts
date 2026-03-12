@@ -152,7 +152,10 @@ export class TeamsService {
         teamMembers: {
           include: {
             mahasiswa: {
-              select: { id: true, nama: true, nim: true, email: true },
+              select: {
+                id: true, nama: true, nim: true, email: true,
+                programStudi: { select: { id: true, nama: true } },
+              },
             },
           },
           orderBy: { joinedAt: 'asc' },

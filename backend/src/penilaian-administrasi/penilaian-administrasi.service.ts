@@ -118,7 +118,14 @@ export class PenilaianAdministrasiService {
         },
       },
     });
-    return penilaian;
+
+    if (!penilaian) return null;
+
+    // Ensure totalKesalahan is returned as number
+    return {
+      ...penilaian,
+      totalKesalahan: Number(penilaian.totalKesalahan),
+    };
   }
 
   async getErrorUnion(proposalId: bigint) {

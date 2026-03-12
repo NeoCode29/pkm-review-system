@@ -88,7 +88,9 @@ export default function AdminReviewDetailPage() {
   }
 
   const totalNilai = substansiReview?.detailPenilaianSubstansi?.reduce((sum, d) => {
-    return sum + Number(d.skor) * d.kriteriaSubstansi.bobot;
+    const skorNum = Number(d.skor);
+    const skor = Number.isNaN(skorNum) ? 0 : skorNum;
+    return sum + skor * d.kriteriaSubstansi.bobot;
   }, 0) ?? 0;
 
   return (
@@ -133,7 +135,7 @@ export default function AdminReviewDetailPage() {
                           <TableCell className="text-sm">{d.kriteriaAdministrasi.deskripsi}</TableCell>
                           <TableCell className="text-center">
                             <Badge variant={d.adaKesalahan ? 'destructive' : 'default'} className="text-xs">
-                              {d.adaKesalahan ? 'Error' : 'OK'}
+                              {d.adaKesalahan ? 'Tidak Lengkap' : 'Lengkap'}
                             </Badge>
                           </TableCell>
                         </TableRow>
@@ -183,7 +185,9 @@ export default function AdminReviewDetailPage() {
                     </TableHeader>
                     <TableBody>
                       {substansiReview.detailPenilaianSubstansi.map((d) => {
-                        const nilai = Number(d.skor) * d.kriteriaSubstansi.bobot;
+                        const skorNum = Number(d.skor);
+                        const skor = Number.isNaN(skorNum) ? null : skorNum;
+                        const nilai = skor !== null ? skor * d.kriteriaSubstansi.bobot : null;
                         return (
                           <TableRow key={d.kriteriaSubstansi.id}>
                             <TableCell>
@@ -193,8 +197,8 @@ export default function AdminReviewDetailPage() {
                               )}
                             </TableCell>
                             <TableCell className="text-center">{d.kriteriaSubstansi.bobot}</TableCell>
-                            <TableCell className="text-center">{d.skor}</TableCell>
-                            <TableCell className="text-center font-bold">{nilai}</TableCell>
+                            <TableCell className="text-center">{skor !== null ? skor : '-'}</TableCell>
+                            <TableCell className="text-center font-bold">{nilai !== null ? nilai : '-'}</TableCell>
                           </TableRow>
                         );
                       })}
@@ -227,15 +231,23 @@ export default function AdminReviewDetailPage() {
         <CardContent className="flex items-center justify-between p-4 text-sm text-muted-foreground">
           <div>
             <strong>Status Administratif:</strong>{' '}
-            <Badge variant={adminReview?.isComplete ? 'default' : 'outline'}>
-              {adminReview?.isComplete ? 'Completed' : 'Pending'}
-            </Badge>
+            {adminReview ? (
+              <Badge variant={adminReview.isComplete ? 'default' : 'outline'}>
+                {adminReview.isComplete ? 'Completed' : 'In Progress'}
+              </Badge>
+            ) : (
+              <Badge variant="secondary">Belum Dinilai</Badge>
+            )}
           </div>
           <div>
             <strong>Status Substantif:</strong>{' '}
-            <Badge variant={substansiReview?.isComplete ? 'default' : 'outline'}>
-              {substansiReview?.isComplete ? 'Completed' : 'Pending'}
-            </Badge>
+            {substansiReview ? (
+              <Badge variant={substansiReview.isComplete ? 'default' : 'outline'}>
+                {substansiReview.isComplete ? 'Completed' : 'In Progress'}
+              </Badge>
+            ) : (
+              <Badge variant="secondary">Belum Dinilai</Badge>
+            )}
           </div>
         </CardContent>
       </Card>

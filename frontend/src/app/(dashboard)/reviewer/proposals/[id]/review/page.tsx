@@ -118,7 +118,6 @@ export default function ReviewPage() {
         api.get(`/reviews/${assignmentId}/administrasi`).catch(() => null),
         api.get(`/reviews/${assignmentId}/substansi`).catch(() => null),
       ]);
-      // Get assignment info from reviewer dashboard
       const dashboard = await api.get<{ assignments: AssignmentDetail[] }>('/dashboard/reviewer');
       const a = dashboard.assignments.find((x: AssignmentDetail) => String(x.id) === assignmentId);
       if (!a) throw new Error('Assignment tidak ditemukan');
@@ -174,8 +173,17 @@ export default function ReviewPage() {
         ? api.put(`/reviews/${assignmentId}/administrasi`, { body })
         : api.post(`/reviews/${assignmentId}/administrasi`, { body });
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       toast.success('Penilaian administratif berhasil disimpan');
+      // Directly repopulate checklist from mutation response to avoid stale state
+      if (data?.detailPenilaianAdministrasi) {
+        const checklist: Record<string, boolean> = {};
+        data.detailPenilaianAdministrasi.forEach((d: any) => {
+          checklist[String(d.kriteriaAdministrasiId)] = d.adaKesalahan;
+        });
+        setAdminChecklist(checklist);
+        if (data.catatan !== undefined) setAdminCatatan(data.catatan || '');
+      }
       queryClient.invalidateQueries({ queryKey: ['assignment', assignmentId] });
       queryClient.invalidateQueries({ queryKey: ['reviewer-dashboard'] });
     },
@@ -186,7 +194,7 @@ export default function ReviewPage() {
     mutationFn: () => {
       const scores = (kriteriaSubstansiList || []).map((k) => ({
         kriteriaSubstansiId: String(k.id),
-        skor: substansiScores[String(k.id)] || 0,
+        skor: substansiScores[String(k.id)] ?? 0,
       }));
       const body = { scores, catatan: substansiCatatan || undefined };
       const hasExisting = !!assignment?.penilaianSubstansi;
@@ -194,8 +202,17 @@ export default function ReviewPage() {
         ? api.put(`/reviews/${assignmentId}/substansi`, { body })
         : api.post(`/reviews/${assignmentId}/substansi`, { body });
     },
-    onSuccess: () => {
+    onSuccess: (data: any) => {
       toast.success('Penilaian substantif berhasil disimpan');
+      // Directly repopulate scores from mutation response to avoid stale state
+      if (data?.detailPenilaianSubstansi) {
+        const scores: Record<string, number> = {};
+        data.detailPenilaianSubstansi.forEach((d: any) => {
+          scores[String(d.kriteriaSubstansiId)] = Number(d.skor);
+        });
+        setSubstansiScores(scores);
+        if (data.catatan !== undefined) setSubstansiCatatan(data.catatan || '');
+      }
       queryClient.invalidateQueries({ queryKey: ['assignment', assignmentId] });
       queryClient.invalidateQueries({ queryKey: ['reviewer-dashboard'] });
     },
@@ -220,7 +237,7 @@ export default function ReviewPage() {
   const file = assignment.proposal.proposalFiles?.[0];
   const totalKesalahan = Object.values(adminChecklist).filter(Boolean).length;
   const totalNilai = (kriteriaSubstansiList || []).reduce((sum, k) => {
-    const skor = substansiScores[String(k.id)] || 0;
+    const skor = substansiScores[String(k.id)] ?? 0;
     return sum + skor * k.bobot;
   }, 0);
 
@@ -381,7 +398,7 @@ export default function ReviewPage() {
                   </TableHeader>
                   <TableBody>
                     {kriteriaSubstansiList?.map((k, idx) => {
-                      const skor = substansiScores[String(k.id)] || 0;
+                      const skor = substansiScores[String(k.id)] ?? 0;
                       const nilai = skor * k.bobot;
                       return (
                         <TableRow key={k.id}>
@@ -398,7 +415,7 @@ export default function ReviewPage() {
                               type="number"
                               min={k.skorMin}
                               max={k.skorMax}
-                              value={skor || ''}
+                              value={skor > 0 ? skor : ''}
                               disabled={!reviewEnabled}
                               onChange={(e) => {
                                 const val = parseInt(e.target.value, 10);

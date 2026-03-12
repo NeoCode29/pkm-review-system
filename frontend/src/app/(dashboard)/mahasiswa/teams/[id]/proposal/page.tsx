@@ -232,41 +232,11 @@ export default function ProposalPage() {
         </AlertDescription>
       </Alert>
 
-      {/* Status Overview */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Card>
-          <CardContent className="flex items-center justify-between p-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Proposal Original</p>
-              <p className="text-lg font-bold">
-                {STATUS_MAP[originalProposal?.status || 'draft']?.label || 'Draft'}
-              </p>
-            </div>
-            <Badge variant={STATUS_MAP[originalProposal?.status || 'draft']?.variant || 'secondary'}>
-              {STATUS_MAP[originalProposal?.status || 'draft']?.label || 'Draft'}
-            </Badge>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="flex items-center justify-between p-4">
-            <div>
-              <p className="text-sm text-muted-foreground">Proposal Revised</p>
-              <p className="text-lg font-bold">
-                {STATUS_MAP[revisedProposal?.status || 'draft']?.label || 'Draft'}
-              </p>
-            </div>
-            <Badge variant={STATUS_MAP[revisedProposal?.status || 'draft']?.variant || 'secondary'}>
-              {STATUS_MAP[revisedProposal?.status || 'draft']?.label || 'Draft'}
-            </Badge>
-          </CardContent>
-        </Card>
-      </div>
-
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* ===== PROPOSAL ORIGINAL ===== */}
         <div className="space-y-4">
           <Card className="border-blue-200 dark:border-blue-900">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-3 border-b mb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg text-blue-700 dark:text-blue-400">
                   Proposal Original
@@ -280,15 +250,19 @@ export default function ProposalPage() {
               {/* File sudah diupload */}
               {originalFile ? (
                 <>
-                  <div className="flex items-center gap-3 rounded-md border border-green-300 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950">
-                    <FileText className="h-8 w-8 text-green-600 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{originalFile.fileName}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Diupload: {formatDate(originalFile.uploadedAt)} | {formatFileSize(Number(originalFile.fileSize))}
-                      </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border border-green-300 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950">
+                    <div className="flex items-start sm:items-center gap-3 min-w-0">
+                      <FileText className="h-8 w-8 text-green-600 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium truncate leading-snug">{originalFile.fileName}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Diupload: {formatDate(originalFile.uploadedAt)} | {formatFileSize(Number(originalFile.fileSize))}
+                        </p>
+                      </div>
                     </div>
-                    <ProposalDownloadButton proposalId={String(originalProposal?.id)} />
+                    <div className="flex w-full sm:w-auto justify-end sm:justify-start">
+                      <ProposalDownloadButton proposalId={String(originalProposal?.id)} />
+                    </div>
                   </div>
 
                   {/* Re-upload when upload toggle is ON */}
@@ -431,7 +405,7 @@ export default function ProposalPage() {
         {/* ===== PROPOSAL REVISED ===== */}
         <div className="space-y-4">
           <Card className="border-amber-200 dark:border-amber-900">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-3 border-b mb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg text-amber-700 dark:text-amber-400">
                   Proposal Revised
@@ -445,15 +419,19 @@ export default function ProposalPage() {
               {/* File sudah diupload */}
               {revisedFile ? (
                 <>
-                  <div className="flex items-center gap-3 rounded-md border border-green-300 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950">
-                    <FileText className="h-8 w-8 text-green-600 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{revisedFile.fileName}</p>
-                      <p className="text-xs text-muted-foreground">
-                        Diupload: {formatDate(revisedFile.uploadedAt)} | {formatFileSize(Number(revisedFile.fileSize))}
-                      </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-md border border-green-300 bg-green-50 p-3 dark:border-green-800 dark:bg-green-950">
+                    <div className="flex items-start sm:items-center gap-3 min-w-0">
+                      <FileText className="h-8 w-8 text-green-600 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium truncate leading-snug">{revisedFile.fileName}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Diupload: {formatDate(revisedFile.uploadedAt)} | {formatFileSize(Number(revisedFile.fileSize))}
+                        </p>
+                      </div>
                     </div>
-                    <ProposalDownloadButton proposalId={String(revisedProposal?.id)} />
+                    <div className="flex w-full sm:w-auto justify-end sm:justify-start">
+                      <ProposalDownloadButton proposalId={String(revisedProposal?.id)} />
+                    </div>
                   </div>
 
                   {/* Re-upload when revision toggle is ON */}
@@ -577,11 +555,11 @@ export default function ProposalPage() {
 
       {/* Team Info */}
       <Card className="max-w-3xl">
-        <CardHeader>
+        <CardHeader className="pb-3 border-b mb-3">
           <CardTitle className="text-lg">Informasi Tim</CardTitle>
         </CardHeader>
         <CardContent className="text-sm">
-          <div className="grid grid-cols-[140px_1fr] gap-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-y-3">
             <span className="text-muted-foreground">Nama Tim</span>
             <span className="font-medium text-right">{team.namaTeam}</span>
             <Separator className="col-span-2" />

@@ -15,6 +15,7 @@ import {
   Info,
   Users,
   ArrowLeft,
+  BarChart3,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -180,6 +181,9 @@ export default function TeamDetailPage({
 
   const memberCount = team._count.teamMembers;
   const proposalStatus = team.proposals[0]?.status || 'no_proposal';
+  const hasReviewedProposal = team.proposals.some(
+    (p) => ['reviewed', 'need_revision', 'revised'].includes(p.status)
+  );
   const pendingRequests =
     joinRequests?.filter((r) => r.status === 'pending') || [];
   const isMyTeam = team.teamMembers.some(
@@ -212,7 +216,7 @@ export default function TeamDetailPage({
               <p className="text-sm text-muted-foreground mt-1">
                 {team.judulProposal}
               </p>
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap items-center gap-2 mt-3">
                 {team.jenisPkm && (
                   <Badge variant="secondary">{team.jenisPkm.nama}</Badge>
                 )}
@@ -226,45 +230,58 @@ export default function TeamDetailPage({
                 >
                   {team.openToJoin ? '✓ Terbuka' : 'Tertutup'}
                 </Badge>
+                <Separator orientation="vertical" className="h-4" />
+                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-amber-200 uppercase">
+                  {proposalStatus === 'no_proposal' ? 'BELUM ADA PROPOSAL' : proposalStatus.replace(/_/g, ' ')}
+                </Badge>
               </div>
             </div>
             {isMyTeam && (
-              <Button size="sm" variant="outline" asChild>
-                <Link href={`/mahasiswa/teams/${id}/edit`}>
-                  <Pencil size={14} className="mr-1.5" />
-                  Edit Tim
-                </Link>
-              </Button>
+              <div className="flex flex-col gap-2 min-w-[140px]">
+                <Button size="sm" variant="outline" className="w-full" asChild>
+                  <Link href={`/mahasiswa/teams/${id}/edit`}>
+                    <Pencil size={14} className="mr-1.5" />
+                    Edit Tim
+                  </Link>
+                </Button>
+                <Button size="sm" variant="default" className="w-full" asChild>
+                  <Link href={`/mahasiswa/teams/${id}/proposal`}>
+                    <Upload size={14} className="mr-1.5" />
+                    Manajemen Proposal
+                  </Link>
+                </Button>
+              </div>
             )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="rounded-lg border p-3 text-center">
-          <div className="text-2xl font-bold">{memberCount}</div>
-          <div className="text-xs text-muted-foreground">Anggota Tim</div>
-        </div>
-        <div className="rounded-lg border p-3 text-center bg-amber-50">
-          <div className="text-lg font-bold text-amber-600 uppercase">
-            {proposalStatus === 'no_proposal' ? '—' : proposalStatus}
-          </div>
-          <div className="text-xs text-muted-foreground">Status Proposal</div>
-        </div>
-        <div className="rounded-lg border p-3 text-center">
-          <div className="text-2xl font-bold">
-            {team.dosenPembimbing ? '✓' : '—'}
-          </div>
-          <div className="text-xs text-muted-foreground">Dosen Pembimbing</div>
-        </div>
-        <div className="rounded-lg border p-3 text-center bg-amber-50">
-          <div className="text-2xl font-bold text-amber-600">
-            {pendingRequests.length}
-          </div>
-          <div className="text-xs text-muted-foreground">Join Requests</div>
-        </div>
-      </div>
+      {/* Review Results Card (If Reviewed) */}
+      {hasReviewedProposal && (
+        <Card className="border-blue-200 bg-blue-50/50 dark:bg-blue-950/20 dark:border-blue-900">
+          <CardHeader className="pb-3 border-b border-blue-100 dark:border-blue-800 mb-3">
+            <CardTitle className="text-base flex items-center gap-2 text-blue-700 dark:text-blue-400">
+              <BarChart3 size={18} />
+              Hasil Review Proposal
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-medium text-blue-900 dark:text-blue-100">Proposal Anda telah selesai direview!</p>
+                <p className="text-sm text-blue-700/80 dark:text-blue-300/80 mt-1">
+                  Lihat hasil penilaian administratif dan substantif untuk mengetahui evaluasi dari reviewer.
+                </p>
+              </div>
+              <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white flex-shrink-0" asChild>
+                <Link href={`/mahasiswa/teams/${id}/review-results`}>
+                  <BarChart3 className="mr-2 h-4 w-4" /> Lihat Hasil Review
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Column */}
@@ -272,90 +289,48 @@ export default function TeamDetailPage({
           {/* Team Info */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Informasi Tim</CardTitle>
+              <CardTitle className="text-base flex items-center gap-2">
+                <Info className="h-4 w-4" /> Informasi Tim
+              </CardTitle>
             </CardHeader>
             <CardContent className="text-sm">
               <div className="grid grid-cols-[140px_1fr] gap-y-3">
                 <span className="text-muted-foreground">Nama Tim</span>
-                <span className="font-medium text-right">{team.namaTeam}</span>
+                <span className="font-medium">{team.namaTeam}</span>
                 <Separator className="col-span-2" />
                 <span className="text-muted-foreground">Judul</span>
-                <span className="text-right">{team.judulProposal}</span>
+                <span>{team.judulProposal}</span>
                 <Separator className="col-span-2" />
                 <span className="text-muted-foreground">Jenis PKM</span>
-                <div className="text-right">
-                  {team.jenisPkm && (
+                <div>
+                  {team.jenisPkm ? (
                     <Badge variant="secondary">{team.jenisPkm.nama}</Badge>
+                  ) : (
+                    '-'
                   )}
                 </div>
                 <Separator className="col-span-2" />
                 <span className="text-muted-foreground">Dibuat pada</span>
-                <span className="text-right">
+                <span>
                   {new Date(team.createdAt).toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
                   })}
                 </span>
+                <Separator className="col-span-2" />
+                <span className="text-muted-foreground">Dosen Pembimbing</span>
+                <div>
+                  {team.dosenPembimbing ? (
+                    <div>
+                      <span className="font-medium block">{team.dosenPembimbing.nama}</span>
+                      <span className="text-xs text-muted-foreground">NIDN: {team.dosenPembimbing.nidn}</span>
+                    </div>
+                  ) : (
+                    <span className="text-destructive font-medium italic">Belum ditentukan</span>
+                  )}
+                </div>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Dosen Pembimbing */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Dosen Pembimbing</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {team.dosenPembimbing ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                    {getInitials(team.dosenPembimbing.nama)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">
-                      {team.dosenPembimbing.nama}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      NIDN: {team.dosenPembimbing.nidn}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground italic">
-                  Belum ditentukan. Edit tim untuk menambahkan dosen pembimbing.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Proposal Status */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">Status Proposal</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {proposalStatus === 'no_proposal' || proposalStatus === 'draft' ? (
-                <div className="space-y-3">
-                  <Alert className="border-amber-200 bg-amber-50/50">
-                    <AlertDescription className="text-sm">
-                      Proposal belum diupload. Upload sebelum deadline submission.
-                    </AlertDescription>
-                  </Alert>
-                  <Button className="w-full" asChild>
-                    <Link href={`/mahasiswa/teams/${id}/proposal`}>
-                      <Upload size={14} className="mr-2" />
-                      Upload Proposal
-                    </Link>
-                  </Button>
-                </div>
-              ) : (
-                <div className="text-center py-4">
-                  <Badge className="text-sm px-3 py-1 uppercase">
-                    {proposalStatus}
-                  </Badge>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>
@@ -366,8 +341,8 @@ export default function TeamDetailPage({
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">
-                  Anggota Tim ({memberCount}/5)
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Users className="h-4 w-4" /> Anggota Tim ({memberCount}/5)
                 </CardTitle>
                 {memberCount >= 5 && (
                   <Badge variant="secondary">Penuh</Badge>
@@ -499,39 +474,40 @@ export default function TeamDetailPage({
               </CardContent>
             </Card>
           )}
+
+          {/* Danger Zone */}
+          {isMyTeam && (
+            <Card className="border-destructive/30">
+              <CardHeader className="pb-3 border-b mb-3">
+                <CardTitle className="text-base text-destructive">
+                  Danger Zone
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">Keluar dari Tim</p>
+                    <p className="text-xs text-muted-foreground leading-tight mt-1">
+                      {myRole === 'ketua'
+                        ? 'Jika Anda satu-satunya anggota, tim akan dihapus.'
+                        : 'Anda akan keluar dari tim ini.'}
+                    </p>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="w-full sm:w-auto mt-2 sm:mt-0 flex-shrink-0"
+                    onClick={() => setShowLeaveDialog(true)}
+                  >
+                    <LogOut size={14} className="mr-1.5" />
+                    Keluar dari Tim
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
-
-      {/* Danger Zone */}
-      {isMyTeam && (
-        <Card className="border-destructive/30">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base text-destructive">
-              Danger Zone
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium">Keluar dari Tim</p>
-                <p className="text-xs text-muted-foreground">
-                  {myRole === 'ketua'
-                    ? 'Jika Anda satu-satunya anggota, tim akan dihapus.'
-                    : 'Anda akan keluar dari tim ini.'}
-                </p>
-              </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => setShowLeaveDialog(true)}
-              >
-                <LogOut size={14} className="mr-1.5" />
-                Keluar dari Tim
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Kick Confirmation Dialog */}
       <Dialog open={!!kickMember} onOpenChange={() => setKickMember(null)}>
