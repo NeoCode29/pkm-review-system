@@ -6,7 +6,7 @@
 set -e
 
 PROJECT_DIR="/opt/pkm-review"
-REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO.git"  # Ganti dengan URL repo Anda
+REPO_URL="git@github.com:NeoCode29/pkm-review-system.git"
 DOMAIN="yourdomain.com"                                     # Ganti dengan domain Anda
 
 RED='\033[0;31m'
