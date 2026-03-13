@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { passportJwtSecret } from 'jwks-rsa';
 import { PrismaService } from '../../prisma/prisma.service';
 
 export interface JwtPayload {
@@ -33,21 +32,16 @@ export class SupabaseStrategy extends PassportStrategy(Strategy, 'supabase') {
     private configService: ConfigService,
     private prisma: PrismaService,
   ) {
-    const supabaseUrl = configService.get<string>('SUPABASE_URL');
-    if (!supabaseUrl) {
-      throw new Error('SUPABASE_URL must be defined');
+    const jwtSecret = configService.get<string>('JWT_SECRET');
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET must be defined');
     }
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      algorithms: ['ES256', 'HS256'],
-      secretOrKeyProvider: passportJwtSecret({
-        jwksUri: `${supabaseUrl}/auth/v1/.well-known/jwks.json`,
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 10,
-      }),
+      algorithms: ['HS256'],
+      secretOrKey: jwtSecret,
     });
   }
 

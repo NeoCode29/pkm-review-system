@@ -15,5 +15,7 @@ COPY prisma ./prisma/
 RUN npm ci --only=production
 RUN npx prisma generate
 COPY --from=backend-builder /app/dist ./dist
+COPY docker-entrypoint.sh ./
+RUN chmod +x docker-entrypoint.sh
 EXPOSE 4000
-CMD ["npm", "run", "start:prod"]
+CMD ["./docker-entrypoint.sh"]
