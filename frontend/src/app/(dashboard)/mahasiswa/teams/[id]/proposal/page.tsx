@@ -496,7 +496,6 @@ export default function ProposalPage() {
                             <li>Hanya untuk dokumentasi perbaikan</li>
                             <li><strong>TIDAK akan direview lagi</strong></li>
                             <li>Proposal original + review tetap dapat diakses</li>
-                            <li>Tersedia setelah admin buka toggle &quot;Upload Revisi&quot;</li>
                           </ul>
                         </AlertDescription>
                       </Alert>

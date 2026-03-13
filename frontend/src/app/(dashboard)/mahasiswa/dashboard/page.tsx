@@ -226,15 +226,15 @@ function TeamDashboardLayout({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-2">
-            <Button size="sm" asChild>
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2 mt-4">
+            <Button size="sm" className="w-full sm:w-auto" asChild>
               <Link href={`/mahasiswa/teams/${team.id}`}>
                 <Eye size={14} className="mr-1.5" />
                 Lihat Detail Tim
               </Link>
             </Button>
             {(proposalStatus === 'no_proposal' || proposalStatus === 'draft') && (
-              <Button size="sm" variant="outline" className="text-green-700 border-green-300 hover:bg-green-50" asChild>
+              <Button size="sm" variant="outline" className="w-full sm:w-auto text-green-700 border-green-300 hover:bg-green-50" asChild>
                 <Link href={`/mahasiswa/teams/${team.id}/proposal`}>
                   <Upload size={14} className="mr-1.5" />
                   Upload Proposal
@@ -242,7 +242,7 @@ function TeamDashboardLayout({
               </Button>
             )}
             {isKetua && (
-              <Button size="sm" variant="outline" asChild>
+              <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link href={`/mahasiswa/teams/${team.id}/edit`}>
                   <Pencil size={14} className="mr-1.5" />
                   Edit Tim
@@ -293,14 +293,16 @@ function TeamDashboardLayout({
             {pendingActions.map((action, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 rounded-lg border p-3"
+                className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-lg border p-3"
               >
-                <div className="shrink-0 text-muted-foreground">{action.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium">{action.title}</p>
-                  <p className="text-xs text-muted-foreground">{action.desc}</p>
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  <div className="shrink-0 text-muted-foreground mt-0.5">{action.icon}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{action.title}</p>
+                    <p className="text-xs text-muted-foreground">{action.desc}</p>
+                  </div>
                 </div>
-                <Button size="sm" asChild>
+                <Button size="sm" className="w-full sm:w-auto shrink-0" asChild>
                   <Link href={action.href}>{action.label}</Link>
                 </Button>
               </div>
